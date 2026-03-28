@@ -41,6 +41,9 @@ const roleLabels = {
   ADMIN: 'Administrador',
 } as const;
 
+const adminUserFieldClassName =
+  'w-full rounded-2xl border border-[#d9def8] bg-white/96 px-4 py-3 text-sm text-[#22347e] placeholder:text-[#7b86b4] focus:border-[#7b86f8] focus:outline-none focus:ring-2 focus:ring-[#7b86f8]/20 dark:!border-slate-600/80 dark:!bg-[#0b1324] dark:!text-[#eef4ff] dark:!placeholder:text-[#9db2d8] dark:focus:!border-[#7d8eff] dark:focus:!ring-[#6278ff]/25';
+
 function normalizeText(value: string | null | undefined) {
   return (value ?? '')
     .normalize('NFD')
@@ -303,7 +306,7 @@ export function AdminUsersManager({ initialUsers }: { initialUsers: ManagedUser[
             value={search}
             onChange={(event) => setSearch(event.target.value)}
             placeholder="Pesquise por nome, CPF ou número de matrícula"
-            className="admin-readable-field w-full rounded-2xl border border-[#d9def8] bg-white/96 py-3 pl-11 pr-4 text-sm text-[#22347e] placeholder:text-[#7b86b4] focus:border-[#7b86f8] focus:outline-none focus:ring-2 focus:ring-[#7b86f8]/20"
+            className={`py-3 pl-11 pr-4 ${adminUserFieldClassName}`}
           />
         </div>
         <p className="mt-2 text-xs text-[#6d79a5]">
@@ -369,19 +372,19 @@ export function AdminUsersManager({ initialUsers }: { initialUsers: ManagedUser[
                           value={draft.gradeLevel}
                           onChange={(event) => handleDraftChange(user.id, 'gradeLevel', event.target.value)}
                           placeholder="Série"
-                          className="admin-readable-field w-full rounded-2xl border border-[#d9def8] bg-white/96 px-4 py-3 text-sm text-[#22347e] placeholder:text-[#7b86b4] focus:border-[#7b86f8] focus:outline-none focus:ring-2 focus:ring-[#7b86f8]/20"
+                          className={adminUserFieldClassName}
                         />
                         <input
                           value={draft.cpf}
                           onChange={(event) => handleDraftChange(user.id, 'cpf', event.target.value)}
                           placeholder="CPF"
-                          className="admin-readable-field w-full rounded-2xl border border-[#d9def8] bg-white/96 px-4 py-3 text-sm text-[#22347e] placeholder:text-[#7b86b4] focus:border-[#7b86f8] focus:outline-none focus:ring-2 focus:ring-[#7b86f8]/20"
+                          className={adminUserFieldClassName}
                         />
                         <input
                           value={draft.enrollmentNumber}
                           onChange={(event) => handleDraftChange(user.id, 'enrollmentNumber', event.target.value)}
                           placeholder="Número de matrícula"
-                          className="admin-readable-field w-full rounded-2xl border border-[#d9def8] bg-white/96 px-4 py-3 text-sm text-[#22347e] placeholder:text-[#7b86b4] focus:border-[#7b86f8] focus:outline-none focus:ring-2 focus:ring-[#7b86f8]/20"
+                          className={adminUserFieldClassName}
                         />
                       </div>
                     </>

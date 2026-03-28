@@ -13,6 +13,12 @@ const planOptions = [
   { value: 'anual', label: 'Anual' },
 ] as const;
 
+const creatorFieldClassName =
+  'admin-readable-field border-[#d9def8] bg-white/96 text-[#22347e] placeholder:text-[#62729f] focus:border-[#7b86f8] focus:ring-[#7b86f8]/20 dark:!border-slate-600/80 dark:!bg-[#0b1324] dark:!text-[#eef4ff] dark:!placeholder:text-[#9db2d8] dark:focus:!border-[#7d8eff] dark:focus:!ring-[#6278ff]/25';
+
+const creatorSelectClassName =
+  'admin-readable-field w-full rounded-2xl border border-[#d9def8] bg-white/96 px-4 py-3 text-sm text-[#22347e] focus:border-[#7b86f8] focus:outline-none focus:ring-2 focus:ring-[#7b86f8]/20 dark:!border-slate-600/80 dark:!bg-[#0b1324] dark:!text-[#eef4ff] dark:focus:!border-[#7d8eff] dark:focus:!ring-[#6278ff]/25';
+
 export function AdminUserCreator() {
   const router = useRouter();
   const [role, setRole] = useState<'STUDENT' | 'TEACHER'>('STUDENT');
@@ -108,7 +114,7 @@ export function AdminUserCreator() {
               name="name"
               required
               placeholder="Nome completo"
-              className="admin-readable-field border-[#d9def8] bg-white/96 text-[#22347e] placeholder:text-[#62729f] focus:border-[#7b86f8] focus:ring-[#7b86f8]/20"
+              className={creatorFieldClassName}
             />
           </div>
           <div className="space-y-2">
@@ -118,7 +124,7 @@ export function AdminUserCreator() {
               type="email"
               required
               placeholder="usuario@email.com"
-              className="admin-readable-field border-[#d9def8] bg-white/96 text-[#22347e] placeholder:text-[#62729f] focus:border-[#7b86f8] focus:ring-[#7b86f8]/20"
+              className={creatorFieldClassName}
             />
           </div>
           {role === 'STUDENT' ? (
@@ -128,7 +134,7 @@ export function AdminUserCreator() {
                 <Input
                   name="gradeLevel"
                   placeholder="Ex.: 3º ano do ensino médio"
-                  className="admin-readable-field border-[#d9def8] bg-white/96 text-[#22347e] placeholder:text-[#62729f] focus:border-[#7b86f8] focus:ring-[#7b86f8]/20"
+                  className={creatorFieldClassName}
                 />
               </div>
               <div className="space-y-2">
@@ -136,7 +142,7 @@ export function AdminUserCreator() {
                 <Input
                   name="cpf"
                   placeholder="Ex.: 123.456.789-00"
-                  className="admin-readable-field border-[#d9def8] bg-white/96 text-[#22347e] placeholder:text-[#62729f] focus:border-[#7b86f8] focus:ring-[#7b86f8]/20"
+                  className={creatorFieldClassName}
                 />
               </div>
               <div className="space-y-2 md:col-span-2">
@@ -144,7 +150,7 @@ export function AdminUserCreator() {
                 <Input
                   name="enrollmentNumber"
                   placeholder="Deixe em branco para gerar automaticamente"
-                  className="admin-readable-field border-[#d9def8] bg-white/96 text-[#22347e] placeholder:text-[#62729f] focus:border-[#7b86f8] focus:ring-[#7b86f8]/20"
+                  className={creatorFieldClassName}
                 />
               </div>
             </>
@@ -154,7 +160,7 @@ export function AdminUserCreator() {
               <Input
                 name="expertise"
                 placeholder="Ex.: Redação ENEM"
-                className="admin-readable-field border-[#d9def8] bg-white/96 text-[#22347e] placeholder:text-[#62729f] focus:border-[#7b86f8] focus:ring-[#7b86f8]/20"
+                className={creatorFieldClassName}
               />
             </div>
           )}
@@ -167,7 +173,7 @@ export function AdminUserCreator() {
               <select
                 name="plan"
                 defaultValue=""
-                className="admin-readable-field w-full rounded-2xl border border-[#d9def8] bg-white/96 px-4 py-3 text-sm text-[#22347e] focus:border-[#7b86f8] focus:outline-none focus:ring-2 focus:ring-[#7b86f8]/20"
+                className={creatorSelectClassName}
               >
                 <option value="">Não informado</option>
                 {planOptions.map((plan) => (

@@ -38,7 +38,7 @@ export async function GET() {
 
 export async function POST(req: Request) {
   const session = await getAuthSession();
-  if (!session?.user || session.user.isActive === false || !isTeacherRole(session.user.role) || !session.user.teacherId) {
+  if (!session?.user || session.user.isActive === false || !isTeacherRole(session.user.role)) {
     return NextResponse.json({ error: 'Acesso negado' }, { status: 401 });
   }
 
@@ -60,7 +60,7 @@ export async function POST(req: Request) {
       name,
       description: description || null,
       sortOrder,
-      createdById: session.user.teacherId,
+      createdById: session.user.teacherId ?? null,
     },
   });
 

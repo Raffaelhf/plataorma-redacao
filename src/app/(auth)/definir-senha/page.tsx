@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
+import { PlatformLogo } from '@/components/branding/platform-logo';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { getAppUrl } from '@/lib/app-url';
@@ -55,6 +56,19 @@ export default async function PasswordSetupPage({
   return (
     <main className="mx-auto flex min-h-screen max-w-5xl items-center justify-center px-4 py-10">
       <section className="w-full max-w-xl rounded-[32px] border border-[#dbe1fb] bg-[linear-gradient(180deg,rgba(25,31,97,0.97),rgba(53,58,171,0.92))] p-6 text-white shadow-[0_30px_80px_rgba(25,31,97,0.24)] sm:p-8">
+        <div className="mb-6 rounded-[28px] border border-white/14 bg-white/8 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-md">
+          <PlatformLogo
+            priority
+            className="w-[210px] sm:w-[240px]"
+            sizes="(max-width: 640px) 210px, 240px"
+            imageClassName="brightness-0 invert"
+          />
+          <p className="mt-3 text-xs font-semibold uppercase tracking-[0.22em] text-[#c8d3ff]">Identidade da plataforma</p>
+          <p className="mt-2 text-sm leading-6 text-white/72">
+            Ambiente oficial da Escreva Mais para acesso seguro, redefinição de senha e entrada na área da plataforma.
+          </p>
+        </div>
+
         <p className="text-sm font-semibold text-[#c8d3ff]">Acesso da plataforma</p>
         <h1 className="mt-3 text-3xl font-extrabold tracking-[-0.04em] text-white">Definir senha</h1>
         <p className="mt-4 text-sm leading-7 text-white/80">

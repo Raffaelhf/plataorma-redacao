@@ -31,11 +31,20 @@ type CreateVideoContentProps = {
   modules: ModuleOption[];
 };
 
+const panelClassName =
+  'flex h-full flex-col rounded-[30px] border border-[#dde3fb] bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(248,249,255,0.9))] p-5 shadow-[0_20px_50px_rgba(74,73,140,0.1)] dark:border-slate-700/80 dark:bg-[linear-gradient(180deg,rgba(11,19,36,0.96),rgba(15,23,42,0.9))] dark:shadow-[0_20px_50px_rgba(0,0,0,0.28)]';
+
+const fieldClassName =
+  'border-[#d9def8] bg-white/90 text-[#22347e] placeholder:text-[#8a93b8] focus:border-[#7b86f8] focus:ring-[#7b86f8]/20 dark:border-slate-600/80 dark:bg-[#0b1324] dark:text-[#eef4ff] dark:placeholder:text-[#91a6cf] dark:focus:border-[#7d8eff] dark:focus:ring-[#6278ff]/25';
+
+const selectClassName =
+  'w-full rounded-2xl border border-[#d9def8] bg-white/90 px-4 py-3 text-sm text-[#22347e] focus:border-[#7b86f8] focus:outline-none focus:ring-2 focus:ring-[#7b86f8]/20 dark:border-slate-600/80 dark:bg-[#0b1324] dark:text-[#eef4ff] dark:focus:border-[#7d8eff] dark:focus:ring-[#6278ff]/25';
+
 function TextArea(props: TextareaHTMLAttributes<HTMLTextAreaElement>) {
   return (
     <textarea
       {...props}
-      className="w-full rounded-2xl border border-[#d9def8] bg-white/90 px-4 py-3 text-sm text-[#22347e] placeholder:text-[#8a93b8] focus:border-[#7b86f8] focus:outline-none focus:ring-2 focus:ring-[#7b86f8]/20"
+      className="w-full rounded-2xl border border-[#d9def8] bg-white/90 px-4 py-3 text-sm text-[#22347e] placeholder:text-[#8a93b8] focus:border-[#7b86f8] focus:outline-none focus:ring-2 focus:ring-[#7b86f8]/20 dark:border-slate-600/80 dark:bg-[#0b1324] dark:text-[#eef4ff] dark:placeholder:text-[#91a6cf] dark:focus:border-[#7d8eff] dark:focus:ring-[#6278ff]/25"
     />
   );
 }
@@ -96,7 +105,7 @@ export function CreateVideoContent({ categories, classrooms, modules }: CreateVi
 
     if (!res.ok) {
       const body = await res.json().catch(() => ({}));
-      setClassroomError(body.error || 'Não foi possível criar a turma.');
+      setClassroomError(body.error || 'N\u00E3o foi poss\u00EDvel criar a turma.');
     } else {
       setClassroomMessage('Turma criada com sucesso.');
       classroomFormRef.current?.reset();
@@ -112,7 +121,7 @@ export function CreateVideoContent({ categories, classrooms, modules }: CreateVi
     setModuleMessage(null);
 
     if (isDemo) {
-      setModuleMessage('Módulo simulado com sucesso no modo teste.');
+      setModuleMessage('M\u00F3dulo simulado com sucesso no modo teste.');
       setLoadingModule(false);
       return;
     }
@@ -130,9 +139,9 @@ export function CreateVideoContent({ categories, classrooms, modules }: CreateVi
 
     if (!res.ok) {
       const body = await res.json().catch(() => ({}));
-      setModuleError(body.error || 'Não foi possível criar o módulo.');
+      setModuleError(body.error || 'N\u00E3o foi poss\u00EDvel criar o m\u00F3dulo.');
     } else {
-      setModuleMessage('Módulo criado com sucesso.');
+      setModuleMessage('M\u00F3dulo criado com sucesso.');
       moduleFormRef.current?.reset();
       setModuleClassroomId('');
       router.refresh();
@@ -168,7 +177,7 @@ export function CreateVideoContent({ categories, classrooms, modules }: CreateVi
 
     if (!res.ok) {
       const body = await res.json().catch(() => ({}));
-      setLessonError(body.error || 'Não foi possível salvar a videoaula.');
+      setLessonError(body.error || 'N\u00E3o foi poss\u00EDvel salvar a videoaula.');
     } else {
       setLessonMessage('Videoaula criada com sucesso.');
       lessonFormRef.current?.reset();
@@ -182,42 +191,26 @@ export function CreateVideoContent({ categories, classrooms, modules }: CreateVi
 
   return (
     <div className="grid gap-4 xl:grid-cols-3">
-      <form
-        ref={classroomFormRef}
-        action={handleClassroomSubmit}
-        className="flex h-full flex-col rounded-[30px] border border-[#dde3fb] bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(248,249,255,0.9))] p-5 shadow-[0_20px_50px_rgba(74,73,140,0.1)]"
-      >
+      <form ref={classroomFormRef} action={handleClassroomSubmit} className={panelClassName}>
         <div className="flex items-start justify-between gap-3">
           <div>
-            <p className="text-sm font-semibold text-[#5a69a1]">Turmas</p>
-            <h2 className="mt-1 text-lg font-semibold text-[#22347e]">Nova turma</h2>
+            <p className="text-sm font-semibold text-[#5a69a1] dark:text-[#9fb0d8]">Turmas</p>
+            <h2 className="mt-1 text-lg font-semibold text-[#22347e] dark:text-[#f3f7ff]">Nova turma</h2>
           </div>
-          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#eef2ff] text-[#4250d4]">
+          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#eef2ff] text-[#4250d4] dark:bg-[#1b2743] dark:text-[#c7d4ff]">
             <FolderPlus className="h-5 w-5" />
           </div>
         </div>
 
         <div className="mt-4 flex-1 space-y-3">
-          <Input
-            name="name"
-            placeholder="Ex.: Turma extensiva 2026"
-            required
-            className="border-[#d9def8] bg-white/90 text-[#22347e] placeholder:text-[#8a93b8] focus:border-[#7b86f8] focus:ring-[#7b86f8]/20"
-          />
+          <Input name="name" placeholder="Ex.: Turma extensiva 2026" required className={fieldClassName} />
           <TextArea name="description" rows={3} placeholder="Descreva a proposta da turma e para qual perfil de aluno ela serve." />
-          <Input
-            name="sortOrder"
-            type="number"
-            min="0"
-            step="1"
-            defaultValue="0"
-            className="border-[#d9def8] bg-white/90 text-[#22347e] placeholder:text-[#8a93b8] focus:border-[#7b86f8] focus:ring-[#7b86f8]/20"
-          />
+          <Input name="sortOrder" type="number" min="0" step="1" defaultValue="0" className={fieldClassName} />
         </div>
 
         <div className="mt-3 min-h-4">
-          {classroomError ? <p className="text-xs text-[#c05252]">{classroomError}</p> : null}
-          {classroomMessage ? <p className="text-xs text-[#1b7f62]">{classroomMessage}</p> : null}
+          {classroomError ? <p className="text-xs text-[#c05252] dark:text-[#ffb4b4]">{classroomError}</p> : null}
+          {classroomMessage ? <p className="text-xs text-[#1b7f62] dark:text-[#8fe0b7]">{classroomMessage}</p> : null}
         </div>
 
         <Button type="submit" disabled={loadingClassroom} className="mt-4 w-full">
@@ -226,17 +219,13 @@ export function CreateVideoContent({ categories, classrooms, modules }: CreateVi
         </Button>
       </form>
 
-      <form
-        ref={moduleFormRef}
-        action={handleModuleSubmit}
-        className="flex h-full flex-col rounded-[30px] border border-[#dde3fb] bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(248,249,255,0.9))] p-5 shadow-[0_20px_50px_rgba(74,73,140,0.1)]"
-      >
+      <form ref={moduleFormRef} action={handleModuleSubmit} className={panelClassName}>
         <div className="flex items-start justify-between gap-3">
           <div>
-            <p className="text-sm font-semibold text-[#5a69a1]">Módulos</p>
-            <h2 className="mt-1 text-lg font-semibold text-[#22347e]">Novo módulo</h2>
+            <p className="text-sm font-semibold text-[#5a69a1] dark:text-[#9fb0d8]">M\u00F3dulos</p>
+            <h2 className="mt-1 text-lg font-semibold text-[#22347e] dark:text-[#f3f7ff]">Novo m\u00F3dulo</h2>
           </div>
-          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#eef9f4] text-[#1b7f62]">
+          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#eef9f4] text-[#1b7f62] dark:bg-[#14332b] dark:text-[#8fe0b7]">
             <Layers3 className="h-5 w-5" />
           </div>
         </div>
@@ -246,7 +235,7 @@ export function CreateVideoContent({ categories, classrooms, modules }: CreateVi
             name="classroomId"
             value={moduleClassroomId}
             onChange={(event) => setModuleClassroomId(event.target.value)}
-            className="w-full rounded-2xl border border-[#d9def8] bg-white/90 px-4 py-3 text-sm text-[#22347e] focus:border-[#7b86f8] focus:outline-none focus:ring-2 focus:ring-[#7b86f8]/20"
+            className={selectClassName}
             required
           >
             <option value="">Selecione a turma</option>
@@ -256,45 +245,29 @@ export function CreateVideoContent({ categories, classrooms, modules }: CreateVi
               </option>
             ))}
           </select>
-          <Input
-            name="title"
-            placeholder="Ex.: Módulo 1 - Fundamentos"
-            required
-            className="border-[#d9def8] bg-white/90 text-[#22347e] placeholder:text-[#8a93b8] focus:border-[#7b86f8] focus:ring-[#7b86f8]/20"
-          />
-          <TextArea name="description" rows={3} placeholder="Explique o objetivo do módulo e o que será abordado nas aulas." />
-          <Input
-            name="sortOrder"
-            type="number"
-            min="0"
-            step="1"
-            defaultValue="0"
-            className="border-[#d9def8] bg-white/90 text-[#22347e] placeholder:text-[#8a93b8] focus:border-[#7b86f8] focus:ring-[#7b86f8]/20"
-          />
+          <Input name="title" placeholder="Ex.: M\u00F3dulo 1 - Fundamentos" required className={fieldClassName} />
+          <TextArea name="description" rows={3} placeholder="Explique o objetivo do m\u00F3dulo e o que ser\u00E1 abordado nas aulas." />
+          <Input name="sortOrder" type="number" min="0" step="1" defaultValue="0" className={fieldClassName} />
         </div>
 
         <div className="mt-3 min-h-4">
-          {moduleError ? <p className="text-xs text-[#c05252]">{moduleError}</p> : null}
-          {moduleMessage ? <p className="text-xs text-[#1b7f62]">{moduleMessage}</p> : null}
+          {moduleError ? <p className="text-xs text-[#c05252] dark:text-[#ffb4b4]">{moduleError}</p> : null}
+          {moduleMessage ? <p className="text-xs text-[#1b7f62] dark:text-[#8fe0b7]">{moduleMessage}</p> : null}
         </div>
 
         <Button type="submit" disabled={loadingModule} className="mt-4 w-full">
           {loadingModule ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Boxes className="mr-2 h-4 w-4" />}
-          Criar módulo
+          Criar m\u00F3dulo
         </Button>
       </form>
 
-      <form
-        ref={lessonFormRef}
-        action={handleLessonSubmit}
-        className="flex h-full flex-col rounded-[30px] border border-[#dde3fb] bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(248,249,255,0.9))] p-5 shadow-[0_20px_50px_rgba(74,73,140,0.1)]"
-      >
+      <form ref={lessonFormRef} action={handleLessonSubmit} className={panelClassName}>
         <div className="flex items-start justify-between gap-3">
           <div>
-            <p className="text-sm font-semibold text-[#5a69a1]">Conteúdo</p>
-            <h2 className="mt-1 text-lg font-semibold text-[#22347e]">Nova videoaula</h2>
+            <p className="text-sm font-semibold text-[#5a69a1] dark:text-[#9fb0d8]">Conte\u00FAdo</p>
+            <h2 className="mt-1 text-lg font-semibold text-[#22347e] dark:text-[#f3f7ff]">Nova videoaula</h2>
           </div>
-          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#fff1eb] text-[#ff7f32]">
+          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#fff1eb] text-[#ff7f32] dark:bg-[#3b231d] dark:text-[#fdba74]">
             <Film className="h-5 w-5" />
           </div>
         </div>
@@ -307,7 +280,7 @@ export function CreateVideoContent({ categories, classrooms, modules }: CreateVi
               setLessonClassroomId(event.target.value);
               setLessonModuleId('');
             }}
-            className="w-full rounded-2xl border border-[#d9def8] bg-white/90 px-4 py-3 text-sm text-[#22347e] focus:border-[#7b86f8] focus:outline-none focus:ring-2 focus:ring-[#7b86f8]/20"
+            className={selectClassName}
           >
             <option value="">Selecione a turma</option>
             {classrooms.map((classroom) => (
@@ -320,35 +293,20 @@ export function CreateVideoContent({ categories, classrooms, modules }: CreateVi
             name="moduleId"
             value={lessonModuleId}
             onChange={(event) => setLessonModuleId(event.target.value)}
-            className="w-full rounded-2xl border border-[#d9def8] bg-white/90 px-4 py-3 text-sm text-[#22347e] focus:border-[#7b86f8] focus:outline-none focus:ring-2 focus:ring-[#7b86f8]/20 disabled:cursor-not-allowed disabled:bg-[#f3f5ff] disabled:text-[#8a93b8]"
+            className={`${selectClassName} disabled:cursor-not-allowed disabled:bg-[#f3f5ff] disabled:text-[#8a93b8] dark:disabled:bg-[#18233a] dark:disabled:text-[#7f93bb]`}
             disabled={!lessonClassroomId || moduleOptions.length === 0}
           >
-            <option value="">Sem módulo</option>
+            <option value="">Sem m\u00F3dulo</option>
             {moduleOptions.map((module) => (
               <option key={module.id} value={module.id}>
                 {module.title}
               </option>
             ))}
           </select>
-          <Input
-            name="title"
-            placeholder="Título da aula"
-            required
-            className="border-[#d9def8] bg-white/90 text-[#22347e] placeholder:text-[#8a93b8] focus:border-[#7b86f8] focus:ring-[#7b86f8]/20"
-          />
-          <TextArea name="description" rows={3} placeholder="Resumo do que será explicado na videoaula." required />
-          <Input
-            name="videoUrl"
-            type="url"
-            placeholder="https://youtube.com/... ou link incorporado"
-            required
-            className="border-[#d9def8] bg-white/90 text-[#22347e] placeholder:text-[#8a93b8] focus:border-[#7b86f8] focus:ring-[#7b86f8]/20"
-          />
-          <select
-            name="categoryId"
-            className="w-full rounded-2xl border border-[#d9def8] bg-white/90 px-4 py-3 text-sm text-[#22347e] focus:border-[#7b86f8] focus:outline-none focus:ring-2 focus:ring-[#7b86f8]/20"
-            defaultValue=""
-          >
+          <Input name="title" placeholder="T\u00EDtulo da aula" required className={fieldClassName} />
+          <TextArea name="description" rows={3} placeholder="Resumo do que ser\u00E1 explicado na videoaula." required />
+          <Input name="videoUrl" type="url" placeholder="https://youtube.com/... ou link incorporado" required className={fieldClassName} />
+          <select name="categoryId" className={selectClassName} defaultValue="">
             <option value="">Sem categoria</option>
             {categories.map((category) => (
               <option key={category.id} value={category.id}>
@@ -356,19 +314,12 @@ export function CreateVideoContent({ categories, classrooms, modules }: CreateVi
               </option>
             ))}
           </select>
-          <Input
-            name="sortOrder"
-            type="number"
-            min="0"
-            step="1"
-            defaultValue="0"
-            className="border-[#d9def8] bg-white/90 text-[#22347e] placeholder:text-[#8a93b8] focus:border-[#7b86f8] focus:ring-[#7b86f8]/20"
-          />
+          <Input name="sortOrder" type="number" min="0" step="1" defaultValue="0" className={fieldClassName} />
         </div>
 
         <div className="mt-3 min-h-4">
-          {lessonError ? <p className="text-xs text-[#c05252]">{lessonError}</p> : null}
-          {lessonMessage ? <p className="text-xs text-[#1b7f62]">{lessonMessage}</p> : null}
+          {lessonError ? <p className="text-xs text-[#c05252] dark:text-[#ffb4b4]">{lessonError}</p> : null}
+          {lessonMessage ? <p className="text-xs text-[#1b7f62] dark:text-[#8fe0b7]">{lessonMessage}</p> : null}
         </div>
 
         <Button type="submit" disabled={loadingLesson} className="mt-4 w-full">
