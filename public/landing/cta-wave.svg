@@ -1,0 +1,17 @@
+<svg width="2048" height="760" viewBox="0 0 2048 760" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="ctaWave" x1="0" y1="110" x2="2048" y2="620" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#2640D4"/>
+      <stop offset="0.43" stop-color="#8B4FEE"/>
+      <stop offset="1" stop-color="#FF9B68"/>
+    </linearGradient>
+  </defs>
+  <rect width="2048" height="760" fill="url(#ctaWave)"/>
+  <path d="M0 329C185 409 406 444 664 435C830 429 985 385 1177 354C1454 309 1708 324 2048 461V760H0V329Z" fill="#F7B2C1" fill-opacity="0.24"/>
+  <path d="M0 438C213 319 430 283 651 331C829 369 944 448 1145 458C1368 469 1594 379 2048 236V760H0V438Z" fill="#FFFFFF" fill-opacity="0.08"/>
+  <path d="M0 583C225 502 470 476 734 511C1001 547 1215 643 1463 649C1656 653 1852 604 2048 513V760H0V583Z" fill="#3149DD" fill-opacity="0.34"/>
+  <circle cx="293" cy="496" r="10" fill="white" fill-opacity="0.38"/>
+  <circle cx="337" cy="529" r="6" fill="white" fill-opacity="0.25"/>
+  <circle cx="1466" cy="275" r="8" fill="white" fill-opacity="0.25"/>
+  <circle cx="1563" cy="333" r="10" fill="white" fill-opacity="0.32"/>
+</svg>

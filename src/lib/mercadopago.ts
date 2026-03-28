@@ -1,0 +1,113 @@
+import { randomUUID } from 'crypto';
+import type { PaymentMethod } from '@/generated/prisma';
+
+function getAccessToken() {
+  const token = process.env.MERCADOPAGO_ACCESS_TOKEN;
+  if (!token) {
+    throw new Error('MERCADOPAGO_ACCESS_TOKEN não configurado.');
+  }
+  return token;
+}
+
+function getExcludedPaymentTypes(selectedPaymentMethod: PaymentMethod) {
+  const allTypes = ['bank_transfer', 'ticket', 'credit_card', 'debit_card'] as const;
+  const selectedTypeByMethod: Record<PaymentMethod, (typeof allTypes)[number]> = {
+    PIX: 'bank_transfer',
+    BOLETO: 'ticket',
+    CREDIT_CARD: 'credit_card',
+    DEBIT_CARD: 'debit_card',
+  };
+
+  const selectedType = selectedTypeByMethod[selectedPaymentMethod];
+  return allTypes.filter((type) => type !== selectedType).map((id) => ({ id }));
+}
+
+export async function createMercadoPagoPreference({
+  title,
+  description,
+  amountInCents,
+  payerEmail,
+  externalReference,
+  notificationUrl,
+  backUrls,
+  selectedPaymentMethod,
+}: {
+  title: string;
+  description: string;
+  amountInCents: number;
+  payerEmail: string;
+  externalReference: string;
+  notificationUrl: string;
+  backUrls: {
+    success: string;
+    pending: string;
+    failure: string;
+  };
+  selectedPaymentMethod: PaymentMethod;
+}) {
+  const accessToken = getAccessToken();
+  const response = await fetch('https://api.mercadopago.com/checkout/preferences', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      'Content-Type': 'application/json',
+      'X-Idempotency-Key': randomUUID(),
+    },
+    body: JSON.stringify({
+      items: [
+        {
+          id: externalReference,
+          title,
+          description,
+          quantity: 1,
+          currency_id: 'BRL',
+          unit_price: amountInCents / 100,
+        },
+      ],
+      payer: {
+        email: payerEmail,
+      },
+      external_reference: externalReference,
+      notification_url: notificationUrl,
+      back_urls: backUrls,
+      auto_return: 'approved',
+      payment_methods: {
+        excluded_payment_types: getExcludedPaymentTypes(selectedPaymentMethod),
+      },
+    }),
+    cache: 'no-store',
+  });
+
+  if (!response.ok) {
+    const payload = await response.text();
+    throw new Error(`Falha ao criar preferência no Mercado Pago: ${payload}`);
+  }
+
+  return response.json() as Promise<{
+    id: string;
+    init_point: string;
+    sandbox_init_point?: string;
+  }>;
+}
+
+export async function getMercadoPagoPayment(paymentId: string) {
+  const accessToken = getAccessToken();
+  const response = await fetch(`https://api.mercadopago.com/v1/payments/${paymentId}`, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+    cache: 'no-store',
+  });
+
+  if (!response.ok) {
+    const payload = await response.text();
+    throw new Error(`Falha ao consultar pagamento no Mercado Pago: ${payload}`);
+  }
+
+  return response.json() as Promise<{
+    id: number;
+    status: string;
+    external_reference?: string;
+  }>;
+}

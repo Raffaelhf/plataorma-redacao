@@ -1,0 +1,381 @@
+'use client';
+
+import { useRef, useState, type TextareaHTMLAttributes } from 'react';
+import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
+import { Boxes, Film, FolderPlus, Layers3, Loader2, PlusCircle } from 'lucide-react';
+import { isDemoLogin } from '@/lib/demo';
+import { isTeacherRole } from '@/lib/roles';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+
+type CategoryOption = {
+  id: string;
+  name: string;
+};
+
+type ClassroomOption = {
+  id: string;
+  name: string;
+};
+
+type ModuleOption = {
+  id: string;
+  title: string;
+  classroomId: string;
+};
+
+type CreateVideoContentProps = {
+  categories: CategoryOption[];
+  classrooms: ClassroomOption[];
+  modules: ModuleOption[];
+};
+
+function TextArea(props: TextareaHTMLAttributes<HTMLTextAreaElement>) {
+  return (
+    <textarea
+      {...props}
+      className="w-full rounded-2xl border border-[#d9def8] bg-white/90 px-4 py-3 text-sm text-[#22347e] placeholder:text-[#8a93b8] focus:border-[#7b86f8] focus:outline-none focus:ring-2 focus:ring-[#7b86f8]/20"
+    />
+  );
+}
+
+export function CreateVideoContent({ categories, classrooms, modules }: CreateVideoContentProps) {
+  const router = useRouter();
+  const { data } = useSession();
+  const role = (data?.user as { role?: string } | undefined)?.role;
+  const login =
+    (data?.user as { email?: string; name?: string } | undefined)?.email ??
+    (data?.user as { name?: string } | undefined)?.name;
+
+  const classroomFormRef = useRef<HTMLFormElement>(null);
+  const moduleFormRef = useRef<HTMLFormElement>(null);
+  const lessonFormRef = useRef<HTMLFormElement>(null);
+
+  const [loadingClassroom, setLoadingClassroom] = useState(false);
+  const [loadingModule, setLoadingModule] = useState(false);
+  const [loadingLesson, setLoadingLesson] = useState(false);
+
+  const [classroomMessage, setClassroomMessage] = useState<string | null>(null);
+  const [moduleMessage, setModuleMessage] = useState<string | null>(null);
+  const [lessonMessage, setLessonMessage] = useState<string | null>(null);
+
+  const [classroomError, setClassroomError] = useState<string | null>(null);
+  const [moduleError, setModuleError] = useState<string | null>(null);
+  const [lessonError, setLessonError] = useState<string | null>(null);
+
+  const [moduleClassroomId, setModuleClassroomId] = useState('');
+  const [lessonClassroomId, setLessonClassroomId] = useState('');
+  const [lessonModuleId, setLessonModuleId] = useState('');
+
+  const isDemo = isDemoLogin(login);
+  const moduleOptions = lessonClassroomId ? modules.filter((module) => module.classroomId === lessonClassroomId) : [];
+
+  if (!isTeacherRole(role)) return null;
+
+  const handleClassroomSubmit = async (formData: FormData) => {
+    setLoadingClassroom(true);
+    setClassroomError(null);
+    setClassroomMessage(null);
+
+    if (isDemo) {
+      setClassroomMessage('Turma simulada com sucesso no modo teste.');
+      setLoadingClassroom(false);
+      return;
+    }
+
+    const res = await fetch('/api/video-classrooms', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: formData.get('name'),
+        description: formData.get('description'),
+        sortOrder: formData.get('sortOrder'),
+      }),
+    });
+
+    if (!res.ok) {
+      const body = await res.json().catch(() => ({}));
+      setClassroomError(body.error || 'Não foi possível criar a turma.');
+    } else {
+      setClassroomMessage('Turma criada com sucesso.');
+      classroomFormRef.current?.reset();
+      router.refresh();
+    }
+
+    setLoadingClassroom(false);
+  };
+
+  const handleModuleSubmit = async (formData: FormData) => {
+    setLoadingModule(true);
+    setModuleError(null);
+    setModuleMessage(null);
+
+    if (isDemo) {
+      setModuleMessage('Módulo simulado com sucesso no modo teste.');
+      setLoadingModule(false);
+      return;
+    }
+
+    const res = await fetch('/api/video-modules', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        title: formData.get('title'),
+        description: formData.get('description'),
+        classroomId: formData.get('classroomId'),
+        sortOrder: formData.get('sortOrder'),
+      }),
+    });
+
+    if (!res.ok) {
+      const body = await res.json().catch(() => ({}));
+      setModuleError(body.error || 'Não foi possível criar o módulo.');
+    } else {
+      setModuleMessage('Módulo criado com sucesso.');
+      moduleFormRef.current?.reset();
+      setModuleClassroomId('');
+      router.refresh();
+    }
+
+    setLoadingModule(false);
+  };
+
+  const handleLessonSubmit = async (formData: FormData) => {
+    setLoadingLesson(true);
+    setLessonError(null);
+    setLessonMessage(null);
+
+    if (isDemo) {
+      setLessonMessage('Videoaula simulada com sucesso no modo teste.');
+      setLoadingLesson(false);
+      return;
+    }
+
+    const res = await fetch('/api/video-lessons', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        title: formData.get('title'),
+        description: formData.get('description'),
+        videoUrl: formData.get('videoUrl'),
+        sortOrder: formData.get('sortOrder'),
+        classroomId: formData.get('classroomId') || null,
+        moduleId: formData.get('moduleId') || null,
+        categoryId: formData.get('categoryId') || null,
+      }),
+    });
+
+    if (!res.ok) {
+      const body = await res.json().catch(() => ({}));
+      setLessonError(body.error || 'Não foi possível salvar a videoaula.');
+    } else {
+      setLessonMessage('Videoaula criada com sucesso.');
+      lessonFormRef.current?.reset();
+      setLessonClassroomId('');
+      setLessonModuleId('');
+      router.refresh();
+    }
+
+    setLoadingLesson(false);
+  };
+
+  return (
+    <div className="grid gap-4 xl:grid-cols-3">
+      <form
+        ref={classroomFormRef}
+        action={handleClassroomSubmit}
+        className="flex h-full flex-col rounded-[30px] border border-[#dde3fb] bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(248,249,255,0.9))] p-5 shadow-[0_20px_50px_rgba(74,73,140,0.1)]"
+      >
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <p className="text-sm font-semibold text-[#5a69a1]">Turmas</p>
+            <h2 className="mt-1 text-lg font-semibold text-[#22347e]">Nova turma</h2>
+          </div>
+          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#eef2ff] text-[#4250d4]">
+            <FolderPlus className="h-5 w-5" />
+          </div>
+        </div>
+
+        <div className="mt-4 flex-1 space-y-3">
+          <Input
+            name="name"
+            placeholder="Ex.: Turma extensiva 2026"
+            required
+            className="border-[#d9def8] bg-white/90 text-[#22347e] placeholder:text-[#8a93b8] focus:border-[#7b86f8] focus:ring-[#7b86f8]/20"
+          />
+          <TextArea name="description" rows={3} placeholder="Descreva a proposta da turma e para qual perfil de aluno ela serve." />
+          <Input
+            name="sortOrder"
+            type="number"
+            min="0"
+            step="1"
+            defaultValue="0"
+            className="border-[#d9def8] bg-white/90 text-[#22347e] placeholder:text-[#8a93b8] focus:border-[#7b86f8] focus:ring-[#7b86f8]/20"
+          />
+        </div>
+
+        <div className="mt-3 min-h-4">
+          {classroomError ? <p className="text-xs text-[#c05252]">{classroomError}</p> : null}
+          {classroomMessage ? <p className="text-xs text-[#1b7f62]">{classroomMessage}</p> : null}
+        </div>
+
+        <Button type="submit" disabled={loadingClassroom} className="mt-4 w-full">
+          {loadingClassroom ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <PlusCircle className="mr-2 h-4 w-4" />}
+          Criar turma
+        </Button>
+      </form>
+
+      <form
+        ref={moduleFormRef}
+        action={handleModuleSubmit}
+        className="flex h-full flex-col rounded-[30px] border border-[#dde3fb] bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(248,249,255,0.9))] p-5 shadow-[0_20px_50px_rgba(74,73,140,0.1)]"
+      >
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <p className="text-sm font-semibold text-[#5a69a1]">Módulos</p>
+            <h2 className="mt-1 text-lg font-semibold text-[#22347e]">Novo módulo</h2>
+          </div>
+          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#eef9f4] text-[#1b7f62]">
+            <Layers3 className="h-5 w-5" />
+          </div>
+        </div>
+
+        <div className="mt-4 flex-1 space-y-3">
+          <select
+            name="classroomId"
+            value={moduleClassroomId}
+            onChange={(event) => setModuleClassroomId(event.target.value)}
+            className="w-full rounded-2xl border border-[#d9def8] bg-white/90 px-4 py-3 text-sm text-[#22347e] focus:border-[#7b86f8] focus:outline-none focus:ring-2 focus:ring-[#7b86f8]/20"
+            required
+          >
+            <option value="">Selecione a turma</option>
+            {classrooms.map((classroom) => (
+              <option key={classroom.id} value={classroom.id}>
+                {classroom.name}
+              </option>
+            ))}
+          </select>
+          <Input
+            name="title"
+            placeholder="Ex.: Módulo 1 - Fundamentos"
+            required
+            className="border-[#d9def8] bg-white/90 text-[#22347e] placeholder:text-[#8a93b8] focus:border-[#7b86f8] focus:ring-[#7b86f8]/20"
+          />
+          <TextArea name="description" rows={3} placeholder="Explique o objetivo do módulo e o que será abordado nas aulas." />
+          <Input
+            name="sortOrder"
+            type="number"
+            min="0"
+            step="1"
+            defaultValue="0"
+            className="border-[#d9def8] bg-white/90 text-[#22347e] placeholder:text-[#8a93b8] focus:border-[#7b86f8] focus:ring-[#7b86f8]/20"
+          />
+        </div>
+
+        <div className="mt-3 min-h-4">
+          {moduleError ? <p className="text-xs text-[#c05252]">{moduleError}</p> : null}
+          {moduleMessage ? <p className="text-xs text-[#1b7f62]">{moduleMessage}</p> : null}
+        </div>
+
+        <Button type="submit" disabled={loadingModule} className="mt-4 w-full">
+          {loadingModule ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Boxes className="mr-2 h-4 w-4" />}
+          Criar módulo
+        </Button>
+      </form>
+
+      <form
+        ref={lessonFormRef}
+        action={handleLessonSubmit}
+        className="flex h-full flex-col rounded-[30px] border border-[#dde3fb] bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(248,249,255,0.9))] p-5 shadow-[0_20px_50px_rgba(74,73,140,0.1)]"
+      >
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <p className="text-sm font-semibold text-[#5a69a1]">Conteúdo</p>
+            <h2 className="mt-1 text-lg font-semibold text-[#22347e]">Nova videoaula</h2>
+          </div>
+          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#fff1eb] text-[#ff7f32]">
+            <Film className="h-5 w-5" />
+          </div>
+        </div>
+
+        <div className="mt-4 flex-1 space-y-3">
+          <select
+            name="classroomId"
+            value={lessonClassroomId}
+            onChange={(event) => {
+              setLessonClassroomId(event.target.value);
+              setLessonModuleId('');
+            }}
+            className="w-full rounded-2xl border border-[#d9def8] bg-white/90 px-4 py-3 text-sm text-[#22347e] focus:border-[#7b86f8] focus:outline-none focus:ring-2 focus:ring-[#7b86f8]/20"
+          >
+            <option value="">Selecione a turma</option>
+            {classrooms.map((classroom) => (
+              <option key={classroom.id} value={classroom.id}>
+                {classroom.name}
+              </option>
+            ))}
+          </select>
+          <select
+            name="moduleId"
+            value={lessonModuleId}
+            onChange={(event) => setLessonModuleId(event.target.value)}
+            className="w-full rounded-2xl border border-[#d9def8] bg-white/90 px-4 py-3 text-sm text-[#22347e] focus:border-[#7b86f8] focus:outline-none focus:ring-2 focus:ring-[#7b86f8]/20 disabled:cursor-not-allowed disabled:bg-[#f3f5ff] disabled:text-[#8a93b8]"
+            disabled={!lessonClassroomId || moduleOptions.length === 0}
+          >
+            <option value="">Sem módulo</option>
+            {moduleOptions.map((module) => (
+              <option key={module.id} value={module.id}>
+                {module.title}
+              </option>
+            ))}
+          </select>
+          <Input
+            name="title"
+            placeholder="Título da aula"
+            required
+            className="border-[#d9def8] bg-white/90 text-[#22347e] placeholder:text-[#8a93b8] focus:border-[#7b86f8] focus:ring-[#7b86f8]/20"
+          />
+          <TextArea name="description" rows={3} placeholder="Resumo do que será explicado na videoaula." required />
+          <Input
+            name="videoUrl"
+            type="url"
+            placeholder="https://youtube.com/... ou link incorporado"
+            required
+            className="border-[#d9def8] bg-white/90 text-[#22347e] placeholder:text-[#8a93b8] focus:border-[#7b86f8] focus:ring-[#7b86f8]/20"
+          />
+          <select
+            name="categoryId"
+            className="w-full rounded-2xl border border-[#d9def8] bg-white/90 px-4 py-3 text-sm text-[#22347e] focus:border-[#7b86f8] focus:outline-none focus:ring-2 focus:ring-[#7b86f8]/20"
+            defaultValue=""
+          >
+            <option value="">Sem categoria</option>
+            {categories.map((category) => (
+              <option key={category.id} value={category.id}>
+                {category.name}
+              </option>
+            ))}
+          </select>
+          <Input
+            name="sortOrder"
+            type="number"
+            min="0"
+            step="1"
+            defaultValue="0"
+            className="border-[#d9def8] bg-white/90 text-[#22347e] placeholder:text-[#8a93b8] focus:border-[#7b86f8] focus:ring-[#7b86f8]/20"
+          />
+        </div>
+
+        <div className="mt-3 min-h-4">
+          {lessonError ? <p className="text-xs text-[#c05252]">{lessonError}</p> : null}
+          {lessonMessage ? <p className="text-xs text-[#1b7f62]">{lessonMessage}</p> : null}
+        </div>
+
+        <Button type="submit" disabled={loadingLesson} className="mt-4 w-full">
+          {loadingLesson ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Film className="mr-2 h-4 w-4" />}
+          Salvar videoaula
+        </Button>
+      </form>
+    </div>
+  );
+}
