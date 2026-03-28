@@ -6,6 +6,7 @@ import Link from 'next/link';
 const CONSENT_COOKIE_NAME = 'escreva_mais_cookie_notice';
 const CONSENT_COOKIE_VALUE = 'accepted';
 const CONSENT_COOKIE_MAX_AGE = 60 * 60 * 24 * 180;
+const COOKIE_NOTICE_EVENT = 'cookie-notice-change';
 
 function readConsentCookie() {
   if (typeof document === 'undefined') {
@@ -20,10 +21,27 @@ function readConsentCookie() {
 
 function persistConsentCookie() {
   document.cookie = `${CONSENT_COOKIE_NAME}=${CONSENT_COOKIE_VALUE}; Max-Age=${CONSENT_COOKIE_MAX_AGE}; Path=/; SameSite=Lax`;
+  window.dispatchEvent(new Event(COOKIE_NOTICE_EVENT));
 }
 
-function subscribeToCookieNotice() {
-  return () => {};
+function subscribeToCookieNotice(onStoreChange: () => void) {
+  if (typeof window === 'undefined') {
+    return () => {};
+  }
+
+  const notify = () => onStoreChange();
+
+  window.addEventListener(COOKIE_NOTICE_EVENT, notify);
+  window.addEventListener('focus', notify);
+  window.addEventListener('pageshow', notify);
+  document.addEventListener('visibilitychange', notify);
+
+  return () => {
+    window.removeEventListener(COOKIE_NOTICE_EVENT, notify);
+    window.removeEventListener('focus', notify);
+    window.removeEventListener('pageshow', notify);
+    document.removeEventListener('visibilitychange', notify);
+  };
 }
 
 export function CookieBanner() {
