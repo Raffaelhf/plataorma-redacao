@@ -5,6 +5,7 @@ import { generateEnrollmentNumber } from '@/lib/enrollment-number';
 import { sendPasswordSetupEmail } from '@/lib/mail';
 import { createPasswordSetupToken } from '@/lib/password-setup';
 import { prisma } from '@/lib/prisma';
+import { isValidGradeLevel } from '@/lib/grade-levels';
 
 const planMap = {
   mensal: 'MENSAL',
@@ -37,6 +38,10 @@ export async function POST(req: Request) {
 
   if (role === 'STUDENT' && readingClub && !plan) {
     return NextResponse.json({ error: 'Selecione um plano para adicionar o Clube de Leitura.' }, { status: 400 });
+  }
+
+  if (role === 'STUDENT' && gradeLevel && !isValidGradeLevel(gradeLevel)) {
+    return NextResponse.json({ error: 'Selecione uma série válida para o aluno.' }, { status: 400 });
   }
 
   const existing = await prisma.user.findUnique({ where: { email } });

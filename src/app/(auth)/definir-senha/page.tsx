@@ -61,7 +61,7 @@ export default async function PasswordSetupPage({
             priority
             className="w-[210px] sm:w-[240px]"
             sizes="(max-width: 640px) 210px, 240px"
-            imageClassName="brightness-0 invert"
+            imageClassName="drop-shadow-[0_10px_24px_rgba(8,14,41,0.28)]"
           />
           <p className="mt-3 text-xs font-semibold uppercase tracking-[0.22em] text-[#c8d3ff]">Identidade da plataforma</p>
           <p className="mt-2 text-sm leading-6 text-white/72">

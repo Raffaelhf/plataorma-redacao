@@ -132,11 +132,14 @@ export function AdminUserCreator() {
             <>
               <div className="space-y-2">
                 <label className="text-sm font-medium text-[#52618f]">Série</label>
-                <Input
-                  name="gradeLevel"
-                  placeholder="Ex.: 3º ano do ensino médio"
-                  className={creatorFieldClassName}
-                />
+                <select name="gradeLevel" defaultValue="" className={creatorSelectClassName}>
+                  <option value="">Selecione a série</option>
+                  {gradeLevelOptions.map((gradeLevel) => (
+                    <option key={gradeLevel} value={gradeLevel}>
+                      {gradeLevel}
+                    </option>
+                  ))}
+                </select>
               </div>
               <div className="space-y-2">
                 <label className="text-sm font-medium text-[#52618f]">CPF</label>

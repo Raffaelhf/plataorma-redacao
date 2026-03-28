@@ -73,7 +73,7 @@ const fieldClassName =
   'w-full rounded-2xl border border-[#d9def8] bg-white/96 px-4 py-3 text-sm text-[#22347e] placeholder:text-[#62729f] focus:border-[#7b86f8] focus:outline-none focus:ring-2 focus:ring-[#7b86f8]/20 dark:border-slate-600/80 dark:bg-[#0b1324] dark:text-[#eef4ff] dark:placeholder:text-[#9db2d8] dark:focus:border-[#7d8eff] dark:focus:ring-[#6278ff]/25';
 
 const actionButtonClassName =
-  'inline-flex items-center justify-center gap-2 rounded-full border px-3 py-2 text-xs font-semibold transition';
+  'inline-flex min-h-10 items-center justify-center gap-2 whitespace-nowrap rounded-full border px-4 py-2 text-xs font-semibold transition';
 
 function getClassroomDrafts(classrooms: ClassroomItem[]) {
   return Object.fromEntries(
@@ -325,23 +325,25 @@ export function VideoLibraryManager({ categories, classrooms, looseLessons, canM
           </div>
         </div>
 
-        <div className="mt-4 flex flex-wrap items-center gap-2">
-          {lesson.category ? (
-            <span className="rounded-full bg-[#eef2ff] px-3 py-1 text-xs font-semibold text-[#4250d4] dark:bg-[#1b2743] dark:text-[#c7d4ff]">
-              {lesson.category.name}
-            </span>
-          ) : null}
-          <Link
-            href={lesson.videoUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex items-center gap-2 rounded-full bg-[linear-gradient(135deg,#ff7f32_0%,#ff5d6c_100%)] px-4 py-2 text-sm font-semibold text-white shadow-[0_14px_26px_rgba(255,95,108,0.18)]"
-          >
-            <PlayCircle className="h-4 w-4" />
-            Assistir aula
-          </Link>
+        <div className="mt-4 space-y-2">
+          <div className="flex flex-wrap items-center gap-2">
+            {lesson.category ? (
+              <span className="rounded-full bg-[#eef2ff] px-3 py-1 text-xs font-semibold text-[#4250d4] dark:bg-[#1b2743] dark:text-[#c7d4ff]">
+                {lesson.category.name}
+              </span>
+            ) : null}
+            <Link
+              href={lesson.videoUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex min-h-10 items-center gap-2 whitespace-nowrap rounded-full bg-[linear-gradient(135deg,#ff7f32_0%,#ff5d6c_100%)] px-4 py-2 text-sm font-semibold text-white shadow-[0_14px_26px_rgba(255,95,108,0.18)]"
+            >
+              <PlayCircle className="h-4 w-4" />
+              Assistir aula
+            </Link>
+          </div>
           {canManage ? (
-            <>
+            <div className="flex flex-wrap items-center gap-2">
               <button
                 type="button"
                 onClick={() => setEditingLessonId((current) => (current === lesson.id ? null : lesson.id))}
@@ -359,7 +361,7 @@ export function VideoLibraryManager({ categories, classrooms, looseLessons, canM
                 {pendingAction === `lesson-delete-${lesson.id}` ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Trash2 className="h-3.5 w-3.5" />}
                 Excluir aula
               </button>
-            </>
+            </div>
           ) : null}
         </div>
 
@@ -469,22 +471,24 @@ export function VideoLibraryManager({ categories, classrooms, looseLessons, canM
             key={classroom.id}
             className="rounded-[30px] border border-[#dde3fb] bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(248,249,255,0.9))] p-5 shadow-[0_20px_50px_rgba(74,73,140,0.1)] dark:border-slate-700/80 dark:bg-[linear-gradient(180deg,rgba(11,19,36,0.96),rgba(15,23,42,0.9))] dark:shadow-[0_20px_50px_rgba(0,0,0,0.26)]"
           >
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
               <div>
                 <h2 className="text-lg font-semibold text-[#22347e] dark:text-[#f3f7ff]">{classroom.name}</h2>
                 <p className="text-sm text-[#6d79a5] dark:text-[#adc0e8]">
                   {classroom.description || 'Turma criada para organizar uma sequencia especifica de videoaulas.'}
                 </p>
               </div>
-              <div className="flex flex-wrap gap-2">
-                <span className="rounded-full bg-[#eef2ff] px-3 py-1 text-xs font-semibold text-[#4250d4] dark:bg-[#1b2743] dark:text-[#c7d4ff]">
-                  {classroom.modules.length} modulo{classroom.modules.length === 1 ? '' : 's'}
-                </span>
-                <span className="rounded-full bg-[#fff1eb] px-3 py-1 text-xs font-semibold text-[#ff7f32] dark:bg-[#3b231d] dark:text-[#fdba74]">
-                  {classroomLessonCount} aula{classroomLessonCount === 1 ? '' : 's'}
-                </span>
+              <div className="flex flex-col gap-2 lg:items-end">
+                <div className="flex flex-wrap items-center gap-2 lg:justify-end">
+                  <span className="rounded-full bg-[#eef2ff] px-3 py-1 text-xs font-semibold text-[#4250d4] dark:bg-[#1b2743] dark:text-[#c7d4ff]">
+                    {classroom.modules.length} modulo{classroom.modules.length === 1 ? '' : 's'}
+                  </span>
+                  <span className="rounded-full bg-[#fff1eb] px-3 py-1 text-xs font-semibold text-[#ff7f32] dark:bg-[#3b231d] dark:text-[#fdba74]">
+                    {classroomLessonCount} aula{classroomLessonCount === 1 ? '' : 's'}
+                  </span>
+                </div>
                 {canManage ? (
-                  <>
+                  <div className="flex flex-wrap items-center gap-2 lg:justify-end">
                     <button
                       type="button"
                       onClick={() => setEditingClassroomId((current) => (current === classroom.id ? null : classroom.id))}
@@ -502,7 +506,7 @@ export function VideoLibraryManager({ categories, classrooms, looseLessons, canM
                       {pendingAction === `classroom-delete-${classroom.id}` ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Trash2 className="h-3.5 w-3.5" />}
                       Excluir turma
                     </button>
-                  </>
+                  </div>
                 ) : null}
               </div>
             </div>
@@ -557,7 +561,7 @@ export function VideoLibraryManager({ categories, classrooms, looseLessons, canM
 
                 return (
                   <article key={module.id} className="rounded-[26px] border border-[#e1e5f8] bg-white/90 p-4 dark:border-slate-700/80 dark:bg-[#10192d]">
-                    <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                    <div className="flex flex-col gap-2 lg:flex-row lg:items-start lg:justify-between">
                       <div>
                         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#7c87b7] dark:text-[#92a6cb]">
                           Modulo {String(module.sortOrder).padStart(2, '0')}
@@ -567,12 +571,14 @@ export function VideoLibraryManager({ categories, classrooms, looseLessons, canM
                           {module.description || 'Modulo criado para agrupar aulas de uma mesma etapa.'}
                         </p>
                       </div>
-                      <div className="flex flex-wrap gap-2">
-                        <span className="rounded-full bg-[#eef9f4] px-3 py-1 text-xs font-semibold text-[#1b7f62] dark:bg-[#14332b] dark:text-[#8fe0b7]">
-                          {module.lessons.length} aula{module.lessons.length === 1 ? '' : 's'}
-                        </span>
+                      <div className="flex flex-col gap-2 lg:items-end">
+                        <div className="flex flex-wrap items-center gap-2 lg:justify-end">
+                          <span className="rounded-full bg-[#eef9f4] px-3 py-1 text-xs font-semibold text-[#1b7f62] dark:bg-[#14332b] dark:text-[#8fe0b7]">
+                            {module.lessons.length} aula{module.lessons.length === 1 ? '' : 's'}
+                          </span>
+                        </div>
                         {canManage ? (
-                          <>
+                          <div className="flex flex-wrap items-center gap-2 lg:justify-end">
                             <button
                               type="button"
                               onClick={() => setEditingModuleId((current) => (current === module.id ? null : module.id))}
@@ -590,7 +596,7 @@ export function VideoLibraryManager({ categories, classrooms, looseLessons, canM
                               {pendingAction === `module-delete-${module.id}` ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Trash2 className="h-3.5 w-3.5" />}
                               Excluir modulo
                             </button>
-                          </>
+                          </div>
                         ) : null}
                       </div>
                     </div>

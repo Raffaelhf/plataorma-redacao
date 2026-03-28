@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getAuthSession } from '@/lib/auth';
+import { isValidGradeLevel } from '@/lib/grade-levels';
 import { prisma } from '@/lib/prisma';
 
 type RouteContext = { params: Promise<{ id: string }> };
@@ -44,6 +45,10 @@ export async function PATCH(req: Request, context: RouteContext) {
 
   if (hasStudentProfileUpdates && targetUser.role !== 'STUDENT') {
     return NextResponse.json({ error: 'Somente alunos podem ter CPF, matrícula e série atualizados nesta tela.' }, { status: 400 });
+  }
+
+  if (gradeLevel !== undefined && gradeLevel && !isValidGradeLevel(gradeLevel)) {
+    return NextResponse.json({ error: 'Selecione uma série válida para o aluno.' }, { status: 400 });
   }
 
   const updatedUser = await prisma.user.update({
