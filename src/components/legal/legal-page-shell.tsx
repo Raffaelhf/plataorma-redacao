@@ -30,11 +30,11 @@ export async function LegalPageShell({
 
         <div className="relative z-10 mx-auto max-w-5xl px-5 pb-20 pt-8 sm:px-8 lg:px-12">
           <div className="max-w-3xl rounded-[34px] border border-white/14 bg-white/10 p-6 text-white shadow-[0_28px_68px_rgba(14,18,64,0.2)] backdrop-blur-md sm:p-8">
-            <p className="text-[0.78rem] font-bold uppercase tracking-[0.28em] text-white/64">{eyebrow}</p>
-            <h1 className="mt-4 text-3xl font-extrabold tracking-[-0.04em] sm:text-5xl">{title}</h1>
-            <p className="mt-4 max-w-[60ch] text-sm leading-7 text-white/80 sm:text-base">{description}</p>
-            <p className="mt-5 inline-flex rounded-full border border-white/14 bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-white/72">
-              Última atualização: {updatedAt}
+            <p className="text-[0.78rem] font-bold uppercase tracking-[0.28em] text-white/72">{eyebrow}</p>
+            <h1 className="mt-4 text-3xl font-extrabold tracking-[-0.04em] text-white sm:text-5xl">{title}</h1>
+            <p className="mt-4 max-w-[60ch] text-sm leading-7 text-white/84 sm:text-base">{description}</p>
+            <p className="mt-5 inline-flex rounded-full border border-white/14 bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-white/80">
+              Ultima atualizacao: {updatedAt}
             </p>
           </div>
         </div>
@@ -45,26 +45,26 @@ export async function LegalPageShell({
       <section className="mx-auto max-w-5xl px-5 pb-20 pt-10 sm:px-8 lg:px-12">
         <div className="space-y-6">{children}</div>
 
-        <div className="mt-8 rounded-[30px] border border-[#d9def8] bg-white/90 p-5 shadow-[0_18px_48px_rgba(74,73,140,0.08)] sm:p-6">
-          <p className="text-sm font-semibold text-[#5a69a1]">Documentos relacionados</p>
+        <div className="mt-8 rounded-[30px] border border-[#d9def8] bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(248,249,255,0.9))] p-5 shadow-[0_18px_48px_rgba(74,73,140,0.08)] dark:border-slate-700/70 dark:bg-[linear-gradient(180deg,rgba(11,18,32,0.96),rgba(17,24,39,0.92))] dark:shadow-[0_18px_48px_rgba(0,0,0,0.24)] sm:p-6">
+          <p className="text-sm font-semibold text-[#5a69a1] dark:text-indigo-200">Documentos relacionados</p>
           <div className="mt-4 flex flex-wrap gap-3">
             <Link
               href="/privacidade"
-              className="rounded-full border border-[#d7defe] bg-[#f6f8ff] px-4 py-2 text-sm font-semibold text-[#22347e] transition-colors hover:bg-white"
+              className="rounded-full border border-[#d7defe] bg-[#f6f8ff] px-4 py-2 text-sm font-semibold text-[#22347e] transition-colors hover:bg-white dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
             >
               Privacidade e LGPD
             </Link>
             <Link
               href="/politica-de-cookies"
-              className="rounded-full border border-[#d7defe] bg-[#f6f8ff] px-4 py-2 text-sm font-semibold text-[#22347e] transition-colors hover:bg-white"
+              className="rounded-full border border-[#d7defe] bg-[#f6f8ff] px-4 py-2 text-sm font-semibold text-[#22347e] transition-colors hover:bg-white dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
             >
-              Política de Cookies
+              Politica de Cookies
             </Link>
             <Link
               href="/termos-de-servico"
-              className="rounded-full border border-[#d7defe] bg-[#f6f8ff] px-4 py-2 text-sm font-semibold text-[#22347e] transition-colors hover:bg-white"
+              className="rounded-full border border-[#d7defe] bg-[#f6f8ff] px-4 py-2 text-sm font-semibold text-[#22347e] transition-colors hover:bg-white dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
             >
-              Termos de Serviço
+              Termos de Servico
             </Link>
           </div>
         </div>
