@@ -6,6 +6,7 @@
     "dev": "next dev",
     "build": "node scripts/vercel-build.mjs",
     "start": "next start",
+    "sync": "node scripts/sync-git.mjs",
     "lint": "eslint . --ext .ts,.tsx",
     "db:up": "docker compose up -d postgres",
     "db:down": "docker compose down",

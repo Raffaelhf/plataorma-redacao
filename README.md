@@ -23,6 +23,16 @@ npm run db:seed
 npm run dev
 ```
 
+## Sincronizar GitHub e Vercel
+
+Depois de alterar o codigo, use:
+
+```bash
+npm run sync -- "sua mensagem de commit"
+```
+
+Esse comando faz `git add`, `git commit` e `git push`. Como o repositorio ja esta conectado a Vercel, cada push na branch `main` dispara um novo deploy automaticamente.
+
 ## Encerrar o banco
 
 ```bash
