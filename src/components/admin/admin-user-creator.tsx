@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { GraduationCap, Loader2, UserPlus, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { gradeLevelOptions } from '@/lib/grade-levels';
 
 const planOptions = [
   { value: 'mensal', label: 'Mensal' },
