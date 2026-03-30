@@ -131,15 +131,15 @@ export default async function StudentDashboard() {
               {happeningNow ? <Radio className="h-5 w-5" /> : <CalendarClock className="h-5 w-5" />}
             </div>
             <div>
-              <p className="text-sm font-semibold text-[#5a69a1]">{happeningNow ? 'Aula ao vivo agora' : 'Próxima aula ao vivo'}</p>
+              <p className="text-sm font-semibold text-[#5a69a1] dark:text-[#acb8ff]">{happeningNow ? 'Aula ao vivo agora' : 'Próxima aula ao vivo'}</p>
               {nextLiveClass ? (
                 <>
-                  <p className="mt-1 text-base font-semibold text-[#22347e]">{nextLiveClass.title}</p>
-                  <p className="mt-1 text-sm leading-6 text-[#63719c]">{formatLiveDate(nextLiveClass.scheduledAt)}</p>
-                  <p className="mt-1 line-clamp-2 text-sm leading-6 text-[#6d79a5]">{nextLiveClass.description}</p>
+                  <p className="mt-1 text-base font-semibold text-[#22347e] dark:text-slate-100">{nextLiveClass.title}</p>
+                  <p className="mt-1 text-sm leading-6 text-[#63719c] dark:text-slate-300">{formatLiveDate(nextLiveClass.scheduledAt)}</p>
+                  <p className="mt-1 line-clamp-2 text-sm leading-6 text-[#6d79a5] dark:text-slate-400">{nextLiveClass.description}</p>
                 </>
               ) : (
-                <p className="mt-1 text-sm leading-6 text-[#6d79a5]">Nenhuma aula ao vivo agendada no momento.</p>
+                <p className="mt-1 text-sm leading-6 text-[#6d79a5] dark:text-slate-400">Nenhuma aula ao vivo agendada no momento.</p>
               )}
             </div>
           </div>
@@ -151,14 +151,19 @@ export default async function StudentDashboard() {
                 target="_blank"
                 rel="noreferrer"
                 className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold shadow-[0_14px_26px_rgba(74,73,140,0.12)] ${
-                  happeningNow ? 'bg-[#1b7f62] text-white' : 'bg-[#eef2ff] text-[#4250d4]'
+                  happeningNow
+                    ? 'bg-[#1b7f62] text-white dark:bg-emerald-500 dark:text-slate-950'
+                    : 'bg-[#eef2ff] text-[#4250d4] dark:bg-indigo-500/18 dark:text-indigo-100'
                 }`}
               >
                 {happeningNow ? <Radio className="h-4 w-4" /> : <CalendarClock className="h-4 w-4" />}
                 {happeningNow ? 'Entrar agora' : 'Abrir sala'}
               </Link>
             ) : null}
-            <Link href="/ao-vivo" className="inline-flex items-center gap-2 rounded-full border border-[#d9def8] bg-white/80 px-4 py-2 text-sm font-semibold text-[#4250d4]">
+            <Link
+              href="/ao-vivo"
+              className="inline-flex items-center gap-2 rounded-full border border-[#d9def8] bg-white/80 px-4 py-2 text-sm font-semibold text-[#4250d4] dark:border-slate-600/80 dark:bg-slate-800/88 dark:text-slate-100"
+            >
               Ver agenda
             </Link>
           </div>
