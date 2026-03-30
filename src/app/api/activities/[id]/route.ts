@@ -61,7 +61,7 @@ export async function PUT(req: Request, context: RouteContext) {
   }
 
   const nextStatus = body.status === 'PUBLISHED' ? 'PUBLISHED' : 'DRAFT';
-  const nextTags = Array.isArray(body.tags) ? body.tags.filter((tag) => typeof tag === 'string' && tag.trim().length > 0) : [];
+  const nextTags = Array.isArray(body.tags) ? body.tags.filter((tag: unknown): tag is string => typeof tag === 'string' && tag.trim().length > 0) : [];
   const activity = await prisma.activity.update({
     where: { id },
     data: {
