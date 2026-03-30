@@ -4,7 +4,6 @@ import { Footer } from '@/components/landing/Footer';
 import { Header } from '@/components/landing/Header';
 import { Hero } from '@/components/landing/Hero';
 import { Plans } from '@/components/landing/Plans';
-import { ProgramOverview } from '@/components/landing/ProgramOverview';
 import { Skills } from '@/components/landing/Skills';
 import { getPlatformWhatsAppHref } from '@/lib/platform-contact';
 
@@ -23,7 +22,6 @@ export default async function Home() {
 
       <Features />
       <Skills />
-      <ProgramOverview />
       <Plans />
       <CTASection />
       <Footer whatsappHref={whatsappHref} />
