@@ -14,10 +14,11 @@ type PageProps = { params: Promise<{ id: string }> };
 export default async function ActivityDetail({ params }: PageProps) {
   const { id } = await params;
   const session = await getAuthSession();
+  const isDemo = isDemoSession(session);
   const isStudent = session?.user?.role === 'STUDENT';
   const isAdmin = isAdminRole(session?.user?.role);
   const isTeacher = isTeacherRole(session?.user?.role);
-  const activity = isDemoSession(session)
+  const activity = isDemo
     ? (() => {
         const demoActivity = getDemoActivityById(id);
         if (!demoActivity) return null;
@@ -46,9 +47,10 @@ export default async function ActivityDetail({ params }: PageProps) {
 
   if (!activity) return notFound();
 
+  const activityOwnerTeacherId = !isDemo && 'createdById' in activity ? activity.createdById : null;
   const canManageActivity =
-    !isDemoSession(session) &&
-    (isAdmin || (isTeacher && Boolean(session?.user?.teacherId) && activity.createdById === session?.user?.teacherId));
+    !isDemo &&
+    (isAdmin || (isTeacher && Boolean(session?.user?.teacherId) && activityOwnerTeacherId === session?.user?.teacherId));
 
   const existingStudentSubmission =
     isStudent && session?.user?.studentId
