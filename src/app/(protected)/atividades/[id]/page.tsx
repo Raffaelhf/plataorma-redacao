@@ -1,17 +1,22 @@
 import { notFound } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
 import { getSubmissionPdfHref } from '@/lib/submission-pdf';
+import { ManageActivity } from '@/components/activities/manage-activity';
 import { SubmitWork } from '@/components/activities/submit-work';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { getAuthSession } from '@/lib/auth';
 import { getDemoActivityById, getDemoSubmissionsByActivityId, isDemoSession } from '@/lib/demo';
+import { isAdminRole, isTeacherRole } from '@/lib/roles';
 
 type PageProps = { params: Promise<{ id: string }> };
 
 export default async function ActivityDetail({ params }: PageProps) {
   const { id } = await params;
   const session = await getAuthSession();
+  const isStudent = session?.user?.role === 'STUDENT';
+  const isAdmin = isAdminRole(session?.user?.role);
+  const isTeacher = isTeacherRole(session?.user?.role);
   const activity = isDemoSession(session)
     ? (() => {
         const demoActivity = getDemoActivityById(id);
@@ -27,15 +32,26 @@ export default async function ActivityDetail({ params }: PageProps) {
           })),
         };
       })()
-    : await prisma.activity.findUnique({
-        where: { id },
+    : await prisma.activity.findFirst({
+        where: {
+          id,
+          ...(isStudent
+            ? { status: 'PUBLISHED' }
+            : isTeacher && !isAdmin
+              ? { createdById: session?.user?.teacherId ?? '__teacher_without_profile__' }
+              : {}),
+        },
         include: { submissions: { include: { student: { include: { user: true } }, corrections: true } } },
       });
 
   if (!activity) return notFound();
 
+  const canManageActivity =
+    !isDemoSession(session) &&
+    (isAdmin || (isTeacher && Boolean(session?.user?.teacherId) && activity.createdById === session?.user?.teacherId));
+
   const existingStudentSubmission =
-    session?.user?.role === 'STUDENT' && session.user.studentId
+    isStudent && session?.user?.studentId
       ? activity.submissions.find((submission) => submission.studentId === session.user.studentId) ?? null
       : null;
 
@@ -52,6 +68,20 @@ export default async function ActivityDetail({ params }: PageProps) {
         </div>
       </div>
 
+      {canManageActivity ? (
+        <ManageActivity
+          activity={{
+            id: activity.id,
+            title: activity.title,
+            description: activity.description,
+            prompt: activity.prompt,
+            tags: activity.tags,
+            status: activity.status,
+            dueDate: activity.dueDate ? new Date(activity.dueDate).toISOString().slice(0, 10) : null,
+          }}
+        />
+      ) : null}
+
       <Card className="border-[#dde3fb] bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(248,249,255,0.9))] shadow-[0_20px_50px_rgba(74,73,140,0.1)]">
         <p className="text-sm font-semibold text-[#22347e]">Prompt</p>
         <p className="mt-2 whitespace-pre-wrap break-words text-sm leading-7 text-[#52618f]">{activity.prompt}</p>
@@ -64,7 +94,7 @@ export default async function ActivityDetail({ params }: PageProps) {
         </div>
       </Card>
 
-      {session?.user?.role === 'STUDENT' && <SubmitWork activityId={activity.id} existingSubmission={existingStudentSubmission} />}
+      {isStudent && <SubmitWork activityId={activity.id} existingSubmission={existingStudentSubmission} />}
 
       <Card className="border-[#dde3fb] bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(248,249,255,0.9))] shadow-[0_20px_50px_rgba(74,73,140,0.1)]">
         <p className="text-lg font-semibold text-[#22347e]">Envios</p>
