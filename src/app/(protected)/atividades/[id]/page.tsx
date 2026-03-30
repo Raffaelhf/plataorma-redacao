@@ -78,7 +78,7 @@ export default async function ActivityDetail({ params }: PageProps) {
             description: activity.description,
             prompt: activity.prompt,
             tags: activity.tags,
-            status: activity.status,
+            status: activity.status === 'PUBLISHED' ? 'PUBLISHED' : 'DRAFT',
             dueDate: activity.dueDate ? new Date(activity.dueDate).toISOString().slice(0, 10) : null,
           }}
         />
