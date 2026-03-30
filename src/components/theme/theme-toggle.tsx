@@ -8,7 +8,7 @@ export function ThemeToggle() {
   const { theme, setTheme } = useTheme();
 
   return (
-    <div className="fixed right-4 top-4 z-[140]">
+    <div className="fixed right-4 top-20 z-20 lg:top-4 lg:z-[140]">
       <div className="flex items-center gap-1 rounded-full border border-[rgba(217,222,248,0.84)] bg-[rgba(255,255,255,0.86)] p-1 shadow-[0_18px_40px_rgba(28,34,108,0.14)] backdrop-blur-xl transition-colors dark:border-slate-700/70 dark:bg-slate-950/72 dark:shadow-[0_20px_44px_rgba(0,0,0,0.34)]">
         <button
           type="button"
