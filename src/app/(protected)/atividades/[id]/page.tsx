@@ -48,6 +48,7 @@ export default async function ActivityDetail({ params }: PageProps) {
   if (!activity) return notFound();
 
   const activityOwnerTeacherId = !isDemo && 'createdById' in activity ? activity.createdById : null;
+  const activityDueDate = !isDemo && 'dueDate' in activity ? activity.dueDate : null;
   const canManageActivity =
     !isDemo &&
     (isAdmin || (isTeacher && Boolean(session?.user?.teacherId) && activityOwnerTeacherId === session?.user?.teacherId));
@@ -79,7 +80,7 @@ export default async function ActivityDetail({ params }: PageProps) {
             prompt: activity.prompt,
             tags: activity.tags,
             status: activity.status === 'PUBLISHED' ? 'PUBLISHED' : 'DRAFT',
-            dueDate: activity.dueDate ? new Date(activity.dueDate).toISOString().slice(0, 10) : null,
+            dueDate: activityDueDate ? new Date(activityDueDate).toISOString().slice(0, 10) : null,
           }}
         />
       ) : null}
