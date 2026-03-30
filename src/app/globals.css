@@ -110,8 +110,10 @@ body {
   z-index: -2;
   pointer-events: none;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.26) 16%, rgba(255, 255, 255, 0) 34%, rgba(246, 241, 255, 0.2) 58%, rgba(255, 255, 255, 0) 84%);
-  opacity: 0.82;
+    radial-gradient(circle at 18% 18%, rgba(255, 255, 255, 0.08), transparent 18%),
+    radial-gradient(circle at 82% 20%, rgba(255, 244, 236, 0.08), transparent 18%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0) 42%, rgba(246, 241, 255, 0.04) 100%);
+  opacity: 0.68;
 }
 
 a {
@@ -143,14 +145,14 @@ h6 {
   inset-inline: 0;
   top: 0;
   z-index: -1;
-  height: clamp(84px, 10vw, 132px);
-  transform: translateY(-58%);
+  height: clamp(52px, 7vw, 88px);
+  transform: translateY(-42%);
   pointer-events: none;
   background:
-    radial-gradient(circle at 16% 56%, var(--section-glow-blue), transparent 18%),
-    radial-gradient(circle at 84% 28%, var(--section-glow-warm), transparent 18%),
-    linear-gradient(180deg, var(--section-bridge-strong) 0%, transparent 100%);
-  opacity: 0.98;
+    radial-gradient(circle at 18% 62%, var(--section-glow-blue), transparent 16%),
+    radial-gradient(circle at 82% 36%, var(--section-glow-warm), transparent 16%),
+    linear-gradient(180deg, color-mix(in srgb, var(--section-bridge-strong) 62%, transparent) 0%, transparent 100%);
+  opacity: 0.54;
 }
 
 .landing-shell > * + *::after {
@@ -159,13 +161,13 @@ h6 {
   inset-inline: 0;
   bottom: 0;
   z-index: -1;
-  height: clamp(72px, 9vw, 118px);
-  transform: translateY(42%);
+  height: clamp(42px, 6vw, 72px);
+  transform: translateY(28%);
   pointer-events: none;
   background:
-    radial-gradient(circle at 22% 32%, var(--section-glow-cyan), transparent 18%),
-    linear-gradient(180deg, transparent 0%, var(--section-bridge-soft) 100%);
-  opacity: 0.88;
+    radial-gradient(circle at 28% 34%, var(--section-glow-cyan), transparent 15%),
+    linear-gradient(180deg, transparent 0%, color-mix(in srgb, var(--section-bridge-soft) 54%, transparent) 100%);
+  opacity: 0.36;
 }
 
 .landing-shell::before {
@@ -199,7 +201,8 @@ h6 {
   background:
     radial-gradient(circle at 8% 10%, rgba(92, 122, 255, 0.14), transparent 20%),
     radial-gradient(circle at 92% 8%, rgba(255, 138, 41, 0.12), transparent 18%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0) 28%, rgba(244, 240, 255, 0.16) 58%, rgba(255, 255, 255, 0) 100%);
+    radial-gradient(circle at 52% 22%, rgba(255, 255, 255, 0.06), transparent 24%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0) 100%);
 }
 
 .protected-layout-shell {
@@ -253,22 +256,6 @@ h6 {
     radial-gradient(circle at 16% 0%, rgba(92, 122, 255, 0.08), transparent 22%),
     radial-gradient(circle at 90% 14%, rgba(255, 138, 41, 0.08), transparent 18%);
   opacity: 0.85;
-}
-
-.protected-main-flow > * > * {
-  position: relative;
-}
-
-.protected-main-flow > * > * + *::before {
-  content: '';
-  position: absolute;
-  left: clamp(0.5rem, 4vw, 1.5rem);
-  right: clamp(0.5rem, 4vw, 1.5rem);
-  top: calc(-0.95rem - 1px);
-  height: 1px;
-  pointer-events: none;
-  background: linear-gradient(90deg, transparent, var(--section-divider), transparent);
-  opacity: 0.76;
 }
 
 .admin-shell {
@@ -667,14 +654,17 @@ h6 {
 
 :root[data-theme='dark'] .theme-root::after {
   background:
-    linear-gradient(180deg, rgba(10, 18, 35, 0) 0%, rgba(12, 20, 35, 0.4) 16%, rgba(10, 18, 35, 0) 34%, rgba(15, 24, 41, 0.28) 58%, rgba(10, 18, 35, 0) 84%);
+    radial-gradient(circle at 18% 18%, rgba(148, 163, 184, 0.05), transparent 18%),
+    radial-gradient(circle at 82% 20%, rgba(255, 138, 41, 0.05), transparent 18%),
+    linear-gradient(180deg, rgba(9, 16, 31, 0.06) 0%, rgba(9, 16, 31, 0) 42%, rgba(15, 24, 41, 0.08) 100%);
 }
 
 :root[data-theme='dark'] .theme-protected::before {
   background:
     radial-gradient(circle at 8% 10%, rgba(67, 97, 255, 0.18), transparent 20%),
     radial-gradient(circle at 92% 8%, rgba(255, 138, 41, 0.1), transparent 18%),
-    linear-gradient(180deg, rgba(9, 16, 31, 0.18) 0%, rgba(9, 16, 31, 0) 28%, rgba(14, 23, 42, 0.22) 58%, rgba(9, 16, 31, 0) 100%);
+    radial-gradient(circle at 52% 22%, rgba(148, 163, 184, 0.04), transparent 24%),
+    linear-gradient(180deg, rgba(9, 16, 31, 0.04) 0%, rgba(9, 16, 31, 0) 100%);
 }
 
 :root[data-theme='dark'] .protected-layout-shell::after {
