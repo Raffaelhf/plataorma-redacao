@@ -118,12 +118,14 @@ export default async function StudentDashboard() {
         <StatBox title="Atividades novas" value={activities.length} icon={<BarChart3 className="h-5 w-5" />} />
       </div>
 
-      <section className="rounded-[28px] border border-[#dde3fb] bg-[linear-gradient(135deg,rgba(255,255,255,0.98),rgba(244,242,255,0.94),rgba(255,242,234,0.92))] p-4 shadow-[0_20px_50px_rgba(74,73,140,0.1)]">
+      <section className="rounded-[28px] border border-[#dde3fb] bg-[linear-gradient(135deg,rgba(255,255,255,0.98),rgba(244,242,255,0.94),rgba(255,242,234,0.92))] p-4 shadow-[0_20px_50px_rgba(74,73,140,0.1)] dark:border-slate-700/80 dark:bg-[linear-gradient(135deg,rgba(15,23,42,0.96),rgba(23,32,59,0.94),rgba(42,31,56,0.92))] dark:shadow-[0_24px_56px_rgba(0,0,0,0.34)]">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div className="flex items-start gap-3">
             <div
               className={`mt-1 flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl ${
-                happeningNow ? 'bg-[#eef9f4] text-[#1b7f62]' : 'bg-[#eef2ff] text-[#4250d4]'
+                happeningNow
+                  ? 'bg-[#eef9f4] text-[#1b7f62] dark:bg-emerald-500/18 dark:text-emerald-300'
+                  : 'bg-[#eef2ff] text-[#4250d4] dark:bg-indigo-500/18 dark:text-indigo-200'
               }`}
             >
               {happeningNow ? <Radio className="h-5 w-5" /> : <CalendarClock className="h-5 w-5" />}
