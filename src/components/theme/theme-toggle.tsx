@@ -17,8 +17,8 @@ export function ThemeToggle() {
           className={cn(
             'inline-flex items-center gap-2 rounded-full px-3 py-2 text-xs font-semibold transition-all duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#6b49dd]',
             theme === 'light'
-              ? 'bg-[linear-gradient(135deg,#ffffff_0%,#f4f2ff_100%)] text-[#22347e] shadow-[0_10px_24px_rgba(74,73,140,0.14)]'
-              : 'text-[#6777a8] hover:bg-white/70 hover:text-[#22347e] dark:text-slate-300 dark:hover:bg-slate-800/80 dark:hover:text-slate-50',
+              ? 'border border-white/80 bg-[linear-gradient(135deg,#ffffff_0%,#eef2ff_100%)] text-[#16255d] shadow-[0_10px_24px_rgba(74,73,140,0.16)]'
+              : 'text-[#5b6c9f] hover:bg-white/70 hover:text-[#22347e] dark:text-slate-300 dark:hover:bg-slate-800/80 dark:hover:text-slate-50',
           )}
         >
           <Sun className="h-4 w-4" />
