@@ -30,7 +30,7 @@ function run(command, commandArgs, options = {}) {
 
 function usage() {
   console.error('Use: npm run publish -- "sua mensagem de commit"');
-  console.error('Opcoes: --skip-lint, --skip-build, --skip-checks');
+  console.error('Opcoes: --skip-lint, --skip-build, --skip-checks, --dry-run');
   process.exit(1);
 }
 
@@ -69,6 +69,7 @@ const vercelProject = getVercelProject();
 const skipChecks = flags.has("--skip-checks");
 const shouldRunLint = !skipChecks && !flags.has("--skip-lint");
 const shouldRunBuild = !skipChecks && !flags.has("--skip-build");
+const dryRun = flags.has("--dry-run");
 
 if (!origin) {
   console.error("Remote origin nao configurado. Conecte o repositorio ao GitHub antes de publicar.");
@@ -85,21 +86,32 @@ if (shouldRunBuild) {
   run(npmCommand, ["run", "build"]);
 }
 
-console.log("[publish] enviando alteracoes para o GitHub...");
-run("git", ["add", "-A"]);
-run("git", ["commit", "-m", message]);
-run("git", ["push", "origin", branch]);
+if (dryRun) {
+  console.log("[publish] dry-run ativo. Nenhum commit ou push sera executado.");
+  console.log(`[publish] branch atual: ${branch}`);
+  console.log(`[publish] remote origin: ${origin}`);
+  console.log(`[publish] mensagem de commit: ${message}`);
+} else {
+  console.log("[publish] enviando alteracoes para o GitHub...");
+  run("git", ["add", "-A"]);
+  run("git", ["commit", "-m", message]);
+  run("git", ["push", "origin", branch]);
+}
 
 if (vercelProject) {
   const deployType = branch === "main" ? "producao" : "preview";
   console.log(
-    `[publish] GitHub atualizado na branch ${branch}. Projeto Vercel vinculado: ${vercelProject.projectName}.`,
+    `[publish] ${
+      dryRun ? "Fluxo pronto para publicar" : "GitHub atualizado"
+    } na branch ${branch}. Projeto Vercel vinculado: ${vercelProject.projectName}.`,
   );
   console.log(
     `[publish] Se a integracao Git da Vercel estiver ativa, um deploy de ${deployType} deve iniciar automaticamente.`,
   );
 } else {
   console.log(
-    `[publish] GitHub atualizado na branch ${branch}. Nenhum projeto Vercel local foi encontrado em .vercel/project.json.`,
+    `[publish] ${
+      dryRun ? "Fluxo pronto para publicar" : "GitHub atualizado"
+    } na branch ${branch}. Nenhum projeto Vercel local foi encontrado em .vercel/project.json.`,
   );
 }

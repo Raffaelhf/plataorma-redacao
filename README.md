@@ -52,6 +52,12 @@ Se precisar pular as validacoes em um envio rapido:
 npm run publish -- "sua mensagem de commit" -- --skip-checks
 ```
 
+Se quiser testar o fluxo sem enviar nada:
+
+```bash
+npm run publish -- "sua mensagem de commit" -- --dry-run --skip-checks
+```
+
 ## Sincronizacao automatica
 
 Se voce quiser subir automaticamente sempre que salvar alteracoes no projeto, rode:
