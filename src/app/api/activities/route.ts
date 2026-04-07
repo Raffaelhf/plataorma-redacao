@@ -65,7 +65,7 @@ export async function POST(req: Request) {
     title = String(body.title || '').trim();
     description = String(body.description || '').trim();
     prompt = String(body.prompt || '').trim();
-    tags = Array.isArray(body.tags) ? body.tags.map((tag) => String(tag).trim()).filter(Boolean) : [];
+    tags = Array.isArray(body.tags) ? body.tags.map((tag: unknown) => String(tag).trim()).filter(Boolean) : [];
     dueDate = typeof body.dueDate === 'string' && body.dueDate.trim() ? body.dueDate.trim() : null;
     status = body.status === 'PUBLISHED' ? 'PUBLISHED' : 'DRAFT';
   }
