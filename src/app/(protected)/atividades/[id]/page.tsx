@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
+import { getActivityAttachmentHref } from '@/lib/activity-attachment';
 import { getSubmissionPdfHref } from '@/lib/submission-pdf';
 import { SubmitWork } from '@/components/activities/submit-work';
 import { Badge } from '@/components/ui/badge';
@@ -34,6 +35,8 @@ export default async function ActivityDetail({ params }: PageProps) {
 
   if (!activity) return notFound();
 
+  const activityAttachmentHref = getActivityAttachmentHref(activity);
+
   const existingStudentSubmission =
     session?.user?.role === 'STUDENT' && session.user.studentId
       ? activity.submissions.find((submission) => submission.studentId === session.user.studentId) ?? null
@@ -55,6 +58,19 @@ export default async function ActivityDetail({ params }: PageProps) {
       <Card className="border-[#dde3fb] bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(248,249,255,0.9))] shadow-[0_20px_50px_rgba(74,73,140,0.1)]">
         <p className="text-sm font-semibold text-[#22347e]">Prompt</p>
         <p className="mt-2 whitespace-pre-wrap break-words text-sm leading-7 text-[#52618f]">{activity.prompt}</p>
+        {activityAttachmentHref ? (
+          <div className="mt-4 rounded-2xl border border-[#d7defb] bg-[#f7f8ff] p-4">
+            <p className="text-sm font-semibold text-[#22347e]">Anexo da atividade</p>
+            <a
+              href={activityAttachmentHref}
+              target="_blank"
+              rel="noreferrer"
+              className="mt-2 inline-flex w-fit items-center rounded-full bg-[#eef2ff] px-3 py-1 text-xs font-semibold text-[#4250d4]"
+            >
+              Baixar anexo{activity.attachmentName ? `: ${activity.attachmentName}` : ''}
+            </a>
+          </div>
+        ) : null}
         <div className="mt-3 flex flex-wrap gap-2 text-xs">
           {activity.tags.map((tag) => (
             <span key={tag} className="rounded-full bg-[#f4ecff] px-3 py-1 text-[#735f98]">

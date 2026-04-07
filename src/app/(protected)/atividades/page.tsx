@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { Badge } from '@/components/ui/badge';
 import { CreateActivity } from '@/components/activities/create-activity';
 import { getAuthSession } from '@/lib/auth';
+import { getActivityAttachmentHref } from '@/lib/activity-attachment';
 import { demoActivities, isDemoSession } from '@/lib/demo';
 import { isTeacherRole } from '@/lib/roles';
 
@@ -47,11 +48,19 @@ export default async function ActivitiesPage() {
                   #{tag}
                 </span>
               ))}
+              {getActivityAttachmentHref(activity) ? (
+                <span className="rounded-full bg-[#eef2ff] px-3 py-1 text-xs text-[#4250d4]">Com anexo</span>
+              ) : null}
             </div>
             <div className="flex flex-wrap items-center gap-3">
               <Link href={`/atividades/${activity.id}`} className="text-sm font-semibold text-[#4250d4]">
                 Ver detalhes
               </Link>
+              {getActivityAttachmentHref(activity) ? (
+                <Link href={getActivityAttachmentHref(activity)!} className="text-sm font-semibold text-[#5a69a1]">
+                  Baixar anexo
+                </Link>
+              ) : null}
               {isStudent ? (
                 <Link
                   href={`/atividades/${activity.id}`}
