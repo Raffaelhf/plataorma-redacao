@@ -145,6 +145,8 @@ type DemoActivity = {
   prompt: string;
   tags: string[];
   status: 'PUBLISHED' | 'DRAFT';
+  attachmentUrl?: string | null;
+  attachmentName?: string | null;
   publishedAt?: Date;
   createdAt: Date;
   submissionsCount: number;

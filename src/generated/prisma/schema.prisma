@@ -104,19 +104,23 @@ model TeacherProfile {
 }
 
 model Activity {
-  id          String          @id @default(cuid())
-  title       String
-  description String
-  prompt      String
-  tags        String[]
-  status      ActivityStatus  @default(DRAFT)
-  publishedAt DateTime?
-  dueDate     DateTime?
-  createdAt   DateTime        @default(now())
-  updatedAt   DateTime        @updatedAt
-  createdById String?
-  createdBy   TeacherProfile? @relation(fields: [createdById], references: [id])
-  submissions Submission[]
+  id                 String          @id @default(cuid())
+  title              String
+  description        String
+  prompt             String
+  tags               String[]
+  status             ActivityStatus  @default(DRAFT)
+  publishedAt        DateTime?
+  dueDate            DateTime?
+  attachmentUrl      String?
+  attachmentName     String?
+  attachmentMimeType String?
+  attachmentData     Bytes?
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
+  createdById        String?
+  createdBy          TeacherProfile? @relation(fields: [createdById], references: [id])
+  submissions        Submission[]
 }
 
 model Submission {
