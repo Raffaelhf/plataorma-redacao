@@ -6,6 +6,7 @@
     "dev": "next dev",
     "build": "node scripts/vercel-build.mjs",
     "start": "next start",
+    "publish": "node scripts/sync-git.mjs",
     "sync": "node scripts/sync-git.mjs",
     "autosync": "node scripts/auto-sync.mjs",
     "lint": "eslint . --ext .ts,.tsx",
