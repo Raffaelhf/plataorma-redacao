@@ -24,7 +24,7 @@ function TextArea(props: TextareaHTMLAttributes<HTMLTextAreaElement>) {
   return (
     <textarea
       {...props}
-      className="w-full rounded-2xl border border-[#d9def8] bg-white/96 px-4 py-3 text-sm text-[#22347e] placeholder:text-[#7b86b4] focus:border-[#7b86f8] focus:outline-none focus:ring-2 focus:ring-[#7b86f8]/20"
+      className="w-full rounded-2xl border border-[var(--input-border)] bg-[var(--input-bg)] px-4 py-3 text-sm text-[var(--input-text)] placeholder:text-[var(--input-placeholder)] placeholder:opacity-100 focus:border-[#7b86f8] focus:outline-none focus:ring-2 focus:ring-[#7b86f8]/20 dark:[color-scheme:dark] dark:focus:border-[#7d8eff] dark:focus:ring-[#6278ff]/25"
     />
   );
 }
@@ -102,15 +102,15 @@ export function ManageActivity({ activity }: ManageActivityProps) {
   }
 
   return (
-    <section className="rounded-[30px] border border-[#dde3fb] bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(246,248,255,0.94))] p-5 shadow-[0_20px_50px_rgba(74,73,140,0.1)] sm:p-6">
+    <section className="rounded-[30px] border border-[#dde3fb] bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(246,248,255,0.94))] p-5 shadow-[0_20px_50px_rgba(74,73,140,0.1)] dark:border-slate-700/80 dark:bg-[linear-gradient(180deg,rgba(10,18,31,0.96),rgba(14,23,42,0.92))] dark:shadow-[0_20px_50px_rgba(0,0,0,0.24)] sm:p-6">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <p className="text-sm font-semibold text-[#5a69a1]">Editar atividade</p>
-          <p className="mt-1 text-sm leading-6 text-[#6d79a5]">
+          <p className="text-sm font-semibold text-[#5a69a1] dark:text-[#a9bbf0]">Editar atividade</p>
+          <p className="mt-1 text-sm leading-6 text-[#6d79a5] dark:text-[#b3c3e6]">
             Ajuste os campos do rascunho e publique quando quiser disponibilizar a proposta para os alunos.
           </p>
         </div>
-        <span className="inline-flex w-fit rounded-full bg-[#eef2ff] px-3 py-1 text-xs font-semibold text-[#4250d4]">
+        <span className="inline-flex w-fit rounded-full bg-[#eef2ff] px-3 py-1 text-xs font-semibold text-[#4250d4] dark:bg-[#1d2b4d] dark:text-[#c8d5ff]">
           {status === 'PUBLISHED' ? 'Publicado' : 'Rascunho'}
         </span>
       </div>
@@ -132,7 +132,7 @@ export function ManageActivity({ activity }: ManageActivityProps) {
         </div>
 
         <div className="flex flex-col gap-3 text-sm sm:flex-row sm:items-center">
-          <label className="flex items-center gap-2 text-[#42507b]">
+          <label className="flex items-center gap-2 text-[#42507b] dark:text-[#d8e3ff]">
             <input
               type="radio"
               name="status"
@@ -143,7 +143,7 @@ export function ManageActivity({ activity }: ManageActivityProps) {
             />
             Manter como rascunho
           </label>
-          <label className="flex items-center gap-2 text-[#42507b]">
+          <label className="flex items-center gap-2 text-[#42507b] dark:text-[#d8e3ff]">
             <input
               type="radio"
               name="status"
@@ -156,8 +156,8 @@ export function ManageActivity({ activity }: ManageActivityProps) {
           </label>
         </div>
 
-        {error ? <p className="text-sm text-[#b54752]">{error}</p> : null}
-        {success ? <p className="text-sm text-[#227357]">{success}</p> : null}
+        {error ? <p className="text-sm text-[#b54752] dark:text-[#ffb4b4]">{error}</p> : null}
+        {success ? <p className="text-sm text-[#227357] dark:text-[#8fe0b7]">{success}</p> : null}
 
         <div className="flex flex-col gap-3 sm:flex-row">
           <Button type="submit" disabled={loadingAction !== null} className="sm:flex-1">
@@ -181,7 +181,7 @@ export function ManageActivity({ activity }: ManageActivityProps) {
           variant="ghost"
           disabled={loadingAction !== null}
           onClick={() => void deleteActivity()}
-          className="w-full border-[#ffd0cf] bg-[#fff1f1] text-[#b14545] hover:bg-[#ffe7e7]"
+          className="w-full border-[#ffd0cf] bg-[#fff1f1] text-[#b14545] hover:bg-[#ffe7e7] dark:border-[rgba(111,52,58,0.8)] dark:bg-[rgba(69,31,37,0.42)] dark:text-[#ffb4b4] dark:hover:bg-[rgba(88,39,46,0.52)]"
         >
           {loadingAction === 'delete' ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Trash2 className="mr-2 h-4 w-4" />}
           Excluir atividade
