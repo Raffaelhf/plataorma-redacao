@@ -2,7 +2,7 @@
 
 import { useState, type TextareaHTMLAttributes } from 'react';
 import { useRouter } from 'next/navigation';
-import { Loader2, Save, Send } from 'lucide-react';
+import { Loader2, Save, Send, Trash2 } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 
@@ -37,7 +37,7 @@ export function ManageActivity({ activity }: ManageActivityProps) {
   const [tags, setTags] = useState(activity.tags.join(', '));
   const [status, setStatus] = useState<ActivityStatus>(activity.status);
   const [dueDate, setDueDate] = useState(activity.dueDate ?? '');
-  const [loadingAction, setLoadingAction] = useState<'save' | 'publish' | null>(null);
+  const [loadingAction, setLoadingAction] = useState<'save' | 'publish' | 'delete' | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
@@ -74,6 +74,30 @@ export function ManageActivity({ activity }: ManageActivityProps) {
     setDueDate(body.dueDate ? String(body.dueDate).slice(0, 10) : '');
     setSuccess(nextStatus === 'PUBLISHED' ? 'Atividade publicada e liberada para os alunos.' : 'Alteracoes salvas com sucesso.');
     setLoadingAction(null);
+    router.refresh();
+  }
+
+  async function deleteActivity() {
+    const confirmed = window.confirm('Excluir esta atividade? Os envios e correcoes vinculados tambem serao removidos.');
+    if (!confirmed) return;
+
+    setLoadingAction('delete');
+    setError(null);
+    setSuccess(null);
+
+    const response = await fetch(`/api/activities/${activity.id}`, {
+      method: 'DELETE',
+    });
+
+    const body = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+      setError(body.error || 'Nao foi possivel excluir a atividade.');
+      setLoadingAction(null);
+      return;
+    }
+
+    router.push('/atividades');
     router.refresh();
   }
 
@@ -151,6 +175,17 @@ export function ManageActivity({ activity }: ManageActivityProps) {
             Publicar atividade
           </Button>
         </div>
+
+        <Button
+          type="button"
+          variant="ghost"
+          disabled={loadingAction !== null}
+          onClick={() => void deleteActivity()}
+          className="w-full border-[#ffd0cf] bg-[#fff1f1] text-[#b14545] hover:bg-[#ffe7e7]"
+        >
+          {loadingAction === 'delete' ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Trash2 className="mr-2 h-4 w-4" />}
+          Excluir atividade
+        </Button>
       </form>
     </section>
   );

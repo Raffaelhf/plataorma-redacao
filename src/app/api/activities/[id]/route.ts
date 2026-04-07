@@ -99,6 +99,17 @@ export async function DELETE(_req: Request, context: RouteContext) {
     return NextResponse.json({ error: 'Voce nao pode excluir esta atividade.' }, { status: 403 });
   }
 
-  await prisma.activity.delete({ where: { id } });
+  await prisma.$transaction([
+    prisma.correction.deleteMany({
+      where: {
+        submission: {
+          activityId: id,
+        },
+      },
+    }),
+    prisma.submission.deleteMany({ where: { activityId: id } }),
+    prisma.activity.delete({ where: { id } }),
+  ]);
+
   return NextResponse.json({ ok: true });
 }
