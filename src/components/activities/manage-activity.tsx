@@ -1,8 +1,15 @@
 'use client';
 
-import { useState, type TextareaHTMLAttributes } from 'react';
+import { useRef, useState, type ChangeEvent, type TextareaHTMLAttributes } from 'react';
 import { useRouter } from 'next/navigation';
-import { Loader2, Save, Send, Trash2 } from 'lucide-react';
+import { FileText, FileVideo, Loader2, Paperclip, Save, Send, Trash2, X } from 'lucide-react';
+import {
+  ACTIVITY_ATTACHMENT_ACCEPT,
+  ACTIVITY_ATTACHMENT_MAX_FILES,
+  formatFileSize,
+  getActivityAttachmentKindLabel,
+  validateActivityAttachmentFile,
+} from '@/lib/activity-attachments';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 
@@ -17,6 +24,12 @@ type ManageActivityProps = {
     tags: string[];
     status: ActivityStatus;
     dueDate: string | null;
+    attachments: {
+      id: string;
+      fileName: string;
+      mimeType: string;
+      sizeInBytes: number;
+    }[];
   };
 };
 
@@ -31,35 +44,81 @@ function TextArea(props: TextareaHTMLAttributes<HTMLTextAreaElement>) {
 
 export function ManageActivity({ activity }: ManageActivityProps) {
   const router = useRouter();
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [title, setTitle] = useState(activity.title);
   const [description, setDescription] = useState(activity.description);
   const [prompt, setPrompt] = useState(activity.prompt);
   const [tags, setTags] = useState(activity.tags.join(', '));
   const [status, setStatus] = useState<ActivityStatus>(activity.status);
   const [dueDate, setDueDate] = useState(activity.dueDate ?? '');
+  const [existingAttachments, setExistingAttachments] = useState(activity.attachments);
+  const [removedAttachmentIds, setRemovedAttachmentIds] = useState<string[]>([]);
+  const [newAttachments, setNewAttachments] = useState<File[]>([]);
   const [loadingAction, setLoadingAction] = useState<'save' | 'publish' | 'delete' | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+
+  function handleAttachmentSelection(event: ChangeEvent<HTMLInputElement>) {
+    const selectedFiles = Array.from(event.target.files ?? []);
+    if (selectedFiles.length === 0) return;
+
+    const activeExistingAttachments = existingAttachments.filter((attachment) => !removedAttachmentIds.includes(attachment.id));
+    const nextAttachments = [...newAttachments];
+
+    for (const file of selectedFiles) {
+      const validationError = validateActivityAttachmentFile(file);
+      if (validationError) {
+        setError(validationError);
+        event.target.value = '';
+        return;
+      }
+
+      if (activeExistingAttachments.length + nextAttachments.length >= ACTIVITY_ATTACHMENT_MAX_FILES) {
+        setError(`Voce pode manter no maximo ${ACTIVITY_ATTACHMENT_MAX_FILES} materiais de apoio por atividade.`);
+        event.target.value = '';
+        return;
+      }
+
+      nextAttachments.push(file);
+    }
+
+    setNewAttachments(nextAttachments);
+    setError(null);
+    event.target.value = '';
+  }
+
+  function toggleExistingAttachmentRemoval(attachmentId: string) {
+    setRemovedAttachmentIds((current) =>
+      current.includes(attachmentId) ? current.filter((id) => id !== attachmentId) : [...current, attachmentId],
+    );
+  }
+
+  function removeNewAttachment(index: number) {
+    setNewAttachments((current) => current.filter((_, attachmentIndex) => attachmentIndex !== index));
+  }
 
   async function submitActivity(nextStatus: ActivityStatus, action: 'save' | 'publish') {
     setLoadingAction(action);
     setError(null);
     setSuccess(null);
 
+    const formData = new FormData();
+    formData.append('title', title);
+    formData.append('description', description);
+    formData.append('prompt', prompt);
+    formData.append('tags', tags);
+    formData.append('status', nextStatus);
+    formData.append('dueDate', dueDate || '');
+    newAttachments.forEach((attachment) => {
+      formData.append('attachments', attachment);
+    });
+    removedAttachmentIds.forEach((attachmentId) => {
+      formData.append('removeAttachmentIds', attachmentId);
+    });
+
     const response = await fetch(`/api/activities/${activity.id}`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        title,
-        description,
-        prompt,
-        tags: tags
-          .split(',')
-          .map((item) => item.trim())
-          .filter(Boolean),
-        status: nextStatus,
-        dueDate: dueDate || null,
-      }),
+      body: formData,
     });
 
     const body = await response.json().catch(() => ({}));
@@ -72,6 +131,10 @@ export function ManageActivity({ activity }: ManageActivityProps) {
 
     setStatus(body.status);
     setDueDate(body.dueDate ? String(body.dueDate).slice(0, 10) : '');
+    setExistingAttachments(Array.isArray(body.attachments) ? body.attachments : []);
+    setRemovedAttachmentIds([]);
+    setNewAttachments([]);
+    if (fileInputRef.current) fileInputRef.current.value = '';
     setSuccess(nextStatus === 'PUBLISHED' ? 'Atividade publicada e liberada para os alunos.' : 'Alteracoes salvas com sucesso.');
     setLoadingAction(null);
     router.refresh();
@@ -129,6 +192,104 @@ export function ManageActivity({ activity }: ManageActivityProps) {
         <div className="grid gap-3 sm:grid-cols-2">
           <Input value={tags} onChange={(event) => setTags(event.target.value)} placeholder="Tags separadas por virgula" />
           <Input value={dueDate} onChange={(event) => setDueDate(event.target.value)} type="date" />
+        </div>
+
+        <div className="rounded-2xl border border-[#dde3fb] bg-white/70 p-4 dark:border-slate-700/80 dark:bg-[#0d172b]/80">
+          <div className="flex items-center gap-2 text-sm font-semibold text-[#22347e] dark:text-[#eef4ff]">
+            <Paperclip className="h-4 w-4" />
+            Materiais de apoio
+          </div>
+          <p className="mt-1 text-sm text-[#6d79a5] dark:text-[#b3c3e6]">
+            Anexe videos, PDF, Word ou PowerPoint para acompanhar a proposta.
+          </p>
+          <input
+            ref={fileInputRef}
+            type="file"
+            multiple
+            accept={ACTIVITY_ATTACHMENT_ACCEPT}
+            onChange={handleAttachmentSelection}
+            className="mt-3 block w-full text-sm text-[var(--input-text)] file:mr-3 file:rounded-full file:border-0 file:bg-[#eef2ff] file:px-4 file:py-2 file:font-semibold file:text-[#4250d4] hover:file:bg-[#dfe7ff] dark:file:bg-[#1d2b4d] dark:file:text-[#d6e2ff] dark:hover:file:bg-[#26385f]"
+          />
+          <p className="mt-2 text-xs text-[#6d79a5] dark:text-[#9fb0d8]">
+            Ate {ACTIVITY_ATTACHMENT_MAX_FILES} anexos por atividade.
+          </p>
+
+          {existingAttachments.length > 0 ? (
+            <div className="mt-4 space-y-2">
+              {existingAttachments.map((attachment) => {
+                const isMarkedForRemoval = removedAttachmentIds.includes(attachment.id);
+                const attachmentKind = getActivityAttachmentKindLabel(attachment.fileName, attachment.mimeType);
+                const AttachmentIcon = attachmentKind === 'Video' ? FileVideo : FileText;
+
+                return (
+                  <div
+                    key={attachment.id}
+                    className={`flex items-center justify-between gap-3 rounded-xl border px-3 py-2 ${
+                      isMarkedForRemoval
+                        ? 'border-[#ffd0cf] bg-[#fff1f1] dark:border-[rgba(111,52,58,0.8)] dark:bg-[rgba(69,31,37,0.42)]'
+                        : 'border-[#dde3fb] bg-white/90 dark:border-slate-700/80 dark:bg-[#10192d]'
+                    }`}
+                  >
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2 text-sm font-semibold text-[#22347e] dark:text-[#eef4ff]">
+                        <AttachmentIcon className="h-4 w-4 shrink-0" />
+                        <a href={`/api/activity-attachments/${attachment.id}`} target="_blank" rel="noreferrer" className="truncate hover:underline">
+                          {attachment.fileName}
+                        </a>
+                      </div>
+                      <p className="text-xs text-[#6d79a5] dark:text-[#9fb0d8]">
+                        {attachmentKind} • {formatFileSize(attachment.sizeInBytes)}
+                        {isMarkedForRemoval ? ' • Sera removido ao salvar' : ''}
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => toggleExistingAttachmentRemoval(attachment.id)}
+                      className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold ${
+                        isMarkedForRemoval
+                          ? 'bg-white text-[#b14545] dark:bg-[#221319] dark:text-[#ffb4b4]'
+                          : 'bg-[#eef2ff] text-[#4250d4] dark:bg-[#1d2b4d] dark:text-[#c8d5ff]'
+                      }`}
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                      {isMarkedForRemoval ? 'Desfazer' : 'Remover'}
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          ) : null}
+
+          {newAttachments.length > 0 ? (
+            <div className="mt-4 space-y-2">
+              {newAttachments.map((attachment, index) => {
+                const attachmentKind = getActivityAttachmentKindLabel(attachment.name, attachment.type);
+                const AttachmentIcon = attachmentKind === 'Video' ? FileVideo : FileText;
+
+                return (
+                  <div key={`${attachment.name}-${attachment.lastModified}-${index}`} className="flex items-center justify-between gap-3 rounded-xl border border-[#dde3fb] bg-white/90 px-3 py-2 dark:border-slate-700/80 dark:bg-[#10192d]">
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2 text-sm font-semibold text-[#22347e] dark:text-[#eef4ff]">
+                        <AttachmentIcon className="h-4 w-4 shrink-0" />
+                        <span className="truncate">{attachment.name}</span>
+                      </div>
+                      <p className="text-xs text-[#6d79a5] dark:text-[#9fb0d8]">
+                        {attachmentKind} • {formatFileSize(attachment.size)} • Sera enviado ao salvar
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => removeNewAttachment(index)}
+                      className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-[#eef2ff] text-[#4250d4] transition-colors hover:bg-[#dfe7ff] dark:bg-[#1d2b4d] dark:text-[#d6e2ff] dark:hover:bg-[#26385f]"
+                      aria-label={`Remover ${attachment.name}`}
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          ) : null}
         </div>
 
         <div className="flex flex-col gap-3 text-sm sm:flex-row sm:items-center">
