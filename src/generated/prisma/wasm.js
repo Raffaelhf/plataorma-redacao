@@ -170,6 +170,16 @@ exports.Prisma.ActivityScalarFieldEnum = {
   createdById: 'createdById'
 };
 
+exports.Prisma.ActivityAttachmentScalarFieldEnum = {
+  id: 'id',
+  activityId: 'activityId',
+  fileName: 'fileName',
+  mimeType: 'mimeType',
+  sizeInBytes: 'sizeInBytes',
+  fileData: 'fileData',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SubmissionScalarFieldEnum = {
   id: 'id',
   studentId: 'studentId',
@@ -395,6 +405,7 @@ exports.Prisma.ModelName = {
   StudentProfile: 'StudentProfile',
   TeacherProfile: 'TeacherProfile',
   Activity: 'Activity',
+  ActivityAttachment: 'ActivityAttachment',
   Submission: 'Submission',
   Correction: 'Correction',
   VideoCategory: 'VideoCategory',
