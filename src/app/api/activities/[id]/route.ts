@@ -133,8 +133,8 @@ export async function PUT(req: Request, context: RouteContext) {
     }
   }
 
-  const existingAttachmentIds = new Set(currentActivity.attachments.map((attachment) => attachment.id));
-  const removeAttachmentIds = [...new Set(body.removeAttachmentIds)].filter((attachmentId) => existingAttachmentIds.has(attachmentId));
+  const existingAttachmentIds = new Set<string>(currentActivity.attachments.map((attachment) => attachment.id));
+  const removeAttachmentIds = [...new Set<string>(body.removeAttachmentIds)].filter((attachmentId) => existingAttachmentIds.has(attachmentId));
   const attachmentCountAfterUpdate = currentActivity.attachments.length - removeAttachmentIds.length + body.attachments.length;
 
   if (attachmentCountAfterUpdate > ACTIVITY_ATTACHMENT_MAX_FILES) {

@@ -9,7 +9,7 @@ const attachmentExtensionToMimeType = {
   '.mov': 'video/quicktime',
 } as const;
 
-const allowedMimeTypes = new Set(Object.values(attachmentExtensionToMimeType));
+const allowedMimeTypes = new Set<string>(Object.values(attachmentExtensionToMimeType));
 
 export const ACTIVITY_ATTACHMENT_ACCEPT = Object.keys(attachmentExtensionToMimeType).join(',');
 export const ACTIVITY_ATTACHMENT_MAX_FILES = 6;
