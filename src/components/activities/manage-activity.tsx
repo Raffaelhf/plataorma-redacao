@@ -10,6 +10,7 @@ import {
   getActivityAttachmentKindLabel,
   validateActivityAttachmentFile,
 } from '@/lib/activity-attachments';
+import { SERVERLESS_SAFE_UPLOAD_BYTES, getServerlessUploadLimitLabel, getServerlessUploadLimitMessage } from '@/lib/upload-limits';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 
@@ -82,6 +83,13 @@ export function ManageActivity({ activity }: ManageActivityProps) {
       nextAttachments.push(file);
     }
 
+    const totalAttachmentBytes = nextAttachments.reduce((sum, file) => sum + file.size, 0);
+    if (totalAttachmentBytes > SERVERLESS_SAFE_UPLOAD_BYTES) {
+      setError(getServerlessUploadLimitMessage('arquivos de apoio'));
+      event.target.value = '';
+      return;
+    }
+
     setNewAttachments(nextAttachments);
     setError(null);
     event.target.value = '';
@@ -124,7 +132,7 @@ export function ManageActivity({ activity }: ManageActivityProps) {
     const body = await response.json().catch(() => ({}));
 
     if (!response.ok) {
-      setError(body.error || 'Nao foi possivel atualizar a atividade.');
+      setError(response.status === 413 ? getServerlessUploadLimitMessage('arquivos de apoio') : body.error || 'Nao foi possivel atualizar a atividade.');
       setLoadingAction(null);
       return;
     }
@@ -200,7 +208,7 @@ export function ManageActivity({ activity }: ManageActivityProps) {
             Materiais de apoio
           </div>
           <p className="mt-1 text-sm text-[#6d79a5] dark:text-[#b3c3e6]">
-            Anexe videos, PDF, Word ou PowerPoint para acompanhar a proposta.
+            Anexe videos, PDF, Word ou PowerPoint para acompanhar a proposta. Total por envio: ate {getServerlessUploadLimitLabel()}.
           </p>
           <input
             ref={fileInputRef}

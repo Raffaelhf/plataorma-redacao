@@ -7,6 +7,7 @@ import {
 import { getAuthSession } from '@/lib/auth';
 import { isAdminRole, isTeacherRole } from '@/lib/roles';
 import { prisma } from '@/lib/prisma';
+import { SERVERLESS_SAFE_UPLOAD_BYTES, getServerlessUploadLimitMessage } from '@/lib/upload-limits';
 
 type RouteContext = { params: Promise<{ id: string }> };
 
@@ -131,6 +132,11 @@ export async function PUT(req: Request, context: RouteContext) {
     if (validationError) {
       return NextResponse.json({ error: validationError }, { status: 400 });
     }
+  }
+
+  const totalAttachmentBytes = body.attachments.reduce((sum, attachment) => sum + attachment.size, 0);
+  if (totalAttachmentBytes > SERVERLESS_SAFE_UPLOAD_BYTES) {
+    return NextResponse.json({ error: getServerlessUploadLimitMessage('arquivos de apoio') }, { status: 400 });
   }
 
   const existingAttachmentIds = new Set<string>(currentActivity.attachments.map((attachment) => attachment.id));

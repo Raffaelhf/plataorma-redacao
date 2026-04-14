@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 import { getAuthSession } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { isAdminRole, isTeacherRole } from '@/lib/roles';
+import { SERVERLESS_SAFE_UPLOAD_BYTES, getServerlessUploadLimitMessage } from '@/lib/upload-limits';
 
 export const runtime = 'nodejs';
 
@@ -56,8 +57,8 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'O arquivo deve ser um PDF.' }, { status: 400 });
   }
 
-  if (file.size > 10 * 1024 * 1024) {
-    return NextResponse.json({ error: 'O PDF deve ter no maximo 10 MB.' }, { status: 400 });
+  if (file.size > SERVERLESS_SAFE_UPLOAD_BYTES) {
+    return NextResponse.json({ error: getServerlessUploadLimitMessage('arquivos PDF') }, { status: 400 });
   }
 
   const activity = await prisma.activity.findUnique({

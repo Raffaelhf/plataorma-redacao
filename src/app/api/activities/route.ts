@@ -8,6 +8,7 @@ import { getAuthSession } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { isTeacherRole } from '@/lib/roles';
 import { ensureTeacherProfile } from '@/lib/teacher-profiles';
+import { SERVERLESS_SAFE_UPLOAD_BYTES, getServerlessUploadLimitMessage } from '@/lib/upload-limits';
 
 export const runtime = 'nodejs';
 
@@ -92,6 +93,11 @@ export async function POST(req: Request) {
     if (validationError) {
       return NextResponse.json({ error: validationError }, { status: 400 });
     }
+  }
+
+  const totalAttachmentBytes = attachments.reduce((sum, attachment) => sum + attachment.size, 0);
+  if (totalAttachmentBytes > SERVERLESS_SAFE_UPLOAD_BYTES) {
+    return NextResponse.json({ error: getServerlessUploadLimitMessage('arquivos de apoio') }, { status: 400 });
   }
 
   const teacherId = session.user.teacherId ?? (await ensureTeacherProfile(session.user.id)).id;

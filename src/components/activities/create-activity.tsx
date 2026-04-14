@@ -13,6 +13,7 @@ import {
 } from '@/lib/activity-attachments';
 import { isDemoLogin } from '@/lib/demo';
 import { isTeacherRole } from '@/lib/roles';
+import { SERVERLESS_SAFE_UPLOAD_BYTES, getServerlessUploadLimitLabel, getServerlessUploadLimitMessage } from '@/lib/upload-limits';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 
@@ -59,6 +60,13 @@ export function CreateActivity() {
       nextAttachments.push(file);
     }
 
+    const totalAttachmentBytes = nextAttachments.reduce((sum, file) => sum + file.size, 0);
+    if (totalAttachmentBytes > SERVERLESS_SAFE_UPLOAD_BYTES) {
+      setError(getServerlessUploadLimitMessage('arquivos de apoio'));
+      event.target.value = '';
+      return;
+    }
+
     setAttachments(nextAttachments);
     setError(null);
     event.target.value = '';
@@ -92,7 +100,7 @@ export function CreateActivity() {
 
     if (!res.ok) {
       const bodyRes = await res.json().catch(() => ({}));
-      setError(bodyRes.error || 'Erro ao criar atividade');
+      setError(res.status === 413 ? getServerlessUploadLimitMessage('arquivos de apoio') : bodyRes.error || 'Erro ao criar atividade');
     } else {
       setSuccess(true);
       setAttachments([]);
@@ -123,7 +131,7 @@ export function CreateActivity() {
           Materiais de apoio
         </div>
         <p className="mt-1 text-xs leading-6 text-[#6d79a5] dark:text-[#9db2d8]">
-          Anexe ate {ACTIVITY_ATTACHMENT_MAX_FILES} arquivos por atividade. Formatos aceitos: video, PDF, Word e PowerPoint.
+          Anexe ate {ACTIVITY_ATTACHMENT_MAX_FILES} arquivos por atividade. Formatos aceitos: video, PDF, Word e PowerPoint. Total por envio: ate {getServerlessUploadLimitLabel()}.
         </p>
         <input
           ref={fileInputRef}

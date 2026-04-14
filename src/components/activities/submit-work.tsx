@@ -7,6 +7,7 @@ import { useSession } from 'next-auth/react';
 import { FileText, Loader2, Send } from 'lucide-react';
 import { isDemoLogin } from '@/lib/demo';
 import { getSubmissionPdfHref } from '@/lib/submission-pdf';
+import { SERVERLESS_SAFE_UPLOAD_BYTES, getServerlessUploadLimitLabel, getServerlessUploadLimitMessage } from '@/lib/upload-limits';
 import { Button } from '../ui/button';
 
 type ExistingSubmission = {
@@ -69,6 +70,12 @@ export function SubmitWork({ activityId, existingSubmission }: { activityId: str
       return;
     }
 
+    if (pdfFile.size > SERVERLESS_SAFE_UPLOAD_BYTES) {
+      setLoading(false);
+      setStatus(getServerlessUploadLimitMessage('arquivos PDF'));
+      return;
+    }
+
     if (isDemoLogin(login)) {
       setLoading(false);
       setStatus('Envio de PDF simulado no modo demo.');
@@ -92,7 +99,7 @@ export function SubmitWork({ activityId, existingSubmission }: { activityId: str
     setLoading(false);
 
     if (!res.ok) {
-      setStatus(body.error || 'Erro ao enviar PDF.');
+      setStatus(res.status === 413 ? getServerlessUploadLimitMessage('arquivos PDF') : body.error || 'Erro ao enviar PDF.');
       return;
     }
 
@@ -108,7 +115,7 @@ export function SubmitWork({ activityId, existingSubmission }: { activityId: str
   return (
     <div className="space-y-3 rounded-[30px] border border-[#dde3fb] bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(248,249,255,0.9))] p-5 shadow-[0_20px_50px_rgba(74,73,140,0.1)]">
       <p className="text-sm font-semibold text-[#22347e]">Enviar redacao em PDF</p>
-      <p className="text-xs leading-6 text-[#6d79a5]">Ao enviar, sua redacao entra automaticamente na fila de correcoes do professor.</p>
+      <p className="text-xs leading-6 text-[#6d79a5]">Ao enviar, sua redacao entra automaticamente na fila de correcoes do professor. Tamanho maximo por envio no deploy atual: {getServerlessUploadLimitLabel()}.</p>
       <textarea
         value={content}
         onChange={(e) => setContent(e.target.value)}
