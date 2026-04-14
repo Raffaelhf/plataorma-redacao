@@ -104,40 +104,20 @@ model TeacherProfile {
 }
 
 model Activity {
-<<<<<<< HEAD
-  id                 String           @id @default(cuid())
-  title              String
-  description        String
-  prompt             String
-  tags               String[]
-  status             ActivityStatus   @default(DRAFT)
-  publishedAt        DateTime?
-  dueDate            DateTime?
-  attachmentUrl      String?
-  attachmentName     String?
-  attachmentMimeType String?
-  attachmentData     Bytes?
-  createdAt          DateTime         @default(now())
-  updatedAt          DateTime         @updatedAt
-  createdById        String?
-  createdBy          TeacherProfile?  @relation(fields: [createdById], references: [id])
-  submissions        Submission[]
-=======
-  id           String           @id @default(cuid())
+  id           String               @id @default(cuid())
   title        String
   description  String
   prompt       String
   tags         String[]
-  status       ActivityStatus   @default(DRAFT)
+  status       ActivityStatus       @default(DRAFT)
   publishedAt  DateTime?
   dueDate      DateTime?
-  createdAt    DateTime         @default(now())
-  updatedAt    DateTime         @updatedAt
+  createdAt    DateTime             @default(now())
+  updatedAt    DateTime             @updatedAt
   createdById  String?
-  createdBy    TeacherProfile?  @relation(fields: [createdById], references: [id])
+  createdBy    TeacherProfile?      @relation(fields: [createdById], references: [id])
   attachments  ActivityAttachment[]
   submissions  Submission[]
->>>>>>> e40f05bd7973d64a521a07873574c13fee880b8f
 }
 
 model ActivityAttachment {
