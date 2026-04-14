@@ -79,6 +79,7 @@ export default async function ActivityDetail({ params }: PageProps) {
       : null;
 
   const visibleSubmissions = isStudent ? (existingStudentSubmission ? [existingStudentSubmission] : []) : activity.submissions;
+  const activityDueDate = 'dueDate' in activity ? activity.dueDate : null;
 
   return (
     <div className="space-y-6">
@@ -102,7 +103,7 @@ export default async function ActivityDetail({ params }: PageProps) {
             prompt: activity.prompt,
             tags: activity.tags,
             status: activity.status === 'PUBLISHED' ? 'PUBLISHED' : 'DRAFT',
-            dueDate: activity.dueDate ? new Date(activity.dueDate).toISOString().slice(0, 10) : null,
+            dueDate: activityDueDate ? new Date(activityDueDate).toISOString().slice(0, 10) : null,
             attachments: activity.attachments,
           }}
         />
