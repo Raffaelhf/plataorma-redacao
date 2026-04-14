@@ -1,12 +1,20 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { Instagram, MessageCircle } from 'lucide-react';
+import { Instagram } from 'lucide-react';
 import { PlatformLogo } from '@/components/branding/platform-logo';
 import { footerColumns } from './data';
 
 type FooterProps = {
   whatsappHref?: string | null;
 };
+
+function WhatsAppIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5 fill-current">
+      <path d="M19.1 4.9A9.84 9.84 0 0 0 12.02 2C6.58 2 2.16 6.42 2.16 11.87c0 1.74.45 3.44 1.3 4.94L2 22l5.34-1.4a9.82 9.82 0 0 0 4.68 1.19h.01c5.44 0 9.86-4.42 9.86-9.87 0-2.63-1.03-5.1-2.79-7.02Zm-7.08 15.2h-.01a8.14 8.14 0 0 1-4.14-1.13l-.3-.18-3.17.83.85-3.09-.2-.32a8.17 8.17 0 0 1-1.25-4.34c0-4.5 3.67-8.17 8.19-8.17 2.18 0 4.23.84 5.77 2.39a8.08 8.08 0 0 1 2.39 5.78c0 4.51-3.67 8.18-8.13 8.23Zm4.49-6.13c-.25-.13-1.48-.73-1.7-.81-.23-.08-.39-.12-.56.12-.16.24-.64.8-.78.96-.14.17-.28.18-.53.06-.25-.13-1.04-.38-1.98-1.22-.73-.65-1.22-1.45-1.36-1.69-.14-.24-.01-.37.1-.49.11-.11.25-.29.37-.43.12-.14.16-.24.25-.4.08-.17.04-.31-.02-.43-.06-.13-.56-1.35-.76-1.84-.2-.48-.41-.42-.56-.43h-.48c-.16 0-.43.06-.66.31-.23.24-.87.85-.87 2.07 0 1.22.89 2.4 1.01 2.56.12.16 1.75 2.67 4.23 3.74.59.25 1.05.4 1.4.5.59.19 1.13.16 1.55.1.47-.07 1.48-.61 1.69-1.2.21-.59.21-1.1.15-1.2-.06-.1-.22-.16-.47-.28Z" />
+    </svg>
+  );
+}
 
 export function Footer({ whatsappHref }: FooterProps) {
   return (
@@ -58,10 +66,9 @@ export function Footer({ whatsappHref }: FooterProps) {
                 target="_blank"
                 rel="noreferrer"
                 aria-label="Falar no WhatsApp"
-                className="inline-flex h-11 items-center justify-center gap-2 rounded-full bg-[linear-gradient(180deg,#6be28d_0%,#1eb35b_100%)] px-5 text-sm font-semibold text-white shadow-[0_8px_18px_rgba(0,0,0,0.14)] transition-transform duration-200 hover:-translate-y-0.5"
+                className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-[linear-gradient(180deg,#6be28d_0%,#1eb35b_100%)] text-white shadow-[0_8px_18px_rgba(0,0,0,0.14)] transition-transform duration-200 hover:-translate-y-0.5"
               >
-                <MessageCircle className="h-5 w-5 shrink-0 text-white" />
-                <span className="leading-none">WhatsApp</span>
+                <WhatsAppIcon />
               </a>
             ) : null}
           </div>

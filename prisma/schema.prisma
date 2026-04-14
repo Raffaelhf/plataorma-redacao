@@ -104,6 +104,7 @@ model TeacherProfile {
 }
 
 model Activity {
+<<<<<<< HEAD
   id                 String           @id @default(cuid())
   title              String
   description        String
@@ -121,6 +122,35 @@ model Activity {
   createdById        String?
   createdBy          TeacherProfile?  @relation(fields: [createdById], references: [id])
   submissions        Submission[]
+=======
+  id           String           @id @default(cuid())
+  title        String
+  description  String
+  prompt       String
+  tags         String[]
+  status       ActivityStatus   @default(DRAFT)
+  publishedAt  DateTime?
+  dueDate      DateTime?
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+  createdById  String?
+  createdBy    TeacherProfile?  @relation(fields: [createdById], references: [id])
+  attachments  ActivityAttachment[]
+  submissions  Submission[]
+>>>>>>> e40f05bd7973d64a521a07873574c13fee880b8f
+}
+
+model ActivityAttachment {
+  id          String   @id @default(cuid())
+  activityId  String
+  fileName    String
+  mimeType    String
+  sizeInBytes Int
+  fileData    Bytes
+  createdAt   DateTime @default(now())
+  activity    Activity @relation(fields: [activityId], references: [id], onDelete: Cascade)
+
+  @@index([activityId, createdAt])
 }
 
 model Submission {

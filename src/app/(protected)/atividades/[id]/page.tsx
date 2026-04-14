@@ -1,24 +1,33 @@
 import { notFound } from 'next/navigation';
+import { Download, FileText, FileVideo, Paperclip } from 'lucide-react';
+import { formatFileSize, getActivityAttachmentKindLabel } from '@/lib/activity-attachments';
 import { prisma } from '@/lib/prisma';
 import { getActivityAttachmentHref } from '@/lib/activity-attachment';
 import { getSubmissionPdfHref } from '@/lib/submission-pdf';
+import { ManageActivity } from '@/components/activities/manage-activity';
 import { SubmitWork } from '@/components/activities/submit-work';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { getAuthSession } from '@/lib/auth';
 import { getDemoActivityById, getDemoSubmissionsByActivityId, isDemoSession } from '@/lib/demo';
+import { isAdminRole, isTeacherRole } from '@/lib/roles';
 
 type PageProps = { params: Promise<{ id: string }> };
 
 export default async function ActivityDetail({ params }: PageProps) {
   const { id } = await params;
   const session = await getAuthSession();
-  const activity = isDemoSession(session)
+  const isDemo = isDemoSession(session);
+  const isStudent = session?.user?.role === 'STUDENT';
+  const isAdmin = isAdminRole(session?.user?.role);
+  const isTeacher = isTeacherRole(session?.user?.role);
+  const activity = isDemo
     ? (() => {
         const demoActivity = getDemoActivityById(id);
         if (!demoActivity) return null;
         return {
           ...demoActivity,
+          attachments: [],
           submissions: getDemoSubmissionsByActivityId(id).map((submission) => ({
             ...submission,
             student: { user: { name: submission.studentName } },
@@ -28,17 +37,43 @@ export default async function ActivityDetail({ params }: PageProps) {
           })),
         };
       })()
-    : await prisma.activity.findUnique({
-        where: { id },
-        include: { submissions: { include: { student: { include: { user: true } }, corrections: true } } },
+    : await prisma.activity.findFirst({
+        where: {
+          id,
+          ...(isStudent
+            ? { status: 'PUBLISHED' }
+            : isTeacher && !isAdmin
+              ? { createdById: session?.user?.teacherId ?? '__teacher_without_profile__' }
+              : {}),
+        },
+        include: {
+          attachments: {
+            select: {
+              id: true,
+              fileName: true,
+              mimeType: true,
+              sizeInBytes: true,
+              createdAt: true,
+            },
+          },
+          submissions: { include: { student: { include: { user: true } }, corrections: true } },
+        },
       });
 
   if (!activity) return notFound();
 
+<<<<<<< HEAD
   const activityAttachmentHref = getActivityAttachmentHref(activity);
+=======
+  const activityOwnerTeacherId = !isDemo && 'createdById' in activity ? activity.createdById : null;
+  const activityDueDate = !isDemo && 'dueDate' in activity ? activity.dueDate : null;
+  const canManageActivity =
+    !isDemo &&
+    (isAdmin || (isTeacher && Boolean(session?.user?.teacherId) && activityOwnerTeacherId === session?.user?.teacherId));
+>>>>>>> e40f05bd7973d64a521a07873574c13fee880b8f
 
   const existingStudentSubmission =
-    session?.user?.role === 'STUDENT' && session.user.studentId
+    isStudent && session?.user?.studentId
       ? activity.submissions.find((submission) => submission.studentId === session.user.studentId) ?? null
       : null;
 
@@ -54,6 +89,21 @@ export default async function ActivityDetail({ params }: PageProps) {
           <Badge label={activity.status} variant={activity.status === 'PUBLISHED' ? 'success' : 'muted'} />
         </div>
       </div>
+
+      {canManageActivity ? (
+        <ManageActivity
+          activity={{
+            id: activity.id,
+            title: activity.title,
+            description: activity.description,
+            prompt: activity.prompt,
+            tags: activity.tags,
+            status: activity.status === 'PUBLISHED' ? 'PUBLISHED' : 'DRAFT',
+            dueDate: activityDueDate ? new Date(activityDueDate).toISOString().slice(0, 10) : null,
+            attachments: activity.attachments,
+          }}
+        />
+      ) : null}
 
       <Card className="border-[#dde3fb] bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(248,249,255,0.9))] shadow-[0_20px_50px_rgba(74,73,140,0.1)]">
         <p className="text-sm font-semibold text-[#22347e]">Prompt</p>
@@ -80,7 +130,45 @@ export default async function ActivityDetail({ params }: PageProps) {
         </div>
       </Card>
 
-      {session?.user?.role === 'STUDENT' && <SubmitWork activityId={activity.id} existingSubmission={existingStudentSubmission} />}
+      {activity.attachments.length > 0 ? (
+        <Card className="border-[#dde3fb] bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(248,249,255,0.9))] shadow-[0_20px_50px_rgba(74,73,140,0.1)]">
+          <div className="flex items-center gap-2">
+            <Paperclip className="h-4 w-4 text-[#4250d4]" />
+            <p className="text-sm font-semibold text-[#22347e]">Materiais de apoio</p>
+          </div>
+          <div className="mt-4 space-y-3">
+            {activity.attachments.map((attachment) => {
+              const attachmentKind = getActivityAttachmentKindLabel(attachment.fileName, attachment.mimeType);
+              const AttachmentIcon = attachmentKind === 'Video' ? FileVideo : FileText;
+
+              return (
+                <div key={attachment.id} className="flex flex-col gap-3 rounded-2xl border border-[#e4e8f7] bg-white/80 p-4 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2 text-sm font-semibold text-[#22347e]">
+                      <AttachmentIcon className="h-4 w-4 shrink-0 text-[#4250d4]" />
+                      <span className="truncate">{attachment.fileName}</span>
+                    </div>
+                    <p className="mt-1 text-xs text-[#6d79a5]">
+                      {attachmentKind} • {formatFileSize(attachment.sizeInBytes)}
+                    </p>
+                  </div>
+                  <a
+                    href={`/api/activity-attachments/${attachment.id}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex w-fit items-center gap-2 rounded-full bg-[#eef2ff] px-4 py-2 text-xs font-semibold text-[#4250d4]"
+                  >
+                    <Download className="h-3.5 w-3.5" />
+                    Abrir material
+                  </a>
+                </div>
+              );
+            })}
+          </div>
+        </Card>
+      ) : null}
+
+      {isStudent && <SubmitWork activityId={activity.id} existingSubmission={existingStudentSubmission} />}
 
       <Card className="border-[#dde3fb] bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(248,249,255,0.9))] shadow-[0_20px_50px_rgba(74,73,140,0.1)]">
         <p className="text-lg font-semibold text-[#22347e]">Envios</p>

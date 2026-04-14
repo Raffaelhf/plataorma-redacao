@@ -1,10 +1,10 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import { Award, BarChart3, Clock3, PenSquare } from 'lucide-react';
+import { Award, BarChart3, CalendarClock, Clock3, PenSquare, Radio } from 'lucide-react';
 import { prisma } from '@/lib/prisma';
 import { getAuthSession } from '@/lib/auth';
 import { Badge } from '@/components/ui/badge';
-import { demoActivities, demoSubmissions, isDemoStudentSession } from '@/lib/demo';
+import { demoActivities, demoLiveClasses, demoSubmissions, isDemoStudentSession } from '@/lib/demo';
 
 function StatBox({
   title,
@@ -30,13 +30,21 @@ function StatBox({
   );
 }
 
+function formatLiveDate(value: Date | string) {
+  return new Intl.DateTimeFormat('pt-BR', {
+    dateStyle: 'short',
+    timeStyle: 'short',
+  }).format(new Date(value));
+}
+
 export default async function StudentDashboard() {
   const session = await getAuthSession();
   if (!session?.user?.studentId) redirect('/login');
 
   const isDemo = isDemoStudentSession(session);
+  const now = new Date();
 
-  const [totals, recentSubmissions, activities] = isDemo
+  const [totals, recentSubmissions, activities, liveClasses] = isDemo
     ? [
         {
           _count: demoSubmissions.length,
@@ -55,6 +63,7 @@ export default async function StudentDashboard() {
             corrections: submission.correctionComment ? [{ comments: submission.correctionComment }] : [],
           })),
         demoActivities.slice(0, 4),
+        demoLiveClasses.slice().sort((a, b) => a.scheduledAt.getTime() - b.scheduledAt.getTime()),
       ]
     : await Promise.all([
         prisma.submission.aggregate({
@@ -73,9 +82,21 @@ export default async function StudentDashboard() {
           orderBy: { publishedAt: 'desc' },
           take: 4,
         }),
+        prisma.liveClass.findMany({
+          orderBy: { scheduledAt: 'asc' },
+          take: 6,
+        }),
       ]);
 
   const avg = Math.round(totals._avg.grade ?? 0);
+  const happeningNow =
+    liveClasses.find((liveClass) => {
+      const start = new Date(liveClass.scheduledAt).getTime();
+      const end = start + 2 * 60 * 60 * 1000;
+      const current = now.getTime();
+      return current >= start && current <= end;
+    }) ?? null;
+  const nextLiveClass = happeningNow ?? liveClasses.find((liveClass) => new Date(liveClass.scheduledAt).getTime() > now.getTime()) ?? null;
 
   return (
     <div className="space-y-6">
@@ -96,6 +117,58 @@ export default async function StudentDashboard() {
         <StatBox title="Em correção" value={recentSubmissions.filter((s) => s.status === 'UNDER_REVIEW').length} icon={<Clock3 className="h-5 w-5" />} />
         <StatBox title="Atividades novas" value={activities.length} icon={<BarChart3 className="h-5 w-5" />} />
       </div>
+
+      <section className="rounded-[28px] border border-[#dde3fb] bg-[linear-gradient(135deg,rgba(255,255,255,0.98),rgba(244,242,255,0.94),rgba(255,242,234,0.92))] p-4 shadow-[0_20px_50px_rgba(74,73,140,0.1)] dark:border-slate-700/80 dark:bg-[linear-gradient(135deg,rgba(15,23,42,0.96),rgba(23,32,59,0.94),rgba(42,31,56,0.92))] dark:shadow-[0_24px_56px_rgba(0,0,0,0.34)]">
+        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <div className="flex items-start gap-3">
+            <div
+              className={`mt-1 flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl ${
+                happeningNow
+                  ? 'bg-[#eef9f4] text-[#1b7f62] dark:bg-emerald-500/18 dark:text-emerald-300'
+                  : 'bg-[#eef2ff] text-[#4250d4] dark:bg-indigo-500/18 dark:text-indigo-200'
+              }`}
+            >
+              {happeningNow ? <Radio className="h-5 w-5" /> : <CalendarClock className="h-5 w-5" />}
+            </div>
+            <div>
+              <p className="text-sm font-semibold text-[#5a69a1] dark:text-[#acb8ff]">{happeningNow ? 'Aula ao vivo agora' : 'Próxima aula ao vivo'}</p>
+              {nextLiveClass ? (
+                <>
+                  <p className="mt-1 text-base font-semibold text-[#22347e] dark:text-slate-100">{nextLiveClass.title}</p>
+                  <p className="mt-1 text-sm leading-6 text-[#63719c] dark:text-slate-300">{formatLiveDate(nextLiveClass.scheduledAt)}</p>
+                  <p className="mt-1 line-clamp-2 text-sm leading-6 text-[#6d79a5] dark:text-slate-400">{nextLiveClass.description}</p>
+                </>
+              ) : (
+                <p className="mt-1 text-sm leading-6 text-[#6d79a5] dark:text-slate-400">Nenhuma aula ao vivo agendada no momento.</p>
+              )}
+            </div>
+          </div>
+
+          <div className="flex shrink-0 flex-wrap gap-3">
+            {nextLiveClass?.meetingUrl ? (
+              <Link
+                href={nextLiveClass.meetingUrl}
+                target="_blank"
+                rel="noreferrer"
+                className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold shadow-[0_14px_26px_rgba(74,73,140,0.12)] ${
+                  happeningNow
+                    ? 'bg-[#1b7f62] text-white dark:bg-emerald-500 dark:text-slate-950'
+                    : 'bg-[#eef2ff] text-[#4250d4] dark:bg-indigo-500/18 dark:text-indigo-100'
+                }`}
+              >
+                {happeningNow ? <Radio className="h-4 w-4" /> : <CalendarClock className="h-4 w-4" />}
+                {happeningNow ? 'Entrar agora' : 'Abrir sala'}
+              </Link>
+            ) : null}
+            <Link
+              href="/ao-vivo"
+              className="inline-flex items-center gap-2 rounded-full border border-[#d9def8] bg-white/80 px-4 py-2 text-sm font-semibold text-[#4250d4] dark:border-slate-600/80 dark:bg-slate-800/88 dark:text-slate-100"
+            >
+              Ver agenda
+            </Link>
+          </div>
+        </div>
+      </section>
 
       <div className="grid gap-4 xl:grid-cols-2">
         <section className="rounded-[30px] border border-[#dde3fb] bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(248,249,255,0.9))] p-5 shadow-[0_20px_50px_rgba(74,73,140,0.1)]">

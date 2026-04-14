@@ -5,11 +5,12 @@ import { CreateActivity } from '@/components/activities/create-activity';
 import { getAuthSession } from '@/lib/auth';
 import { getActivityAttachmentHref } from '@/lib/activity-attachment';
 import { demoActivities, isDemoSession } from '@/lib/demo';
-import { isTeacherRole } from '@/lib/roles';
+import { isAdminRole, isTeacherRole } from '@/lib/roles';
 
 export default async function ActivitiesPage() {
   const session = await getAuthSession();
   const isTeacher = isTeacherRole(session?.user?.role);
+  const isAdmin = isAdminRole(session?.user?.role);
   const isStudent = session?.user?.role === 'STUDENT';
   const activities = isDemoSession(session)
     ? demoActivities
@@ -21,7 +22,11 @@ export default async function ActivitiesPage() {
                 not: null,
               },
             }
-          : undefined,
+          : isAdmin
+            ? undefined
+            : {
+                createdById: session?.user?.teacherId ?? '__teacher_without_profile__',
+              },
         orderBy: { createdAt: 'desc' },
       });
 

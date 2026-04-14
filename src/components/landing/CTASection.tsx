@@ -72,7 +72,7 @@ export function CTASection() {
                   </Button>
                 </Link>
 
-                <Link href="#planos">
+                <Link href="/#planos">
                   <Button
                     variant="secondary"
                     className="h-14 rounded-full border-[#d7defe] bg-white/76 px-7 text-[1rem] font-bold text-[#24329c] shadow-[0_18px_38px_rgba(49,60,142,0.1)] backdrop-blur-md hover:bg-white sm:h-[60px] sm:px-8 dark:border-slate-600 dark:bg-slate-900/72"
