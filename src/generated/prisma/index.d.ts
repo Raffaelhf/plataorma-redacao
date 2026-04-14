@@ -6069,10 +6069,6 @@ export namespace Prisma {
     status: $Enums.ActivityStatus | null
     publishedAt: Date | null
     dueDate: Date | null
-    attachmentUrl: string | null
-    attachmentName: string | null
-    attachmentMimeType: string | null
-    attachmentData: Buffer | null
     createdAt: Date | null
     updatedAt: Date | null
     createdById: string | null
@@ -6086,10 +6082,6 @@ export namespace Prisma {
     status: $Enums.ActivityStatus | null
     publishedAt: Date | null
     dueDate: Date | null
-    attachmentUrl: string | null
-    attachmentName: string | null
-    attachmentMimeType: string | null
-    attachmentData: Buffer | null
     createdAt: Date | null
     updatedAt: Date | null
     createdById: string | null
@@ -6104,10 +6096,6 @@ export namespace Prisma {
     status: number
     publishedAt: number
     dueDate: number
-    attachmentUrl: number
-    attachmentName: number
-    attachmentMimeType: number
-    attachmentData: number
     createdAt: number
     updatedAt: number
     createdById: number
@@ -6123,10 +6111,6 @@ export namespace Prisma {
     status?: true
     publishedAt?: true
     dueDate?: true
-    attachmentUrl?: true
-    attachmentName?: true
-    attachmentMimeType?: true
-    attachmentData?: true
     createdAt?: true
     updatedAt?: true
     createdById?: true
@@ -6140,10 +6124,6 @@ export namespace Prisma {
     status?: true
     publishedAt?: true
     dueDate?: true
-    attachmentUrl?: true
-    attachmentName?: true
-    attachmentMimeType?: true
-    attachmentData?: true
     createdAt?: true
     updatedAt?: true
     createdById?: true
@@ -6158,10 +6138,6 @@ export namespace Prisma {
     status?: true
     publishedAt?: true
     dueDate?: true
-    attachmentUrl?: true
-    attachmentName?: true
-    attachmentMimeType?: true
-    attachmentData?: true
     createdAt?: true
     updatedAt?: true
     createdById?: true
@@ -6249,10 +6225,6 @@ export namespace Prisma {
     status: $Enums.ActivityStatus
     publishedAt: Date | null
     dueDate: Date | null
-    attachmentUrl: string | null
-    attachmentName: string | null
-    attachmentMimeType: string | null
-    attachmentData: Buffer | null
     createdAt: Date
     updatedAt: Date
     createdById: string | null
@@ -6284,10 +6256,6 @@ export namespace Prisma {
     status?: boolean
     publishedAt?: boolean
     dueDate?: boolean
-    attachmentUrl?: boolean
-    attachmentName?: boolean
-    attachmentMimeType?: boolean
-    attachmentData?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     createdById?: boolean
@@ -6306,10 +6274,6 @@ export namespace Prisma {
     status?: boolean
     publishedAt?: boolean
     dueDate?: boolean
-    attachmentUrl?: boolean
-    attachmentName?: boolean
-    attachmentMimeType?: boolean
-    attachmentData?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     createdById?: boolean
@@ -6325,10 +6289,6 @@ export namespace Prisma {
     status?: boolean
     publishedAt?: boolean
     dueDate?: boolean
-    attachmentUrl?: boolean
-    attachmentName?: boolean
-    attachmentMimeType?: boolean
-    attachmentData?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     createdById?: boolean
@@ -6360,10 +6320,6 @@ export namespace Prisma {
       status: $Enums.ActivityStatus
       publishedAt: Date | null
       dueDate: Date | null
-      attachmentUrl: string | null
-      attachmentName: string | null
-      attachmentMimeType: string | null
-      attachmentData: Buffer | null
       createdAt: Date
       updatedAt: Date
       createdById: string | null
@@ -6771,10 +6727,6 @@ export namespace Prisma {
     readonly status: FieldRef<"Activity", 'ActivityStatus'>
     readonly publishedAt: FieldRef<"Activity", 'DateTime'>
     readonly dueDate: FieldRef<"Activity", 'DateTime'>
-    readonly attachmentUrl: FieldRef<"Activity", 'String'>
-    readonly attachmentName: FieldRef<"Activity", 'String'>
-    readonly attachmentMimeType: FieldRef<"Activity", 'String'>
-    readonly attachmentData: FieldRef<"Activity", 'Bytes'>
     readonly createdAt: FieldRef<"Activity", 'DateTime'>
     readonly updatedAt: FieldRef<"Activity", 'DateTime'>
     readonly createdById: FieldRef<"Activity", 'String'>
@@ -21493,10 +21445,6 @@ export namespace Prisma {
     status: 'status',
     publishedAt: 'publishedAt',
     dueDate: 'dueDate',
-    attachmentUrl: 'attachmentUrl',
-    attachmentName: 'attachmentName',
-    attachmentMimeType: 'attachmentMimeType',
-    attachmentData: 'attachmentData',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     createdById: 'createdById'
@@ -22195,10 +22143,6 @@ export namespace Prisma {
     status?: EnumActivityStatusFilter<"Activity"> | $Enums.ActivityStatus
     publishedAt?: DateTimeNullableFilter<"Activity"> | Date | string | null
     dueDate?: DateTimeNullableFilter<"Activity"> | Date | string | null
-    attachmentUrl?: StringNullableFilter<"Activity"> | string | null
-    attachmentName?: StringNullableFilter<"Activity"> | string | null
-    attachmentMimeType?: StringNullableFilter<"Activity"> | string | null
-    attachmentData?: BytesNullableFilter<"Activity"> | Buffer | null
     createdAt?: DateTimeFilter<"Activity"> | Date | string
     updatedAt?: DateTimeFilter<"Activity"> | Date | string
     createdById?: StringNullableFilter<"Activity"> | string | null
@@ -22216,10 +22160,6 @@ export namespace Prisma {
     status?: SortOrder
     publishedAt?: SortOrderInput | SortOrder
     dueDate?: SortOrderInput | SortOrder
-    attachmentUrl?: SortOrderInput | SortOrder
-    attachmentName?: SortOrderInput | SortOrder
-    attachmentMimeType?: SortOrderInput | SortOrder
-    attachmentData?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     createdById?: SortOrderInput | SortOrder
@@ -22240,10 +22180,6 @@ export namespace Prisma {
     status?: EnumActivityStatusFilter<"Activity"> | $Enums.ActivityStatus
     publishedAt?: DateTimeNullableFilter<"Activity"> | Date | string | null
     dueDate?: DateTimeNullableFilter<"Activity"> | Date | string | null
-    attachmentUrl?: StringNullableFilter<"Activity"> | string | null
-    attachmentName?: StringNullableFilter<"Activity"> | string | null
-    attachmentMimeType?: StringNullableFilter<"Activity"> | string | null
-    attachmentData?: BytesNullableFilter<"Activity"> | Buffer | null
     createdAt?: DateTimeFilter<"Activity"> | Date | string
     updatedAt?: DateTimeFilter<"Activity"> | Date | string
     createdById?: StringNullableFilter<"Activity"> | string | null
@@ -22261,10 +22197,6 @@ export namespace Prisma {
     status?: SortOrder
     publishedAt?: SortOrderInput | SortOrder
     dueDate?: SortOrderInput | SortOrder
-    attachmentUrl?: SortOrderInput | SortOrder
-    attachmentName?: SortOrderInput | SortOrder
-    attachmentMimeType?: SortOrderInput | SortOrder
-    attachmentData?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     createdById?: SortOrderInput | SortOrder
@@ -22285,10 +22217,6 @@ export namespace Prisma {
     status?: EnumActivityStatusWithAggregatesFilter<"Activity"> | $Enums.ActivityStatus
     publishedAt?: DateTimeNullableWithAggregatesFilter<"Activity"> | Date | string | null
     dueDate?: DateTimeNullableWithAggregatesFilter<"Activity"> | Date | string | null
-    attachmentUrl?: StringNullableWithAggregatesFilter<"Activity"> | string | null
-    attachmentName?: StringNullableWithAggregatesFilter<"Activity"> | string | null
-    attachmentMimeType?: StringNullableWithAggregatesFilter<"Activity"> | string | null
-    attachmentData?: BytesNullableWithAggregatesFilter<"Activity"> | Buffer | null
     createdAt?: DateTimeWithAggregatesFilter<"Activity"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Activity"> | Date | string
     createdById?: StringNullableWithAggregatesFilter<"Activity"> | string | null
@@ -23741,10 +23669,6 @@ export namespace Prisma {
     status?: $Enums.ActivityStatus
     publishedAt?: Date | string | null
     dueDate?: Date | string | null
-    attachmentUrl?: string | null
-    attachmentName?: string | null
-    attachmentMimeType?: string | null
-    attachmentData?: Buffer | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: TeacherProfileCreateNestedOneWithoutActivitiesInput
@@ -23761,10 +23685,6 @@ export namespace Prisma {
     status?: $Enums.ActivityStatus
     publishedAt?: Date | string | null
     dueDate?: Date | string | null
-    attachmentUrl?: string | null
-    attachmentName?: string | null
-    attachmentMimeType?: string | null
-    attachmentData?: Buffer | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdById?: string | null
@@ -23781,10 +23701,6 @@ export namespace Prisma {
     status?: EnumActivityStatusFieldUpdateOperationsInput | $Enums.ActivityStatus
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    attachmentUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    attachmentName?: NullableStringFieldUpdateOperationsInput | string | null
-    attachmentMimeType?: NullableStringFieldUpdateOperationsInput | string | null
-    attachmentData?: NullableBytesFieldUpdateOperationsInput | Buffer | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: TeacherProfileUpdateOneWithoutActivitiesNestedInput
@@ -23801,10 +23717,6 @@ export namespace Prisma {
     status?: EnumActivityStatusFieldUpdateOperationsInput | $Enums.ActivityStatus
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    attachmentUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    attachmentName?: NullableStringFieldUpdateOperationsInput | string | null
-    attachmentMimeType?: NullableStringFieldUpdateOperationsInput | string | null
-    attachmentData?: NullableBytesFieldUpdateOperationsInput | Buffer | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
@@ -23821,10 +23733,6 @@ export namespace Prisma {
     status?: $Enums.ActivityStatus
     publishedAt?: Date | string | null
     dueDate?: Date | string | null
-    attachmentUrl?: string | null
-    attachmentName?: string | null
-    attachmentMimeType?: string | null
-    attachmentData?: Buffer | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdById?: string | null
@@ -23839,10 +23747,6 @@ export namespace Prisma {
     status?: EnumActivityStatusFieldUpdateOperationsInput | $Enums.ActivityStatus
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    attachmentUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    attachmentName?: NullableStringFieldUpdateOperationsInput | string | null
-    attachmentMimeType?: NullableStringFieldUpdateOperationsInput | string | null
-    attachmentData?: NullableBytesFieldUpdateOperationsInput | Buffer | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -23856,10 +23760,6 @@ export namespace Prisma {
     status?: EnumActivityStatusFieldUpdateOperationsInput | $Enums.ActivityStatus
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    attachmentUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    attachmentName?: NullableStringFieldUpdateOperationsInput | string | null
-    attachmentMimeType?: NullableStringFieldUpdateOperationsInput | string | null
-    attachmentData?: NullableBytesFieldUpdateOperationsInput | Buffer | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
@@ -25514,13 +25414,6 @@ export namespace Prisma {
     not?: NestedEnumActivityStatusFilter<$PrismaModel> | $Enums.ActivityStatus
   }
 
-<<<<<<< HEAD
-  export type BytesNullableFilter<$PrismaModel = never> = {
-    equals?: Buffer | BytesFieldRefInput<$PrismaModel> | null
-    in?: Buffer[] | ListBytesFieldRefInput<$PrismaModel> | null
-    notIn?: Buffer[] | ListBytesFieldRefInput<$PrismaModel> | null
-    not?: NestedBytesNullableFilter<$PrismaModel> | Buffer | null
-=======
   export type ActivityAttachmentListRelationFilter = {
     every?: ActivityAttachmentWhereInput
     some?: ActivityAttachmentWhereInput
@@ -25529,7 +25422,6 @@ export namespace Prisma {
 
   export type ActivityAttachmentOrderByRelationAggregateInput = {
     _count?: SortOrder
->>>>>>> e40f05bd7973d64a521a07873574c13fee880b8f
   }
 
   export type ActivityCountOrderByAggregateInput = {
@@ -25541,10 +25433,6 @@ export namespace Prisma {
     status?: SortOrder
     publishedAt?: SortOrder
     dueDate?: SortOrder
-    attachmentUrl?: SortOrder
-    attachmentName?: SortOrder
-    attachmentMimeType?: SortOrder
-    attachmentData?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     createdById?: SortOrder
@@ -25558,10 +25446,6 @@ export namespace Prisma {
     status?: SortOrder
     publishedAt?: SortOrder
     dueDate?: SortOrder
-    attachmentUrl?: SortOrder
-    attachmentName?: SortOrder
-    attachmentMimeType?: SortOrder
-    attachmentData?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     createdById?: SortOrder
@@ -25575,10 +25459,6 @@ export namespace Prisma {
     status?: SortOrder
     publishedAt?: SortOrder
     dueDate?: SortOrder
-    attachmentUrl?: SortOrder
-    attachmentName?: SortOrder
-    attachmentMimeType?: SortOrder
-    attachmentData?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     createdById?: SortOrder
@@ -25594,9 +25474,6 @@ export namespace Prisma {
     _max?: NestedEnumActivityStatusFilter<$PrismaModel>
   }
 
-<<<<<<< HEAD
-  export type BytesNullableWithAggregatesFilter<$PrismaModel = never> = {
-=======
   export type IntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -25685,14 +25562,10 @@ export namespace Prisma {
   }
 
   export type BytesNullableFilter<$PrismaModel = never> = {
->>>>>>> e40f05bd7973d64a521a07873574c13fee880b8f
     equals?: Buffer | BytesFieldRefInput<$PrismaModel> | null
     in?: Buffer[] | ListBytesFieldRefInput<$PrismaModel> | null
     notIn?: Buffer[] | ListBytesFieldRefInput<$PrismaModel> | null
-    not?: NestedBytesNullableWithAggregatesFilter<$PrismaModel> | Buffer | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedBytesNullableFilter<$PrismaModel>
-    _max?: NestedBytesNullableFilter<$PrismaModel>
+    not?: NestedBytesNullableFilter<$PrismaModel> | Buffer | null
   }
 
   export type EnumSubmissionStatusFilter<$PrismaModel = never> = {
@@ -25772,6 +25645,16 @@ export namespace Prisma {
 
   export type SubmissionSumOrderByAggregateInput = {
     grade?: SortOrder
+  }
+
+  export type BytesNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Buffer | BytesFieldRefInput<$PrismaModel> | null
+    in?: Buffer[] | ListBytesFieldRefInput<$PrismaModel> | null
+    notIn?: Buffer[] | ListBytesFieldRefInput<$PrismaModel> | null
+    not?: NestedBytesNullableWithAggregatesFilter<$PrismaModel> | Buffer | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedBytesNullableFilter<$PrismaModel>
+    _max?: NestedBytesNullableFilter<$PrismaModel>
   }
 
   export type EnumSubmissionStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -27038,10 +26921,6 @@ export namespace Prisma {
     set?: $Enums.ActivityStatus
   }
 
-  export type NullableBytesFieldUpdateOperationsInput = {
-    set?: Buffer | null
-  }
-
   export type TeacherProfileUpdateOneWithoutActivitiesNestedInput = {
     create?: XOR<TeacherProfileCreateWithoutActivitiesInput, TeacherProfileUncheckedCreateWithoutActivitiesInput>
     connectOrCreate?: TeacherProfileCreateOrConnectWithoutActivitiesInput
@@ -27158,6 +27037,10 @@ export namespace Prisma {
     connectOrCreate?: CorrectionCreateOrConnectWithoutSubmissionInput | CorrectionCreateOrConnectWithoutSubmissionInput[]
     createMany?: CorrectionCreateManySubmissionInputEnvelope
     connect?: CorrectionWhereUniqueInput | CorrectionWhereUniqueInput[]
+  }
+
+  export type NullableBytesFieldUpdateOperationsInput = {
+    set?: Buffer | null
   }
 
   export type EnumSubmissionStatusFieldUpdateOperationsInput = {
@@ -27826,13 +27709,6 @@ export namespace Prisma {
     not?: NestedEnumActivityStatusFilter<$PrismaModel> | $Enums.ActivityStatus
   }
 
-  export type NestedBytesNullableFilter<$PrismaModel = never> = {
-    equals?: Buffer | BytesFieldRefInput<$PrismaModel> | null
-    in?: Buffer[] | ListBytesFieldRefInput<$PrismaModel> | null
-    notIn?: Buffer[] | ListBytesFieldRefInput<$PrismaModel> | null
-    not?: NestedBytesNullableFilter<$PrismaModel> | Buffer | null
-  }
-
   export type NestedEnumActivityStatusWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.ActivityStatus | EnumActivityStatusFieldRefInput<$PrismaModel>
     in?: $Enums.ActivityStatus[] | ListEnumActivityStatusFieldRefInput<$PrismaModel>
@@ -27843,8 +27719,6 @@ export namespace Prisma {
     _max?: NestedEnumActivityStatusFilter<$PrismaModel>
   }
 
-<<<<<<< HEAD
-=======
   export type NestedBytesFilter<$PrismaModel = never> = {
     equals?: Buffer | BytesFieldRefInput<$PrismaModel>
     in?: Buffer[] | ListBytesFieldRefInput<$PrismaModel>
@@ -27903,7 +27777,6 @@ export namespace Prisma {
     not?: NestedEnumSubmissionStatusFilter<$PrismaModel> | $Enums.SubmissionStatus
   }
 
->>>>>>> e40f05bd7973d64a521a07873574c13fee880b8f
   export type NestedBytesNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Buffer | BytesFieldRefInput<$PrismaModel> | null
     in?: Buffer[] | ListBytesFieldRefInput<$PrismaModel> | null
@@ -27912,13 +27785,6 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedBytesNullableFilter<$PrismaModel>
     _max?: NestedBytesNullableFilter<$PrismaModel>
-  }
-
-  export type NestedEnumSubmissionStatusFilter<$PrismaModel = never> = {
-    equals?: $Enums.SubmissionStatus | EnumSubmissionStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.SubmissionStatus[] | ListEnumSubmissionStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.SubmissionStatus[] | ListEnumSubmissionStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumSubmissionStatusFilter<$PrismaModel> | $Enums.SubmissionStatus
   }
 
   export type NestedEnumSubmissionStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -28647,10 +28513,6 @@ export namespace Prisma {
     status?: $Enums.ActivityStatus
     publishedAt?: Date | string | null
     dueDate?: Date | string | null
-    attachmentUrl?: string | null
-    attachmentName?: string | null
-    attachmentMimeType?: string | null
-    attachmentData?: Buffer | null
     createdAt?: Date | string
     updatedAt?: Date | string
     attachments?: ActivityAttachmentCreateNestedManyWithoutActivityInput
@@ -28666,10 +28528,6 @@ export namespace Prisma {
     status?: $Enums.ActivityStatus
     publishedAt?: Date | string | null
     dueDate?: Date | string | null
-    attachmentUrl?: string | null
-    attachmentName?: string | null
-    attachmentMimeType?: string | null
-    attachmentData?: Buffer | null
     createdAt?: Date | string
     updatedAt?: Date | string
     attachments?: ActivityAttachmentUncheckedCreateNestedManyWithoutActivityInput
@@ -28953,10 +28811,6 @@ export namespace Prisma {
     status?: EnumActivityStatusFilter<"Activity"> | $Enums.ActivityStatus
     publishedAt?: DateTimeNullableFilter<"Activity"> | Date | string | null
     dueDate?: DateTimeNullableFilter<"Activity"> | Date | string | null
-    attachmentUrl?: StringNullableFilter<"Activity"> | string | null
-    attachmentName?: StringNullableFilter<"Activity"> | string | null
-    attachmentMimeType?: StringNullableFilter<"Activity"> | string | null
-    attachmentData?: BytesNullableFilter<"Activity"> | Buffer | null
     createdAt?: DateTimeFilter<"Activity"> | Date | string
     updatedAt?: DateTimeFilter<"Activity"> | Date | string
     createdById?: StringNullableFilter<"Activity"> | string | null
@@ -29457,10 +29311,6 @@ export namespace Prisma {
     status?: $Enums.ActivityStatus
     publishedAt?: Date | string | null
     dueDate?: Date | string | null
-    attachmentUrl?: string | null
-    attachmentName?: string | null
-    attachmentMimeType?: string | null
-    attachmentData?: Buffer | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: TeacherProfileCreateNestedOneWithoutActivitiesInput
@@ -29476,10 +29326,6 @@ export namespace Prisma {
     status?: $Enums.ActivityStatus
     publishedAt?: Date | string | null
     dueDate?: Date | string | null
-    attachmentUrl?: string | null
-    attachmentName?: string | null
-    attachmentMimeType?: string | null
-    attachmentData?: Buffer | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdById?: string | null
@@ -29582,10 +29428,6 @@ export namespace Prisma {
     status?: EnumActivityStatusFieldUpdateOperationsInput | $Enums.ActivityStatus
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    attachmentUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    attachmentName?: NullableStringFieldUpdateOperationsInput | string | null
-    attachmentMimeType?: NullableStringFieldUpdateOperationsInput | string | null
-    attachmentData?: NullableBytesFieldUpdateOperationsInput | Buffer | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: TeacherProfileUpdateOneWithoutActivitiesNestedInput
@@ -29601,10 +29443,6 @@ export namespace Prisma {
     status?: EnumActivityStatusFieldUpdateOperationsInput | $Enums.ActivityStatus
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    attachmentUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    attachmentName?: NullableStringFieldUpdateOperationsInput | string | null
-    attachmentMimeType?: NullableStringFieldUpdateOperationsInput | string | null
-    attachmentData?: NullableBytesFieldUpdateOperationsInput | Buffer | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
@@ -31278,10 +31116,6 @@ export namespace Prisma {
     status?: $Enums.ActivityStatus
     publishedAt?: Date | string | null
     dueDate?: Date | string | null
-    attachmentUrl?: string | null
-    attachmentName?: string | null
-    attachmentMimeType?: string | null
-    attachmentData?: Buffer | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -31357,10 +31191,6 @@ export namespace Prisma {
     status?: EnumActivityStatusFieldUpdateOperationsInput | $Enums.ActivityStatus
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    attachmentUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    attachmentName?: NullableStringFieldUpdateOperationsInput | string | null
-    attachmentMimeType?: NullableStringFieldUpdateOperationsInput | string | null
-    attachmentData?: NullableBytesFieldUpdateOperationsInput | Buffer | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     attachments?: ActivityAttachmentUpdateManyWithoutActivityNestedInput
@@ -31376,10 +31206,6 @@ export namespace Prisma {
     status?: EnumActivityStatusFieldUpdateOperationsInput | $Enums.ActivityStatus
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    attachmentUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    attachmentName?: NullableStringFieldUpdateOperationsInput | string | null
-    attachmentMimeType?: NullableStringFieldUpdateOperationsInput | string | null
-    attachmentData?: NullableBytesFieldUpdateOperationsInput | Buffer | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     attachments?: ActivityAttachmentUncheckedUpdateManyWithoutActivityNestedInput
@@ -31395,10 +31221,6 @@ export namespace Prisma {
     status?: EnumActivityStatusFieldUpdateOperationsInput | $Enums.ActivityStatus
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    attachmentUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    attachmentName?: NullableStringFieldUpdateOperationsInput | string | null
-    attachmentMimeType?: NullableStringFieldUpdateOperationsInput | string | null
-    attachmentData?: NullableBytesFieldUpdateOperationsInput | Buffer | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

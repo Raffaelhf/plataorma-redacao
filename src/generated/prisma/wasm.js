@@ -165,10 +165,6 @@ exports.Prisma.ActivityScalarFieldEnum = {
   status: 'status',
   publishedAt: 'publishedAt',
   dueDate: 'dueDate',
-  attachmentUrl: 'attachmentUrl',
-  attachmentName: 'attachmentName',
-  attachmentMimeType: 'attachmentMimeType',
-  attachmentData: 'attachmentData',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   createdById: 'createdById'
