@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
 import { Badge } from '@/components/ui/badge';
 import { CreateActivity } from '@/components/activities/create-activity';
+import { DeleteActivityButton } from '@/components/activities/delete-activity-button';
 import { getAuthSession } from '@/lib/auth';
 import { demoActivities, isDemoSession } from '@/lib/demo';
 import { isAdminRole, isTeacherRole } from '@/lib/roles';
@@ -11,7 +12,8 @@ export default async function ActivitiesPage() {
   const isTeacher = isTeacherRole(session?.user?.role);
   const isAdmin = isAdminRole(session?.user?.role);
   const isStudent = session?.user?.role === 'STUDENT';
-  const activities = isDemoSession(session)
+  const isDemo = isDemoSession(session);
+  const activities = isDemo
     ? demoActivities.map((activity) => ({
         ...activity,
         attachments: [],
@@ -84,6 +86,9 @@ export default async function ActivitiesPage() {
                 >
                   Enviar PDF
                 </Link>
+              ) : null}
+              {!isStudent && !isDemo ? (
+                <DeleteActivityButton activityId={activity.id} activityTitle={activity.title} />
               ) : null}
             </div>
           </section>
