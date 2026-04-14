@@ -1,10 +1,9 @@
 type ActivityAttachmentLinkInput = {
   id: string;
-  attachmentUrl?: string | null;
-  attachmentName?: string | null;
+  attachments?: Array<{ id: string }>;
 };
 
 export function getActivityAttachmentHref(activity: ActivityAttachmentLinkInput) {
-  if (!activity.attachmentName && !activity.attachmentUrl) return null;
+  if (!activity.attachments?.length) return null;
   return `/api/activities/${activity.id}/attachment`;
 }

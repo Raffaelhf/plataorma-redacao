@@ -3,7 +3,6 @@ import { prisma } from '@/lib/prisma';
 import { Badge } from '@/components/ui/badge';
 import { CreateActivity } from '@/components/activities/create-activity';
 import { getAuthSession } from '@/lib/auth';
-import { getActivityAttachmentHref } from '@/lib/activity-attachment';
 import { demoActivities, isDemoSession } from '@/lib/demo';
 import { isAdminRole, isTeacherRole } from '@/lib/roles';
 
@@ -13,7 +12,10 @@ export default async function ActivitiesPage() {
   const isAdmin = isAdminRole(session?.user?.role);
   const isStudent = session?.user?.role === 'STUDENT';
   const activities = isDemoSession(session)
-    ? demoActivities
+    ? demoActivities.map((activity) => ({
+        ...activity,
+        attachments: [],
+      }))
     : await prisma.activity.findMany({
         where: isStudent
           ? {
@@ -28,6 +30,13 @@ export default async function ActivitiesPage() {
                 createdById: session?.user?.teacherId ?? '__teacher_without_profile__',
               },
         orderBy: { createdAt: 'desc' },
+        include: {
+          attachments: {
+            select: {
+              id: true,
+            },
+          },
+        },
       });
 
   return (
@@ -53,17 +62,19 @@ export default async function ActivitiesPage() {
                   #{tag}
                 </span>
               ))}
-              {getActivityAttachmentHref(activity) ? (
-                <span className="rounded-full bg-[#eef2ff] px-3 py-1 text-xs text-[#4250d4]">Com anexo</span>
+              {activity.attachments.length > 0 ? (
+                <span className="rounded-full bg-[#eef2ff] px-3 py-1 text-xs text-[#4250d4]">
+                  {activity.attachments.length === 1 ? '1 material' : `${activity.attachments.length} materiais`}
+                </span>
               ) : null}
             </div>
             <div className="flex flex-wrap items-center gap-3">
               <Link href={`/atividades/${activity.id}`} className="text-sm font-semibold text-[#4250d4]">
                 Ver detalhes
               </Link>
-              {getActivityAttachmentHref(activity) ? (
-                <Link href={getActivityAttachmentHref(activity)!} className="text-sm font-semibold text-[#5a69a1]">
-                  Baixar anexo
+              {activity.attachments.length > 0 ? (
+                <Link href={`/atividades/${activity.id}`} className="text-sm font-semibold text-[#5a69a1]">
+                  Ver materiais
                 </Link>
               ) : null}
               {isStudent ? (

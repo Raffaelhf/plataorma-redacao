@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getAuthSession } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { isAdminRole, isTeacherRole } from '@/lib/roles';
 
 export const runtime = 'nodejs';
 
@@ -16,10 +17,15 @@ export async function GET(req: Request, context: RouteContext) {
   const activity = await prisma.activity.findUnique({
     where: { id },
     select: {
-      attachmentData: true,
-      attachmentMimeType: true,
-      attachmentName: true,
-      attachmentUrl: true,
+      status: true,
+      createdById: true,
+      attachments: {
+        select: {
+          id: true,
+        },
+        orderBy: { createdAt: 'asc' },
+        take: 1,
+      },
     },
   });
 
@@ -27,22 +33,20 @@ export async function GET(req: Request, context: RouteContext) {
     return NextResponse.json({ error: 'Atividade nao encontrada.' }, { status: 404 });
   }
 
-  if (activity.attachmentData) {
-    const safeFileName = (activity.attachmentName || 'anexo').replace(/[^a-zA-Z0-9._-]/g, '_');
-    const attachmentBody = new Uint8Array(activity.attachmentData);
+  const isAdmin = isAdminRole(session.user.role);
+  const canAccess =
+    isAdmin ||
+    (session.user.role === 'STUDENT' && activity.status === 'PUBLISHED') ||
+    (isTeacherRole(session.user.role) && activity.createdById === session.user.teacherId);
 
-    return new NextResponse(attachmentBody, {
-      headers: {
-        'Content-Type': activity.attachmentMimeType || 'application/octet-stream',
-        'Content-Disposition': `attachment; filename="${safeFileName}"`,
-        'Cache-Control': 'private, no-store, max-age=0',
-      },
-    });
+  if (!canAccess) {
+    return NextResponse.json({ error: 'Acesso negado.' }, { status: 403 });
   }
 
-  if (activity.attachmentUrl) {
-    return NextResponse.redirect(new URL(activity.attachmentUrl, req.url));
+  const firstAttachment = activity.attachments[0];
+  if (!firstAttachment) {
+    return NextResponse.json({ error: 'Anexo nao encontrado.' }, { status: 404 });
   }
 
-  return NextResponse.json({ error: 'Anexo nao encontrado.' }, { status: 404 });
+  return NextResponse.redirect(new URL(`/api/activity-attachments/${firstAttachment.id}`, req.url));
 }
