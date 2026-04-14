@@ -43,10 +43,10 @@ const roleLabels = {
 } as const;
 
 const adminUserFieldClassName =
-  'w-full rounded-2xl border border-[#d9def8] bg-white/96 px-4 py-3 text-sm text-[#22347e] placeholder:text-[#7b86b4] focus:border-[#7b86f8] focus:outline-none focus:ring-2 focus:ring-[#7b86f8]/20 dark:!border-slate-600/80 dark:!bg-[#0b1324] dark:!text-[#eef4ff] dark:!placeholder:text-[#9db2d8] dark:focus:!border-[#7d8eff] dark:focus:!ring-[#6278ff]/25';
+  'theme-field admin-readable-field w-full rounded-2xl px-4 py-3 text-sm';
 
 const adminUserSelectClassName =
-  'w-full rounded-2xl border border-[#d9def8] bg-white/96 px-4 py-3 text-sm text-[#22347e] focus:border-[#7b86f8] focus:outline-none focus:ring-2 focus:ring-[#7b86f8]/20 dark:!border-slate-600/80 dark:!bg-[#0b1324] dark:!text-[#eef4ff] dark:focus:!border-[#7d8eff] dark:focus:!ring-[#6278ff]/25';
+  'theme-field admin-readable-field w-full rounded-2xl px-4 py-3 text-sm';
 
 function normalizeText(value: string | null | undefined) {
   return (value ?? '')

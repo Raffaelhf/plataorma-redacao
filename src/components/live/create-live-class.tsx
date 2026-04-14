@@ -12,7 +12,7 @@ function TextArea(props: TextareaHTMLAttributes<HTMLTextAreaElement>) {
   return (
     <textarea
       {...props}
-      className="w-full rounded-2xl border border-[#d9def8] bg-white/90 px-4 py-3 text-sm text-[#22347e] placeholder:text-[#8a93b8] focus:border-[#7b86f8] focus:outline-none focus:ring-2 focus:ring-[#7b86f8]/20"
+      className="theme-field w-full rounded-2xl px-4 py-3 text-sm"
     />
   );
 }
@@ -65,7 +65,7 @@ export function CreateLiveClass() {
   return (
     <form
       action={handleSubmit}
-      className="rounded-[30px] border border-[#dde3fb] bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(248,249,255,0.9))] p-5 shadow-[0_20px_50px_rgba(74,73,140,0.1)]"
+      className="theme-form-surface rounded-[30px] p-5"
     >
       <div className="flex items-start justify-between gap-3">
         <div>
@@ -82,20 +82,20 @@ export function CreateLiveClass() {
           name="title"
           placeholder="Tema da aula ao vivo"
           required
-          className="border-[#d9def8] bg-white/90 text-[#22347e] placeholder:text-[#8a93b8] focus:border-[#7b86f8] focus:ring-[#7b86f8]/20"
+          className="rounded-2xl"
         />
         <TextArea name="description" rows={3} placeholder="Explique o que será tratado e para quem a aula é indicada." required />
         <Input
           name="scheduledAt"
           type="datetime-local"
           required
-          className="border-[#d9def8] bg-white/90 text-[#22347e] placeholder:text-[#8a93b8] focus:border-[#7b86f8] focus:ring-[#7b86f8]/20"
+          className="rounded-2xl"
         />
         <Input
           name="meetingUrl"
           type="url"
           placeholder="https://meet.google.com/... ou outra sala"
-          className="border-[#d9def8] bg-white/90 text-[#22347e] placeholder:text-[#8a93b8] focus:border-[#7b86f8] focus:ring-[#7b86f8]/20"
+          className="rounded-2xl"
         />
       </div>
 

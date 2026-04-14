@@ -32,19 +32,19 @@ type CreateVideoContentProps = {
 };
 
 const panelClassName =
-  'flex h-full flex-col rounded-[30px] border border-[#dde3fb] bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(248,249,255,0.9))] p-5 shadow-[0_20px_50px_rgba(74,73,140,0.1)] dark:border-slate-700/80 dark:bg-[linear-gradient(180deg,rgba(11,19,36,0.96),rgba(15,23,42,0.9))] dark:shadow-[0_20px_50px_rgba(0,0,0,0.28)]';
+  'theme-form-surface flex h-full flex-col rounded-[30px] p-5';
 
 const fieldClassName =
-  'border-[#d9def8] bg-white/90 text-[#22347e] placeholder:text-[#8a93b8] focus:border-[#7b86f8] focus:ring-[#7b86f8]/20 dark:border-slate-600/80 dark:bg-[#0b1324] dark:text-[#eef4ff] dark:placeholder:text-[#91a6cf] dark:focus:border-[#7d8eff] dark:focus:ring-[#6278ff]/25';
+  'rounded-2xl';
 
 const selectClassName =
-  'w-full rounded-2xl border border-[#d9def8] bg-white/90 px-4 py-3 text-sm text-[#22347e] focus:border-[#7b86f8] focus:outline-none focus:ring-2 focus:ring-[#7b86f8]/20 dark:border-slate-600/80 dark:bg-[#0b1324] dark:text-[#eef4ff] dark:focus:border-[#7d8eff] dark:focus:ring-[#6278ff]/25';
+  'theme-field w-full rounded-2xl px-4 py-3 text-sm';
 
 function TextArea(props: TextareaHTMLAttributes<HTMLTextAreaElement>) {
   return (
     <textarea
       {...props}
-      className="w-full rounded-2xl border border-[#d9def8] bg-white/90 px-4 py-3 text-sm text-[#22347e] placeholder:text-[#8a93b8] focus:border-[#7b86f8] focus:outline-none focus:ring-2 focus:ring-[#7b86f8]/20 dark:border-slate-600/80 dark:bg-[#0b1324] dark:text-[#eef4ff] dark:placeholder:text-[#91a6cf] dark:focus:border-[#7d8eff] dark:focus:ring-[#6278ff]/25"
+      className="theme-field w-full rounded-2xl px-4 py-3 text-sm"
     />
   );
 }

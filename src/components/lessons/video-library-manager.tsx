@@ -70,7 +70,7 @@ type LessonDraft = {
 };
 
 const fieldClassName =
-  'w-full rounded-2xl border border-[#d9def8] bg-white/96 px-4 py-3 text-sm text-[#22347e] placeholder:text-[#62729f] focus:border-[#7b86f8] focus:outline-none focus:ring-2 focus:ring-[#7b86f8]/20 dark:border-slate-600/80 dark:bg-[#0b1324] dark:text-[#eef4ff] dark:placeholder:text-[#9db2d8] dark:focus:border-[#7d8eff] dark:focus:ring-[#6278ff]/25';
+  'theme-field w-full rounded-2xl px-4 py-3 text-sm';
 
 const actionButtonClassName =
   'inline-flex min-h-10 items-center justify-center gap-2 whitespace-nowrap rounded-full border px-4 py-2 text-xs font-semibold transition';
@@ -366,7 +366,7 @@ export function VideoLibraryManager({ categories, classrooms, looseLessons, canM
         </div>
 
         {canManage && editingLessonId === lesson.id && draft ? (
-          <div className="mt-4 grid gap-3 rounded-[20px] border border-[#d9def8] bg-white/80 p-4 dark:border-slate-700/80 dark:bg-[#10192d] md:grid-cols-2">
+          <div className="theme-field-panel mt-4 grid gap-3 rounded-[20px] p-4 md:grid-cols-2">
             <input
               value={draft.title}
               onChange={(event) => updateLessonDraft(lesson.id, 'title', event.target.value)}
@@ -512,7 +512,7 @@ export function VideoLibraryManager({ categories, classrooms, looseLessons, canM
             </div>
 
             {canManage && editingClassroomId === classroom.id && classroomDraft ? (
-              <div className="mt-4 grid gap-3 rounded-[22px] border border-[#d9def8] bg-white/80 p-4 dark:border-slate-700/80 dark:bg-[#10192d] md:grid-cols-2">
+              <div className="theme-field-panel mt-4 grid gap-3 rounded-[22px] p-4 md:grid-cols-2">
                 <input
                   value={classroomDraft.name}
                   onChange={(event) => updateClassroomDraft(classroom.id, 'name', event.target.value)}
@@ -602,7 +602,7 @@ export function VideoLibraryManager({ categories, classrooms, looseLessons, canM
                     </div>
 
                     {canManage && editingModuleId === module.id && moduleDraft ? (
-                      <div className="mt-4 grid gap-3 rounded-[22px] border border-[#d9def8] bg-white/80 p-4 dark:border-slate-700/80 dark:bg-[#162137] md:grid-cols-2">
+                      <div className="theme-field-panel mt-4 grid gap-3 rounded-[22px] p-4 md:grid-cols-2">
                         <input
                           value={moduleDraft.title}
                           onChange={(event) => updateModuleDraft(module.id, 'title', event.target.value)}

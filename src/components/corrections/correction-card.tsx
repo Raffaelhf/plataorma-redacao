@@ -10,7 +10,7 @@ function TextArea(props: TextareaHTMLAttributes<HTMLTextAreaElement>) {
   return (
     <textarea
       {...props}
-      className="w-full rounded-xl border border-slate-800 bg-slate-950/70 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-500 focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/30"
+      className="theme-field w-full rounded-xl px-3 py-2 text-sm"
     />
   );
 }
@@ -55,7 +55,7 @@ export function CorrectionCard({ submissionId }: { submissionId: string }) {
   return (
     <div className="space-y-2">
       <div className="grid grid-cols-1 gap-2 text-sm sm:grid-cols-2">
-        <label className="flex items-center gap-2 text-slate-200">
+        <label className="flex items-center gap-2 text-[var(--field-text-strong)]">
           Nota
           <input
             type="number"
@@ -63,7 +63,7 @@ export function CorrectionCard({ submissionId }: { submissionId: string }) {
             max={1000}
             value={score}
             onChange={(e) => setScore(Number(e.target.value))}
-            className="w-full rounded-lg border border-slate-800 bg-slate-950/70 px-2 py-2 text-sm text-slate-100"
+            className="theme-field w-full rounded-lg px-2 py-2 text-sm"
           />
         </label>
       </div>
@@ -77,7 +77,7 @@ export function CorrectionCard({ submissionId }: { submissionId: string }) {
       >
         {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />} Enviar correção
       </Button>
-      {status && <p className="text-xs text-slate-300">{status}</p>}
+      {status && <p className="text-xs text-[#6d79a5] dark:text-[#9db2d8]">{status}</p>}
     </div>
   );
 }

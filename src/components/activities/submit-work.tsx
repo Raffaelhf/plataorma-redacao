@@ -114,9 +114,9 @@ export function SubmitWork({ activityId, existingSubmission }: { activityId: str
         onChange={(e) => setContent(e.target.value)}
         placeholder="Se desejar, adicione uma observacao para o professor..."
         rows={4}
-        className="w-full rounded-xl border border-[#d9def8] bg-white px-4 py-3 text-sm text-[#22347e] placeholder:text-[#8a6f9f] focus:border-[#6b49dd] focus:outline-none focus:ring-2 focus:ring-[#6b49dd]/20"
+        className="theme-field w-full rounded-xl px-4 py-3 text-sm"
       />
-      <label className="flex cursor-pointer items-center gap-3 rounded-2xl border border-dashed border-[#cfd6ff] bg-[#f7f4ff] px-4 py-4 text-sm text-[#5d50d8]">
+      <label className="theme-field-panel flex cursor-pointer items-center gap-3 rounded-2xl border-dashed px-4 py-4 text-sm text-[#5d50d8] dark:text-[#c7d4ff]">
         <FileText className="h-5 w-5" />
         <span className="flex-1">{pdfFile ? pdfFile.name : 'Selecionar arquivo PDF da redacao'}</span>
         <input

@@ -18,6 +18,15 @@
   --input-border: rgba(217, 222, 248, 0.9);
   --input-text: #22347e;
   --input-placeholder: #7d88b0;
+  --field-bg-strong: rgba(251, 252, 255, 0.98);
+  --field-border-strong: rgba(190, 199, 236, 0.96);
+  --field-text-strong: #1f3176;
+  --field-placeholder-strong: #6978a6;
+  --field-shadow-strong: inset 0 1px 0 rgba(255, 255, 255, 0.82), 0 1px 2px rgba(81, 96, 143, 0.08);
+  --field-focus-ring: rgba(123, 134, 248, 0.18);
+  --panel-soft-bg-strong: linear-gradient(180deg, rgba(251, 252, 255, 0.94), rgba(244, 247, 255, 0.9));
+  --panel-soft-border-strong: rgba(211, 218, 246, 0.96);
+  --panel-soft-shadow-strong: inset 0 1px 0 rgba(255, 255, 255, 0.78);
   --hero-start: #181f63;
   --hero-mid: #4e40d2;
   --hero-end: #f38a63;
@@ -46,6 +55,15 @@
   --input-border: rgba(71, 85, 105, 0.45);
   --input-text: #e6ecff;
   --input-placeholder: #94a3c3;
+  --field-bg-strong: rgba(5, 11, 22, 0.98);
+  --field-border-strong: rgba(103, 117, 148, 0.9);
+  --field-text-strong: #f3f7ff;
+  --field-placeholder-strong: #a3b6dc;
+  --field-shadow-strong: inset 0 1px 0 rgba(148, 163, 184, 0.08), 0 1px 2px rgba(0, 0, 0, 0.24);
+  --field-focus-ring: rgba(98, 120, 255, 0.2);
+  --panel-soft-bg-strong: linear-gradient(180deg, rgba(8, 15, 28, 0.96), rgba(12, 20, 36, 0.92));
+  --panel-soft-border-strong: rgba(81, 95, 124, 0.7);
+  --panel-soft-shadow-strong: inset 0 1px 0 rgba(148, 163, 184, 0.08);
   --hero-start: #0a122b;
   --hero-mid: #15234f;
   --hero-end: #3e2940;
@@ -190,11 +208,14 @@ h6 {
 }
 
 .admin-readable-field {
-  color: #22347e !important;
+  border-color: var(--field-border-strong) !important;
+  background: var(--field-bg-strong) !important;
+  color: var(--field-text-strong) !important;
+  box-shadow: var(--field-shadow-strong) !important;
 }
 
 .admin-readable-field::placeholder {
-  color: #62729f !important;
+  color: var(--field-placeholder-strong) !important;
   opacity: 1 !important;
 }
 
@@ -270,9 +291,9 @@ h6 {
 }
 
 .admin-field-panel {
-  border: 1px solid rgba(221, 227, 251, 0.95);
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(247, 248, 255, 0.84));
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  border: 1px solid var(--panel-soft-border-strong);
+  background: var(--panel-soft-bg-strong);
+  box-shadow: var(--panel-soft-shadow-strong);
 }
 
 .admin-form-label {
@@ -284,11 +305,11 @@ h6 {
 }
 
 .admin-form-input {
-  border: 1px solid rgba(217, 222, 248, 0.96);
-  background: rgba(255, 255, 255, 0.96);
-  color: #22347e;
+  border: 1px solid var(--field-border-strong);
+  background: var(--field-bg-strong);
+  color: var(--field-text-strong);
   color-scheme: light;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.72);
+  box-shadow: var(--field-shadow-strong);
   transition:
     border-color 0.2s ease,
     background-color 0.2s ease,
@@ -296,16 +317,62 @@ h6 {
 }
 
 .admin-form-input::placeholder {
-  color: #62729f;
+  color: var(--field-placeholder-strong);
   opacity: 1;
 }
 
 .admin-form-input:focus {
   border-color: #7b86f8;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.72),
-    0 0 0 4px rgba(123, 134, 248, 0.16);
+  box-shadow: var(--field-shadow-strong), 0 0 0 4px var(--field-focus-ring);
   outline: none;
+}
+
+.theme-form-surface {
+  border: 1px solid var(--panel-soft-border-strong);
+  background: var(--panel-soft-bg-strong);
+  box-shadow:
+    0 20px 50px rgba(74, 73, 140, 0.1),
+    var(--panel-soft-shadow-strong);
+}
+
+.theme-field-panel {
+  border: 1px solid var(--panel-soft-border-strong);
+  background: var(--panel-soft-bg-strong);
+  box-shadow: var(--panel-soft-shadow-strong);
+}
+
+.theme-field {
+  border: 1px solid var(--field-border-strong);
+  background: var(--field-bg-strong);
+  color: var(--field-text-strong);
+  color-scheme: light;
+  box-shadow: var(--field-shadow-strong);
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease,
+    box-shadow 0.2s ease,
+    color 0.2s ease;
+}
+
+.theme-field::placeholder {
+  color: var(--field-placeholder-strong);
+  opacity: 1;
+}
+
+.theme-field:focus {
+  border-color: #7b86f8;
+  box-shadow: var(--field-shadow-strong), 0 0 0 4px var(--field-focus-ring);
+  outline: none;
+}
+
+.theme-field:disabled {
+  cursor: not-allowed;
+  opacity: 0.72;
+}
+
+select.theme-field option {
+  background: #ffffff;
+  color: #1f3176;
 }
 
 :root[data-theme='dark'] .admin-readable-placeholder::placeholder,
@@ -315,22 +382,20 @@ h6 {
 }
 
 :root[data-theme='dark'] .admin-readable-field {
-  border-color: rgba(97, 112, 140, 0.82) !important;
-  background: rgba(11, 19, 36, 0.96) !important;
-  color: #f3f7ff !important;
+  border-color: var(--field-border-strong) !important;
+  background: var(--field-bg-strong) !important;
+  color: var(--field-text-strong) !important;
   color-scheme: dark;
-  box-shadow: inset 0 1px 0 rgba(148, 163, 184, 0.05) !important;
+  box-shadow: var(--field-shadow-strong) !important;
 }
 
 :root[data-theme='dark'] .admin-readable-field:focus {
   border-color: rgba(125, 142, 255, 0.92) !important;
-  box-shadow:
-    inset 0 1px 0 rgba(148, 163, 184, 0.06),
-    0 0 0 4px rgba(98, 120, 255, 0.18) !important;
+  box-shadow: var(--field-shadow-strong), 0 0 0 4px var(--field-focus-ring) !important;
 }
 
 :root[data-theme='dark'] select.admin-readable-field option {
-  background: #0b1324;
+  background: #050b16;
   color: #f3f7ff;
 }
 
@@ -403,9 +468,9 @@ h6 {
 }
 
 :root[data-theme='dark'] .admin-field-panel {
-  border-color: rgba(71, 85, 105, 0.52);
-  background: linear-gradient(180deg, rgba(10, 18, 31, 0.9), rgba(13, 21, 38, 0.84));
-  box-shadow: inset 0 1px 0 rgba(148, 163, 184, 0.05);
+  border-color: var(--panel-soft-border-strong);
+  background: var(--panel-soft-bg-strong);
+  box-shadow: var(--panel-soft-shadow-strong);
 }
 
 :root[data-theme='dark'] .admin-form-label {
@@ -417,37 +482,35 @@ h6 {
 }
 
 :root[data-theme='dark'] .admin-form-input {
-  border-color: rgba(97, 112, 140, 0.82) !important;
-  background: rgba(11, 19, 36, 0.96) !important;
-  color: #f3f7ff !important;
+  border-color: var(--field-border-strong) !important;
+  background: var(--field-bg-strong) !important;
+  color: var(--field-text-strong) !important;
   color-scheme: dark;
-  box-shadow: inset 0 1px 0 rgba(148, 163, 184, 0.05) !important;
+  box-shadow: var(--field-shadow-strong) !important;
 }
 
 :root[data-theme='dark'] .admin-form-input::placeholder {
-  color: #9db2d8 !important;
+  color: var(--field-placeholder-strong) !important;
 }
 
 :root[data-theme='dark'] .admin-form-input:focus {
   border-color: rgba(125, 142, 255, 0.92);
-  box-shadow:
-    inset 0 1px 0 rgba(148, 163, 184, 0.06),
-    0 0 0 4px rgba(98, 120, 255, 0.18);
+  box-shadow: var(--field-shadow-strong), 0 0 0 4px var(--field-focus-ring);
 }
 
 :root[data-theme='dark'] .admin-shell input:not([type='checkbox']):not([type='radio']):not([type='hidden']),
 :root[data-theme='dark'] .admin-shell select,
 :root[data-theme='dark'] .admin-shell textarea {
-  border-color: rgba(97, 112, 140, 0.82) !important;
-  background: rgba(11, 19, 36, 0.96) !important;
-  color: #f3f7ff !important;
+  border-color: var(--field-border-strong) !important;
+  background: var(--field-bg-strong) !important;
+  color: var(--field-text-strong) !important;
   color-scheme: dark;
-  box-shadow: inset 0 1px 0 rgba(148, 163, 184, 0.05) !important;
+  box-shadow: var(--field-shadow-strong) !important;
 }
 
 :root[data-theme='dark'] .admin-shell input:not([type='checkbox']):not([type='radio']):not([type='hidden'])::placeholder,
 :root[data-theme='dark'] .admin-shell textarea::placeholder {
-  color: #9db2d8 !important;
+  color: var(--field-placeholder-strong) !important;
   opacity: 1 !important;
 }
 
@@ -455,9 +518,22 @@ h6 {
 :root[data-theme='dark'] .admin-shell select:focus,
 :root[data-theme='dark'] .admin-shell textarea:focus {
   border-color: rgba(125, 142, 255, 0.92) !important;
+  box-shadow: var(--field-shadow-strong), 0 0 0 4px var(--field-focus-ring) !important;
+}
+
+:root[data-theme='dark'] .theme-form-surface {
   box-shadow:
-    inset 0 1px 0 rgba(148, 163, 184, 0.06),
-    0 0 0 4px rgba(98, 120, 255, 0.18) !important;
+    0 20px 50px rgba(0, 0, 0, 0.24),
+    var(--panel-soft-shadow-strong);
+}
+
+:root[data-theme='dark'] .theme-field {
+  color-scheme: dark;
+}
+
+:root[data-theme='dark'] select.theme-field option {
+  background: #050b16;
+  color: #f3f7ff;
 }
 
 .theme-panel-hero {

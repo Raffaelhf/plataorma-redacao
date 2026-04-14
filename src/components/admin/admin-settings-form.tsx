@@ -17,9 +17,9 @@ type SettingsData = {
 };
 
 const fieldPanelClassName =
-  'admin-field-panel space-y-2 rounded-[24px] border border-[#dde3fb] bg-white/90 p-4 dark:border-slate-700/80 dark:bg-[#10192d]';
+  'admin-field-panel theme-field-panel space-y-2 rounded-[24px] p-4';
 const fieldClassName =
-  'admin-form-input w-full rounded-2xl border border-[#d9def8] bg-white px-4 py-3 text-sm text-[#22347e] placeholder:text-[#62729f] shadow-[inset_0_1px_0_rgba(255,255,255,0.72)] focus:border-[#7b86f8] focus:outline-none focus:ring-4 focus:ring-[#7b86f8]/20 dark:!border-slate-600/80 dark:!bg-[#0b1324] dark:!text-[#eef4ff] dark:!placeholder:text-[#9db2d8] dark:shadow-[inset_0_1px_0_rgba(148,163,184,0.05)] dark:focus:!border-[#7d8eff] dark:focus:!ring-[#6278ff]/25';
+  'admin-form-input theme-field w-full rounded-2xl px-4 py-3 text-sm';
 
 export function AdminSettingsForm({ initialSettings }: { initialSettings: SettingsData }) {
   const [loading, setLoading] = useState(false);
