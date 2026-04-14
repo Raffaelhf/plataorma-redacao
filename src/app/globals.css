@@ -60,8 +60,7 @@
   --input-bg: rgba(9, 16, 31, 0.82);
   --input-border: rgba(71, 85, 105, 0.45);
   --input-text: #e6ecff;
-<<<<<<< HEAD
-  --input-placeholder: #94a3c3;
+  --input-placeholder: #c4d2f3;
   --field-bg-strong: rgba(5, 11, 22, 0.98);
   --field-border-strong: rgba(103, 117, 148, 0.9);
   --field-text-strong: #f3f7ff;
@@ -71,9 +70,6 @@
   --panel-soft-bg-strong: linear-gradient(180deg, rgba(8, 15, 28, 0.96), rgba(12, 20, 36, 0.92));
   --panel-soft-border-strong: rgba(81, 95, 124, 0.7);
   --panel-soft-shadow-strong: inset 0 1px 0 rgba(148, 163, 184, 0.08);
-=======
-  --input-placeholder: #c4d2f3;
->>>>>>> e40f05bd7973d64a521a07873574c13fee880b8f
   --hero-start: #0a122b;
   --hero-mid: #15234f;
   --hero-end: #3e2940;
