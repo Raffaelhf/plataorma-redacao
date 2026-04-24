@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Loader2, UserRound } from 'lucide-react';
+import { GraduationCap, Loader2, UserRound } from 'lucide-react';
 import { useForm, useWatch } from 'react-hook-form';
 import { z } from 'zod';
 import { Button } from '../ui/button';
@@ -26,7 +26,6 @@ const schema = z
     name: z.string().min(2, 'Informe seu nome'),
     email: z.string().email('E-mail invalido'),
     password: z.string().min(6, 'Minimo de 6 caracteres'),
-    role: z.enum(['STUDENT', 'TEACHER']),
     plan: z.enum(planValues).optional(),
     readingClub: z.boolean(),
     mentoring: z.boolean(),
@@ -65,7 +64,7 @@ export function RegisterForm({
     formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
-    defaultValues: { role: 'STUDENT', plan: undefined, readingClub: false, mentoring: false },
+    defaultValues: { plan: undefined, readingClub: false, mentoring: false },
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -130,18 +129,15 @@ export function RegisterForm({
       </div>
       <div className="space-y-2">
         <label className="text-sm text-slate-200">Perfil</label>
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-          {[
-            { value: 'STUDENT', label: 'Aluno' },
-            { value: 'TEACHER', label: 'Professor' },
-          ].map((opt) => (
-            <label key={opt.value} className="flex cursor-pointer items-center gap-2 rounded-xl border border-slate-800 bg-slate-900/60 px-3 py-3 text-sm text-slate-200">
-              <input type="radio" value={opt.value} {...register('role')} className="accent-indigo-500" />
-              <span>{opt.label}</span>
-            </label>
-          ))}
+        <div className="flex items-center gap-3 rounded-xl border border-indigo-500/30 bg-indigo-500/10 px-4 py-3 text-sm text-slate-200">
+          <span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-indigo-500/15 text-indigo-200">
+            <GraduationCap className="h-4 w-4" />
+          </span>
+          <div>
+            <p className="font-semibold text-white">Aluno</p>
+            <p className="mt-0.5 text-xs text-slate-300">Professores sao cadastrados pela administracao.</p>
+          </div>
         </div>
-        {errors.role ? <p className="text-xs text-amber-300">{errors.role.message}</p> : null}
       </div>
       <div className="space-y-2">
         <label className="text-sm text-slate-200">Plano</label>

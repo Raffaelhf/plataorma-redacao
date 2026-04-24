@@ -22,7 +22,7 @@ export default async function CadastroPage() {
         <div className="mb-6">
           <p className="text-sm font-semibold text-indigo-200">Comece agora</p>
           <h2 className="text-xl font-semibold text-white sm:text-2xl">Crie sua conta</h2>
-          <p className="text-sm text-slate-400">Escolha o perfil, o plano e siga para um checkout seguro com Pix, cartões ou boleto.</p>
+          <p className="text-sm text-slate-400">Escolha o plano e siga para um checkout seguro com Pix, cartões ou boleto.</p>
         </div>
         <RegisterForm
           planPrices={{

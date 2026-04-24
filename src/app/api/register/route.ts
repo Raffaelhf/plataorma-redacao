@@ -6,8 +6,8 @@ import { prisma } from '@/lib/prisma';
 
 export async function POST(req: Request) {
   try {
-    const { name, email, password, role = 'STUDENT', plan, readingClub = false, mentoring = false } = await req.json();
-    const normalizedRole = role === 'TEACHER' ? 'TEACHER' : 'STUDENT';
+    const { name, email, password, plan, readingClub = false, mentoring = false } = await req.json();
+    const normalizedRole = 'STUDENT';
     const normalizedEmail = String(email || '').trim().toLowerCase();
     const normalizedPlan = getStudentPlanFromSlug(typeof plan === 'string' ? plan : null);
     const normalizedReadingClub = Boolean(readingClub);
@@ -18,15 +18,15 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'E-mail e senha são obrigatórios.' }, { status: 400 });
     }
 
-    if (normalizedRole === 'STUDENT' && normalizedReadingClub && !normalizedPlan) {
+    if (normalizedReadingClub && !normalizedPlan) {
       return NextResponse.json({ error: 'Selecione um plano para adicionar o Clube de Leitura.' }, { status: 400 });
     }
 
-    if (normalizedRole === 'STUDENT' && normalizedMentoring && !normalizedPlan) {
+    if (normalizedMentoring && !normalizedPlan) {
       return NextResponse.json({ error: 'Selecione um plano para adicionar a Mentoria.' }, { status: 400 });
     }
 
-    if (normalizedRole === 'STUDENT' && !normalizedPlan) {
+    if (!normalizedPlan) {
       return NextResponse.json({ error: 'Selecione um plano para seguir para o pagamento.' }, { status: 400 });
     }
 
@@ -36,20 +36,6 @@ export async function POST(req: Request) {
     }
 
     const passwordHash = await bcrypt.hash(password, 10);
-
-    if (normalizedRole === 'TEACHER') {
-      const user = await prisma.user.create({
-        data: {
-          name: normalizedName,
-          email: normalizedEmail,
-          role: normalizedRole,
-          passwordHash,
-          teacherProfile: { create: {} },
-        },
-      });
-
-      return NextResponse.json({ redirectTo: '/login', id: user.id, email: user.email });
-    }
 
     if (!normalizedPlan) {
       return NextResponse.json({ error: 'Plano do aluno não identificado para o checkout.' }, { status: 400 });
