@@ -24,6 +24,7 @@ export default async function AdminUsersPage() {
           enrollmentNumber: true,
           plan: true,
           readingClub: true,
+          mentoring: true,
         },
       },
     },

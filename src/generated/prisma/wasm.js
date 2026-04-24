@@ -140,6 +140,7 @@ exports.Prisma.StudentProfileScalarFieldEnum = {
   enrollmentNumber: 'enrollmentNumber',
   plan: 'plan',
   readingClub: 'readingClub',
+  mentoring: 'mentoring',
   bio: 'bio',
   avatarUrl: 'avatarUrl',
   createdAt: 'createdAt',
@@ -304,6 +305,12 @@ exports.Prisma.PlatformSettingsScalarFieldEnum = {
   pixKey: 'pixKey',
   whatsappNumber: 'whatsappNumber',
   paymentNotes: 'paymentNotes',
+  mensalPlanPriceInCents: 'mensalPlanPriceInCents',
+  trimestralPlanPriceInCents: 'trimestralPlanPriceInCents',
+  semestralPlanPriceInCents: 'semestralPlanPriceInCents',
+  anualPlanPriceInCents: 'anualPlanPriceInCents',
+  mentoriaPlanPriceInCents: 'mentoriaPlanPriceInCents',
+  readingClubPriceInCents: 'readingClubPriceInCents',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -319,6 +326,7 @@ exports.Prisma.RegistrationSessionScalarFieldEnum = {
   expertise: 'expertise',
   plan: 'plan',
   readingClub: 'readingClub',
+  mentoring: 'mentoring',
   acceptedPrivacyPolicy: 'acceptedPrivacyPolicy',
   acceptedTerms: 'acceptedTerms',
   selectedPaymentMethod: 'selectedPaymentMethod',

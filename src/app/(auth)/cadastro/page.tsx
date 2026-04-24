@@ -1,8 +1,13 @@
 import { RegisterForm } from '@/components/auth/register-form';
 import Link from 'next/link';
 import { ArrowLeft, ShieldCheck } from 'lucide-react';
+import { formatCurrencyFromCents, getPublicPlanPricing } from '@/lib/plans';
 
-export default function CadastroPage() {
+export const dynamic = 'force-dynamic';
+
+export default async function CadastroPage() {
+  const pricing = await getPublicPlanPricing();
+
   return (
     <div className="mx-auto flex min-h-screen w-full max-w-6xl flex-col-reverse items-center gap-6 px-4 py-8 sm:px-6 sm:py-12 lg:flex-row lg:gap-10">
       <div className="w-full max-w-md rounded-3xl border border-slate-800/70 bg-slate-900/70 p-5 shadow-2xl shadow-black/40 backdrop-blur sm:p-8">
@@ -19,7 +24,34 @@ export default function CadastroPage() {
           <h2 className="text-xl font-semibold text-white sm:text-2xl">Crie sua conta</h2>
           <p className="text-sm text-slate-400">Escolha o perfil, o plano e siga para um checkout seguro com Pix, cartões ou boleto.</p>
         </div>
-        <RegisterForm />
+        <RegisterForm
+          planPrices={{
+            mensal: `${formatCurrencyFromCents(pricing.plans.mensal)}/mês`,
+            trimestral: `${formatCurrencyFromCents(pricing.plans.trimestral)}/trimestre`,
+            semestral: `${formatCurrencyFromCents(pricing.plans.semestral)}/semestre`,
+            anual: `${formatCurrencyFromCents(pricing.plans.anual)}/ano`,
+          }}
+          readingClubPriceLabel={formatCurrencyFromCents(pricing.readingClubPriceInCents)}
+          mentoringPriceLabel={formatCurrencyFromCents(pricing.mentoringPriceInCents)}
+          mentoringPackagePrices={{
+            mensal: {
+              price: formatCurrencyFromCents(pricing.mentoringPackages.mensal),
+              discountLabel: pricing.mentoringDiscounts.mensal ? `${pricing.mentoringDiscounts.mensal}% off` : 'preco cheio',
+            },
+            trimestral: {
+              price: formatCurrencyFromCents(pricing.mentoringPackages.trimestral),
+              discountLabel: `${pricing.mentoringDiscounts.trimestral}% off`,
+            },
+            semestral: {
+              price: formatCurrencyFromCents(pricing.mentoringPackages.semestral),
+              discountLabel: `${pricing.mentoringDiscounts.semestral}% off`,
+            },
+            anual: {
+              price: formatCurrencyFromCents(pricing.mentoringPackages.anual),
+              discountLabel: `${pricing.mentoringDiscounts.anual}% off`,
+            },
+          }}
+        />
       </div>
 
       <div className="w-full flex-1">

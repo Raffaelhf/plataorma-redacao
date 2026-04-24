@@ -6,11 +6,12 @@ import { prisma } from '@/lib/prisma';
 
 export async function POST(req: Request) {
   try {
-    const { name, email, password, role = 'STUDENT', plan, readingClub = false } = await req.json();
+    const { name, email, password, role = 'STUDENT', plan, readingClub = false, mentoring = false } = await req.json();
     const normalizedRole = role === 'TEACHER' ? 'TEACHER' : 'STUDENT';
     const normalizedEmail = String(email || '').trim().toLowerCase();
     const normalizedPlan = getStudentPlanFromSlug(typeof plan === 'string' ? plan : null);
     const normalizedReadingClub = Boolean(readingClub);
+    const normalizedMentoring = Boolean(mentoring);
     const normalizedName = String(name || '').trim();
 
     if (!normalizedEmail || !password) {
@@ -19,6 +20,10 @@ export async function POST(req: Request) {
 
     if (normalizedRole === 'STUDENT' && normalizedReadingClub && !normalizedPlan) {
       return NextResponse.json({ error: 'Selecione um plano para adicionar o Clube de Leitura.' }, { status: 400 });
+    }
+
+    if (normalizedRole === 'STUDENT' && normalizedMentoring && !normalizedPlan) {
+      return NextResponse.json({ error: 'Selecione um plano para adicionar a Mentoria.' }, { status: 400 });
     }
 
     if (normalizedRole === 'STUDENT' && !normalizedPlan) {
@@ -73,7 +78,8 @@ export async function POST(req: Request) {
         role: normalizedRole,
         plan: studentPlan,
         readingClub: normalizedReadingClub,
-        amountInCents: calculateStudentCheckoutAmount(studentPlan, normalizedReadingClub),
+        mentoring: normalizedMentoring,
+        amountInCents: await calculateStudentCheckoutAmount(studentPlan, normalizedReadingClub, normalizedMentoring),
         status: 'CHECKOUT_PENDING',
         expiresAt: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
       },

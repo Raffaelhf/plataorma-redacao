@@ -6,11 +6,87 @@ import { Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { planItems } from './data';
 
-export function Plans() {
+type PlanPricing = {
+  readingClubPriceInCents: number;
+  mentoringPriceInCents: number;
+  mentoringPackages: Record<string, number>;
+  mentoringDiscounts: Record<string, number>;
+  plans: Record<string, number>;
+};
+
+const monthsByPlanSlug: Record<string, number> = {
+  mensal: 1,
+  trimestral: 3,
+  semestral: 6,
+  anual: 12,
+};
+
+function formatCurrencyFromCents(amountInCents: number) {
+  return new Intl.NumberFormat('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+  }).format(amountInCents / 100);
+}
+
+function getPlanPriceDetails(slug: string, fallback: { price: string; perMonth: string; highlight?: string }, pricing?: PlanPricing) {
+  const amountInCents = pricing?.plans[slug];
+  if (typeof amountInCents !== 'number') return fallback;
+
+  const months = monthsByPlanSlug[slug] ?? 1;
+  const monthlyAmount = pricing?.plans.mensal;
+  const regularCycleAmount = typeof monthlyAmount === 'number' ? monthlyAmount * months : null;
+  const savingsPercent =
+    regularCycleAmount && months > 1 && regularCycleAmount > amountInCents
+      ? Math.round(((regularCycleAmount - amountInCents) / regularCycleAmount) * 100)
+      : null;
+
+  return {
+    price: formatCurrencyFromCents(amountInCents),
+    perMonth: months === 1 ? fallback.perMonth : `Equivale a ${formatCurrencyFromCents(Math.round(amountInCents / months))}/mês`,
+    highlight: savingsPercent ? `Economia de ${savingsPercent}% no ciclo` : undefined,
+  };
+}
+
+function buildSignupHref(slug: string, options: { readingClub: boolean; mentoring: boolean }) {
+  const params = new URLSearchParams({ plan: slug });
+  if (options.readingClub) params.set('readingClub', '1');
+  if (options.mentoring) params.set('mentoring', '1');
+  return `/cadastro?${params.toString()}`;
+}
+
+function getMentoringPackageDetails(slug: string, pricing?: PlanPricing) {
+  const packageAmount = pricing?.mentoringPackages[slug];
+  const baseAmount = pricing?.mentoringPriceInCents;
+  const discount = pricing?.mentoringDiscounts[slug] ?? 0;
+
+  if (typeof packageAmount !== 'number' || typeof baseAmount !== 'number') {
+    return {
+      price: slug === 'mensal' ? 'R$ 120' : 'com desconto',
+      discountLabel: discount ? `${discount}% off` : 'preco cheio',
+      savingsLabel: null,
+    };
+  }
+
+  const savings = baseAmount - packageAmount;
+  return {
+    price: formatCurrencyFromCents(packageAmount),
+    discountLabel: discount ? `${discount}% off` : 'preco cheio',
+    savingsLabel: savings > 0 ? `Voce economiza ${formatCurrencyFromCents(savings)}` : null,
+  };
+}
+
+export function Plans({ pricing }: { pricing?: PlanPricing }) {
   const [readingClubByPlan, setReadingClubByPlan] = useState<Record<string, boolean>>({});
+  const [mentoringByPlan, setMentoringByPlan] = useState<Record<string, boolean>>({});
+  const readingClubPriceLabel = pricing ? formatCurrencyFromCents(pricing.readingClubPriceInCents) : 'R$ 30';
+  const mentoringPriceLabel = pricing ? formatCurrencyFromCents(pricing.mentoringPriceInCents) : 'R$ 120';
 
   const toggleReadingClub = (slug: string) => {
     setReadingClubByPlan((current) => ({ ...current, [slug]: !current[slug] }));
+  };
+
+  const toggleMentoring = (slug: string) => {
+    setMentoringByPlan((current) => ({ ...current, [slug]: !current[slug] }));
   };
 
   return (
@@ -34,7 +110,14 @@ export function Plans() {
           {planItems.map((plan, index) => {
             const Icon = plan.icon;
             const withReadingClub = Boolean(readingClubByPlan[plan.slug]);
-            const href = withReadingClub ? `/cadastro?plan=${plan.slug}&readingClub=1` : `/cadastro?plan=${plan.slug}`;
+            const withMentoring = Boolean(mentoringByPlan[plan.slug]);
+            const href = buildSignupHref(plan.slug, { readingClub: withReadingClub, mentoring: withMentoring });
+            const priceDetails = getPlanPriceDetails(plan.slug, plan, pricing);
+            const mentoringDetails = getMentoringPackageDetails(plan.slug, pricing);
+            const packageTotal =
+              pricing && withMentoring
+                ? formatCurrencyFromCents((pricing.plans[plan.slug] ?? 0) + (pricing.mentoringPackages[plan.slug] ?? 0) + (withReadingClub ? pricing.readingClubPriceInCents : 0))
+                : null;
 
             return (
               <article
@@ -85,11 +168,11 @@ export function Plans() {
                   }`}
                 >
                   <div className="text-[2.5rem] font-extrabold tracking-[-0.06em] text-slate-900 dark:text-slate-50">
-                    {plan.price}
+                    {priceDetails.price}
                     <span className="ml-2 text-[1rem] font-semibold tracking-normal text-slate-500 dark:text-slate-300">{plan.cadence}</span>
                   </div>
-                  <p className={`mt-2 text-sm font-semibold ${plan.featured ? 'text-[#4350c9] dark:text-indigo-300' : 'text-[#4d5ca3] dark:text-indigo-200'}`}>{plan.perMonth}</p>
-                  {plan.highlight ? <p className="mt-1 text-sm text-[#6a75a0] dark:text-slate-400">{plan.highlight}</p> : null}
+                  <p className={`mt-2 text-sm font-semibold ${plan.featured ? 'text-[#4350c9] dark:text-indigo-300' : 'text-[#4d5ca3] dark:text-indigo-200'}`}>{priceDetails.perMonth}</p>
+                  {priceDetails.highlight ? <p className="mt-1 text-sm text-[#6a75a0] dark:text-slate-400">{priceDetails.highlight}</p> : null}
                 </div>
 
                 <ul className="mt-6 flex-1 space-y-3 md:max-w-[34ch] xl:max-w-none">
@@ -122,10 +205,46 @@ export function Plans() {
                   <span>
                     <span className="block text-sm font-semibold text-slate-900 dark:text-slate-100">Adicionar Clube de leitura</span>
                     <span className="mt-1 block text-sm leading-6 text-slate-600 dark:text-slate-300">
-                      Acrescente o complemento por + R$ 30 e leve as leituras comentadas para o seu plano.
+                      Acrescente o complemento por + {readingClubPriceLabel} e leve as leituras comentadas para o seu plano.
                     </span>
                   </span>
                 </button>
+
+                <button
+                  type="button"
+                  onClick={() => toggleMentoring(plan.slug)}
+                  className={`mt-3 flex w-full items-start gap-3 rounded-[22px] border px-4 py-4 text-left transition-colors ${
+                    withMentoring
+                      ? 'border-[#bfc9ff] bg-[#eef2ff] dark:border-indigo-400/50 dark:bg-indigo-950/42'
+                      : 'border-[#e6eaf9] bg-white/85 hover:border-[#cfd7ff] dark:border-slate-700 dark:bg-slate-900/72 dark:hover:border-slate-500'
+                  }`}
+                >
+                  <span
+                    className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border ${
+                      withMentoring ? 'border-[#5363e6] bg-[#5363e6] text-white dark:border-indigo-300 dark:bg-indigo-400' : 'border-[#c9d0ef] bg-white dark:border-slate-500 dark:bg-slate-950/80'
+                    }`}
+                  >
+                    {withMentoring ? <Check className="h-3.5 w-3.5" /> : null}
+                  </span>
+                  <span>
+                    <span className="flex flex-wrap items-center gap-2 text-sm font-semibold text-slate-900 dark:text-slate-100">
+                      Adicionar Mentoria
+                      <span className="rounded-full bg-white px-2 py-0.5 text-[0.68rem] font-extrabold uppercase tracking-[0.12em] text-[#4350c9] dark:bg-slate-800 dark:text-indigo-200">
+                        {mentoringDetails.discountLabel}
+                      </span>
+                    </span>
+                    <span className="mt-1 block text-sm leading-6 text-slate-600 dark:text-slate-300">
+                      Pacote com o plano por + {mentoringDetails.price}. Preco avulso: {mentoringPriceLabel}.
+                      {mentoringDetails.savingsLabel ? ` ${mentoringDetails.savingsLabel}.` : ''}
+                    </span>
+                  </span>
+                </button>
+
+                {packageTotal ? (
+                  <div className="mt-3 rounded-[20px] border border-[#dbe1ff] bg-[#f8f9ff] px-4 py-3 text-sm text-[#53618f] dark:border-slate-700 dark:bg-slate-900/72 dark:text-slate-300">
+                    Pacote selecionado: <span className="font-extrabold text-[#22347e] dark:text-white">{packageTotal}</span>
+                  </div>
+                ) : null}
 
                 <div className="mt-7 border-t border-[#e7eaf8] pt-6 dark:border-slate-700/70">
                   <Link href={href} className="block">
@@ -136,7 +255,7 @@ export function Plans() {
                           : 'bg-[linear-gradient(135deg,#3141bf_0%,#5363e6_100%)] text-white shadow-[0_16px_30px_rgba(69,85,210,0.22)]'
                       }`}
                     >
-                      {withReadingClub ? `${plan.cta} + Clube` : plan.cta}
+                      {withMentoring || withReadingClub ? `${plan.cta} + Pacote` : plan.cta}
                     </Button>
                   </Link>
                 </div>
@@ -150,8 +269,15 @@ export function Plans() {
         </p>
         <div className="mx-auto mt-5 max-w-[820px] rounded-[28px] border border-[#d9def8] bg-[linear-gradient(135deg,rgba(255,255,255,0.96),rgba(244,242,255,0.92))] px-6 py-5 text-center shadow-[0_18px_46px_rgba(74,73,140,0.08)] dark:border-slate-600 dark:bg-slate-900 dark:shadow-[0_18px_46px_rgba(0,0,0,0.28)]">
           <p className="text-sm font-semibold uppercase tracking-[0.14em] text-[#5a69a1] dark:text-indigo-200">Add-on opcional</p>
-          <p className="mt-2 text-lg font-semibold text-slate-900 dark:text-white">Clube de leitura por + R$ 30</p>
+          <p className="mt-2 text-lg font-semibold text-slate-900 dark:text-white">Clube de leitura por + {readingClubPriceLabel}</p>
           <p className="mt-2 text-sm leading-7 text-slate-600 dark:text-slate-200">Indicacao de livros para leitura ao longo do ciclo, com comentarios em lives selecionadas.</p>
+        </div>
+        <div className="mx-auto mt-4 max-w-[820px] rounded-[28px] border border-[#d9def8] bg-white/92 px-6 py-5 text-center shadow-[0_18px_46px_rgba(74,73,140,0.08)] dark:border-slate-600 dark:bg-slate-900 dark:shadow-[0_18px_46px_rgba(0,0,0,0.28)]">
+          <p className="text-sm font-semibold uppercase tracking-[0.14em] text-[#5a69a1] dark:text-indigo-200">Pacote com mentoria</p>
+          <p className="mt-2 text-lg font-semibold text-slate-900 dark:text-white">Mentoria avulsa por {mentoringPriceLabel}, com desconto ao juntar com um plano</p>
+          <p className="mt-2 text-sm leading-7 text-slate-600 dark:text-slate-200">
+            Desconto progressivo: mensal sem desconto, trimestral 10%, semestral 15% e anual 20% sobre a mentoria.
+          </p>
         </div>
       </div>
     </section>

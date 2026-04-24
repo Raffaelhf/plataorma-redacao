@@ -5,10 +5,13 @@ import { Header } from '@/components/landing/Header';
 import { Hero } from '@/components/landing/Hero';
 import { Plans } from '@/components/landing/Plans';
 import { Skills } from '@/components/landing/Skills';
+import { getPublicPlanPricing } from '@/lib/plans';
 import { getPlatformWhatsAppHref } from '@/lib/platform-contact';
 
+export const dynamic = 'force-dynamic';
+
 export default async function Home() {
-  const whatsappHref = await getPlatformWhatsAppHref();
+  const [whatsappHref, planPricing] = await Promise.all([getPlatformWhatsAppHref(), getPublicPlanPricing()]);
 
   return (
     <main className="landing-shell min-h-screen overflow-x-hidden">
@@ -22,7 +25,7 @@ export default async function Home() {
 
       <Features />
       <Skills />
-      <Plans />
+      <Plans pricing={planPricing} />
       <CTASection />
       <Footer whatsappHref={whatsappHref} />
     </main>

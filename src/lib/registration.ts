@@ -49,6 +49,7 @@ export async function createApprovedUserFromRegistrationSession(sessionId: strin
                   enrollmentNumber: await generateEnrollmentNumber(tx),
                   plan: session.plan,
                   readingClub: session.readingClub,
+                  mentoring: session.mentoring,
                 },
               }
             : undefined,

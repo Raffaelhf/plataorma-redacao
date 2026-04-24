@@ -3911,6 +3911,7 @@ export namespace Prisma {
     enrollmentNumber: string | null
     plan: $Enums.StudentPlan | null
     readingClub: boolean | null
+    mentoring: boolean | null
     bio: string | null
     avatarUrl: string | null
     createdAt: Date | null
@@ -3925,6 +3926,7 @@ export namespace Prisma {
     enrollmentNumber: string | null
     plan: $Enums.StudentPlan | null
     readingClub: boolean | null
+    mentoring: boolean | null
     bio: string | null
     avatarUrl: string | null
     createdAt: Date | null
@@ -3939,6 +3941,7 @@ export namespace Prisma {
     enrollmentNumber: number
     plan: number
     readingClub: number
+    mentoring: number
     bio: number
     avatarUrl: number
     createdAt: number
@@ -3955,6 +3958,7 @@ export namespace Prisma {
     enrollmentNumber?: true
     plan?: true
     readingClub?: true
+    mentoring?: true
     bio?: true
     avatarUrl?: true
     createdAt?: true
@@ -3969,6 +3973,7 @@ export namespace Prisma {
     enrollmentNumber?: true
     plan?: true
     readingClub?: true
+    mentoring?: true
     bio?: true
     avatarUrl?: true
     createdAt?: true
@@ -3983,6 +3988,7 @@ export namespace Prisma {
     enrollmentNumber?: true
     plan?: true
     readingClub?: true
+    mentoring?: true
     bio?: true
     avatarUrl?: true
     createdAt?: true
@@ -4070,6 +4076,7 @@ export namespace Prisma {
     enrollmentNumber: string | null
     plan: $Enums.StudentPlan | null
     readingClub: boolean
+    mentoring: boolean
     bio: string | null
     avatarUrl: string | null
     createdAt: Date
@@ -4101,6 +4108,7 @@ export namespace Prisma {
     enrollmentNumber?: boolean
     plan?: boolean
     readingClub?: boolean
+    mentoring?: boolean
     bio?: boolean
     avatarUrl?: boolean
     createdAt?: boolean
@@ -4118,6 +4126,7 @@ export namespace Prisma {
     enrollmentNumber?: boolean
     plan?: boolean
     readingClub?: boolean
+    mentoring?: boolean
     bio?: boolean
     avatarUrl?: boolean
     createdAt?: boolean
@@ -4133,6 +4142,7 @@ export namespace Prisma {
     enrollmentNumber?: boolean
     plan?: boolean
     readingClub?: boolean
+    mentoring?: boolean
     bio?: boolean
     avatarUrl?: boolean
     createdAt?: boolean
@@ -4162,6 +4172,7 @@ export namespace Prisma {
       enrollmentNumber: string | null
       plan: $Enums.StudentPlan | null
       readingClub: boolean
+      mentoring: boolean
       bio: string | null
       avatarUrl: string | null
       createdAt: Date
@@ -4568,6 +4579,7 @@ export namespace Prisma {
     readonly enrollmentNumber: FieldRef<"StudentProfile", 'String'>
     readonly plan: FieldRef<"StudentProfile", 'StudentPlan'>
     readonly readingClub: FieldRef<"StudentProfile", 'Boolean'>
+    readonly mentoring: FieldRef<"StudentProfile", 'Boolean'>
     readonly bio: FieldRef<"StudentProfile", 'String'>
     readonly avatarUrl: FieldRef<"StudentProfile", 'String'>
     readonly createdAt: FieldRef<"StudentProfile", 'DateTime'>
@@ -18277,8 +18289,28 @@ export namespace Prisma {
 
   export type AggregatePlatformSettings = {
     _count: PlatformSettingsCountAggregateOutputType | null
+    _avg: PlatformSettingsAvgAggregateOutputType | null
+    _sum: PlatformSettingsSumAggregateOutputType | null
     _min: PlatformSettingsMinAggregateOutputType | null
     _max: PlatformSettingsMaxAggregateOutputType | null
+  }
+
+  export type PlatformSettingsAvgAggregateOutputType = {
+    mensalPlanPriceInCents: number | null
+    trimestralPlanPriceInCents: number | null
+    semestralPlanPriceInCents: number | null
+    anualPlanPriceInCents: number | null
+    mentoriaPlanPriceInCents: number | null
+    readingClubPriceInCents: number | null
+  }
+
+  export type PlatformSettingsSumAggregateOutputType = {
+    mensalPlanPriceInCents: number | null
+    trimestralPlanPriceInCents: number | null
+    semestralPlanPriceInCents: number | null
+    anualPlanPriceInCents: number | null
+    mentoriaPlanPriceInCents: number | null
+    readingClubPriceInCents: number | null
   }
 
   export type PlatformSettingsMinAggregateOutputType = {
@@ -18291,6 +18323,12 @@ export namespace Prisma {
     pixKey: string | null
     whatsappNumber: string | null
     paymentNotes: string | null
+    mensalPlanPriceInCents: number | null
+    trimestralPlanPriceInCents: number | null
+    semestralPlanPriceInCents: number | null
+    anualPlanPriceInCents: number | null
+    mentoriaPlanPriceInCents: number | null
+    readingClubPriceInCents: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -18305,6 +18343,12 @@ export namespace Prisma {
     pixKey: string | null
     whatsappNumber: string | null
     paymentNotes: string | null
+    mensalPlanPriceInCents: number | null
+    trimestralPlanPriceInCents: number | null
+    semestralPlanPriceInCents: number | null
+    anualPlanPriceInCents: number | null
+    mentoriaPlanPriceInCents: number | null
+    readingClubPriceInCents: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -18319,11 +18363,35 @@ export namespace Prisma {
     pixKey: number
     whatsappNumber: number
     paymentNotes: number
+    mensalPlanPriceInCents: number
+    trimestralPlanPriceInCents: number
+    semestralPlanPriceInCents: number
+    anualPlanPriceInCents: number
+    mentoriaPlanPriceInCents: number
+    readingClubPriceInCents: number
     createdAt: number
     updatedAt: number
     _all: number
   }
 
+
+  export type PlatformSettingsAvgAggregateInputType = {
+    mensalPlanPriceInCents?: true
+    trimestralPlanPriceInCents?: true
+    semestralPlanPriceInCents?: true
+    anualPlanPriceInCents?: true
+    mentoriaPlanPriceInCents?: true
+    readingClubPriceInCents?: true
+  }
+
+  export type PlatformSettingsSumAggregateInputType = {
+    mensalPlanPriceInCents?: true
+    trimestralPlanPriceInCents?: true
+    semestralPlanPriceInCents?: true
+    anualPlanPriceInCents?: true
+    mentoriaPlanPriceInCents?: true
+    readingClubPriceInCents?: true
+  }
 
   export type PlatformSettingsMinAggregateInputType = {
     id?: true
@@ -18335,6 +18403,12 @@ export namespace Prisma {
     pixKey?: true
     whatsappNumber?: true
     paymentNotes?: true
+    mensalPlanPriceInCents?: true
+    trimestralPlanPriceInCents?: true
+    semestralPlanPriceInCents?: true
+    anualPlanPriceInCents?: true
+    mentoriaPlanPriceInCents?: true
+    readingClubPriceInCents?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -18349,6 +18423,12 @@ export namespace Prisma {
     pixKey?: true
     whatsappNumber?: true
     paymentNotes?: true
+    mensalPlanPriceInCents?: true
+    trimestralPlanPriceInCents?: true
+    semestralPlanPriceInCents?: true
+    anualPlanPriceInCents?: true
+    mentoriaPlanPriceInCents?: true
+    readingClubPriceInCents?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -18363,6 +18443,12 @@ export namespace Prisma {
     pixKey?: true
     whatsappNumber?: true
     paymentNotes?: true
+    mensalPlanPriceInCents?: true
+    trimestralPlanPriceInCents?: true
+    semestralPlanPriceInCents?: true
+    anualPlanPriceInCents?: true
+    mentoriaPlanPriceInCents?: true
+    readingClubPriceInCents?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -18406,6 +18492,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: PlatformSettingsAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: PlatformSettingsSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: PlatformSettingsMinAggregateInputType
@@ -18436,6 +18534,8 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: PlatformSettingsCountAggregateInputType | true
+    _avg?: PlatformSettingsAvgAggregateInputType
+    _sum?: PlatformSettingsSumAggregateInputType
     _min?: PlatformSettingsMinAggregateInputType
     _max?: PlatformSettingsMaxAggregateInputType
   }
@@ -18450,9 +18550,17 @@ export namespace Prisma {
     pixKey: string | null
     whatsappNumber: string | null
     paymentNotes: string | null
+    mensalPlanPriceInCents: number
+    trimestralPlanPriceInCents: number
+    semestralPlanPriceInCents: number
+    anualPlanPriceInCents: number
+    mentoriaPlanPriceInCents: number
+    readingClubPriceInCents: number
     createdAt: Date
     updatedAt: Date
     _count: PlatformSettingsCountAggregateOutputType | null
+    _avg: PlatformSettingsAvgAggregateOutputType | null
+    _sum: PlatformSettingsSumAggregateOutputType | null
     _min: PlatformSettingsMinAggregateOutputType | null
     _max: PlatformSettingsMaxAggregateOutputType | null
   }
@@ -18481,6 +18589,12 @@ export namespace Prisma {
     pixKey?: boolean
     whatsappNumber?: boolean
     paymentNotes?: boolean
+    mensalPlanPriceInCents?: boolean
+    trimestralPlanPriceInCents?: boolean
+    semestralPlanPriceInCents?: boolean
+    anualPlanPriceInCents?: boolean
+    mentoriaPlanPriceInCents?: boolean
+    readingClubPriceInCents?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["platformSettings"]>
@@ -18495,6 +18609,12 @@ export namespace Prisma {
     pixKey?: boolean
     whatsappNumber?: boolean
     paymentNotes?: boolean
+    mensalPlanPriceInCents?: boolean
+    trimestralPlanPriceInCents?: boolean
+    semestralPlanPriceInCents?: boolean
+    anualPlanPriceInCents?: boolean
+    mentoriaPlanPriceInCents?: boolean
+    readingClubPriceInCents?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["platformSettings"]>
@@ -18509,6 +18629,12 @@ export namespace Prisma {
     pixKey?: boolean
     whatsappNumber?: boolean
     paymentNotes?: boolean
+    mensalPlanPriceInCents?: boolean
+    trimestralPlanPriceInCents?: boolean
+    semestralPlanPriceInCents?: boolean
+    anualPlanPriceInCents?: boolean
+    mentoriaPlanPriceInCents?: boolean
+    readingClubPriceInCents?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
@@ -18527,6 +18653,12 @@ export namespace Prisma {
       pixKey: string | null
       whatsappNumber: string | null
       paymentNotes: string | null
+      mensalPlanPriceInCents: number
+      trimestralPlanPriceInCents: number
+      semestralPlanPriceInCents: number
+      anualPlanPriceInCents: number
+      mentoriaPlanPriceInCents: number
+      readingClubPriceInCents: number
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["platformSettings"]>
@@ -18931,6 +19063,12 @@ export namespace Prisma {
     readonly pixKey: FieldRef<"PlatformSettings", 'String'>
     readonly whatsappNumber: FieldRef<"PlatformSettings", 'String'>
     readonly paymentNotes: FieldRef<"PlatformSettings", 'String'>
+    readonly mensalPlanPriceInCents: FieldRef<"PlatformSettings", 'Int'>
+    readonly trimestralPlanPriceInCents: FieldRef<"PlatformSettings", 'Int'>
+    readonly semestralPlanPriceInCents: FieldRef<"PlatformSettings", 'Int'>
+    readonly anualPlanPriceInCents: FieldRef<"PlatformSettings", 'Int'>
+    readonly mentoriaPlanPriceInCents: FieldRef<"PlatformSettings", 'Int'>
+    readonly readingClubPriceInCents: FieldRef<"PlatformSettings", 'Int'>
     readonly createdAt: FieldRef<"PlatformSettings", 'DateTime'>
     readonly updatedAt: FieldRef<"PlatformSettings", 'DateTime'>
   }
@@ -19252,6 +19390,7 @@ export namespace Prisma {
     expertise: string | null
     plan: $Enums.StudentPlan | null
     readingClub: boolean | null
+    mentoring: boolean | null
     acceptedPrivacyPolicy: boolean | null
     acceptedTerms: boolean | null
     selectedPaymentMethod: $Enums.PaymentMethod | null
@@ -19279,6 +19418,7 @@ export namespace Prisma {
     expertise: string | null
     plan: $Enums.StudentPlan | null
     readingClub: boolean | null
+    mentoring: boolean | null
     acceptedPrivacyPolicy: boolean | null
     acceptedTerms: boolean | null
     selectedPaymentMethod: $Enums.PaymentMethod | null
@@ -19306,6 +19446,7 @@ export namespace Prisma {
     expertise: number
     plan: number
     readingClub: number
+    mentoring: number
     acceptedPrivacyPolicy: number
     acceptedTerms: number
     selectedPaymentMethod: number
@@ -19343,6 +19484,7 @@ export namespace Prisma {
     expertise?: true
     plan?: true
     readingClub?: true
+    mentoring?: true
     acceptedPrivacyPolicy?: true
     acceptedTerms?: true
     selectedPaymentMethod?: true
@@ -19370,6 +19512,7 @@ export namespace Prisma {
     expertise?: true
     plan?: true
     readingClub?: true
+    mentoring?: true
     acceptedPrivacyPolicy?: true
     acceptedTerms?: true
     selectedPaymentMethod?: true
@@ -19397,6 +19540,7 @@ export namespace Prisma {
     expertise?: true
     plan?: true
     readingClub?: true
+    mentoring?: true
     acceptedPrivacyPolicy?: true
     acceptedTerms?: true
     selectedPaymentMethod?: true
@@ -19511,6 +19655,7 @@ export namespace Prisma {
     expertise: string | null
     plan: $Enums.StudentPlan | null
     readingClub: boolean
+    mentoring: boolean
     acceptedPrivacyPolicy: boolean
     acceptedTerms: boolean
     selectedPaymentMethod: $Enums.PaymentMethod | null
@@ -19557,6 +19702,7 @@ export namespace Prisma {
     expertise?: boolean
     plan?: boolean
     readingClub?: boolean
+    mentoring?: boolean
     acceptedPrivacyPolicy?: boolean
     acceptedTerms?: boolean
     selectedPaymentMethod?: boolean
@@ -19585,6 +19731,7 @@ export namespace Prisma {
     expertise?: boolean
     plan?: boolean
     readingClub?: boolean
+    mentoring?: boolean
     acceptedPrivacyPolicy?: boolean
     acceptedTerms?: boolean
     selectedPaymentMethod?: boolean
@@ -19613,6 +19760,7 @@ export namespace Prisma {
     expertise?: boolean
     plan?: boolean
     readingClub?: boolean
+    mentoring?: boolean
     acceptedPrivacyPolicy?: boolean
     acceptedTerms?: boolean
     selectedPaymentMethod?: boolean
@@ -19652,6 +19800,7 @@ export namespace Prisma {
       expertise: string | null
       plan: $Enums.StudentPlan | null
       readingClub: boolean
+      mentoring: boolean
       acceptedPrivacyPolicy: boolean
       acceptedTerms: boolean
       selectedPaymentMethod: $Enums.PaymentMethod | null
@@ -20070,6 +20219,7 @@ export namespace Prisma {
     readonly expertise: FieldRef<"RegistrationSession", 'String'>
     readonly plan: FieldRef<"RegistrationSession", 'StudentPlan'>
     readonly readingClub: FieldRef<"RegistrationSession", 'Boolean'>
+    readonly mentoring: FieldRef<"RegistrationSession", 'Boolean'>
     readonly acceptedPrivacyPolicy: FieldRef<"RegistrationSession", 'Boolean'>
     readonly acceptedTerms: FieldRef<"RegistrationSession", 'Boolean'>
     readonly selectedPaymentMethod: FieldRef<"RegistrationSession", 'PaymentMethod'>
@@ -21414,6 +21564,7 @@ export namespace Prisma {
     enrollmentNumber: 'enrollmentNumber',
     plan: 'plan',
     readingClub: 'readingClub',
+    mentoring: 'mentoring',
     bio: 'bio',
     avatarUrl: 'avatarUrl',
     createdAt: 'createdAt',
@@ -21620,6 +21771,12 @@ export namespace Prisma {
     pixKey: 'pixKey',
     whatsappNumber: 'whatsappNumber',
     paymentNotes: 'paymentNotes',
+    mensalPlanPriceInCents: 'mensalPlanPriceInCents',
+    trimestralPlanPriceInCents: 'trimestralPlanPriceInCents',
+    semestralPlanPriceInCents: 'semestralPlanPriceInCents',
+    anualPlanPriceInCents: 'anualPlanPriceInCents',
+    mentoriaPlanPriceInCents: 'mentoriaPlanPriceInCents',
+    readingClubPriceInCents: 'readingClubPriceInCents',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -21638,6 +21795,7 @@ export namespace Prisma {
     expertise: 'expertise',
     plan: 'plan',
     readingClub: 'readingClub',
+    mentoring: 'mentoring',
     acceptedPrivacyPolicy: 'acceptedPrivacyPolicy',
     acceptedTerms: 'acceptedTerms',
     selectedPaymentMethod: 'selectedPaymentMethod',
@@ -21968,6 +22126,7 @@ export namespace Prisma {
     enrollmentNumber?: StringNullableFilter<"StudentProfile"> | string | null
     plan?: EnumStudentPlanNullableFilter<"StudentProfile"> | $Enums.StudentPlan | null
     readingClub?: BoolFilter<"StudentProfile"> | boolean
+    mentoring?: BoolFilter<"StudentProfile"> | boolean
     bio?: StringNullableFilter<"StudentProfile"> | string | null
     avatarUrl?: StringNullableFilter<"StudentProfile"> | string | null
     createdAt?: DateTimeFilter<"StudentProfile"> | Date | string
@@ -21984,6 +22143,7 @@ export namespace Prisma {
     enrollmentNumber?: SortOrderInput | SortOrder
     plan?: SortOrderInput | SortOrder
     readingClub?: SortOrder
+    mentoring?: SortOrder
     bio?: SortOrderInput | SortOrder
     avatarUrl?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -22003,6 +22163,7 @@ export namespace Prisma {
     enrollmentNumber?: StringNullableFilter<"StudentProfile"> | string | null
     plan?: EnumStudentPlanNullableFilter<"StudentProfile"> | $Enums.StudentPlan | null
     readingClub?: BoolFilter<"StudentProfile"> | boolean
+    mentoring?: BoolFilter<"StudentProfile"> | boolean
     bio?: StringNullableFilter<"StudentProfile"> | string | null
     avatarUrl?: StringNullableFilter<"StudentProfile"> | string | null
     createdAt?: DateTimeFilter<"StudentProfile"> | Date | string
@@ -22019,6 +22180,7 @@ export namespace Prisma {
     enrollmentNumber?: SortOrderInput | SortOrder
     plan?: SortOrderInput | SortOrder
     readingClub?: SortOrder
+    mentoring?: SortOrder
     bio?: SortOrderInput | SortOrder
     avatarUrl?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -22039,6 +22201,7 @@ export namespace Prisma {
     enrollmentNumber?: StringNullableWithAggregatesFilter<"StudentProfile"> | string | null
     plan?: EnumStudentPlanNullableWithAggregatesFilter<"StudentProfile"> | $Enums.StudentPlan | null
     readingClub?: BoolWithAggregatesFilter<"StudentProfile"> | boolean
+    mentoring?: BoolWithAggregatesFilter<"StudentProfile"> | boolean
     bio?: StringNullableWithAggregatesFilter<"StudentProfile"> | string | null
     avatarUrl?: StringNullableWithAggregatesFilter<"StudentProfile"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"StudentProfile"> | Date | string
@@ -23066,6 +23229,12 @@ export namespace Prisma {
     pixKey?: StringNullableFilter<"PlatformSettings"> | string | null
     whatsappNumber?: StringNullableFilter<"PlatformSettings"> | string | null
     paymentNotes?: StringNullableFilter<"PlatformSettings"> | string | null
+    mensalPlanPriceInCents?: IntFilter<"PlatformSettings"> | number
+    trimestralPlanPriceInCents?: IntFilter<"PlatformSettings"> | number
+    semestralPlanPriceInCents?: IntFilter<"PlatformSettings"> | number
+    anualPlanPriceInCents?: IntFilter<"PlatformSettings"> | number
+    mentoriaPlanPriceInCents?: IntFilter<"PlatformSettings"> | number
+    readingClubPriceInCents?: IntFilter<"PlatformSettings"> | number
     createdAt?: DateTimeFilter<"PlatformSettings"> | Date | string
     updatedAt?: DateTimeFilter<"PlatformSettings"> | Date | string
   }
@@ -23080,6 +23249,12 @@ export namespace Prisma {
     pixKey?: SortOrderInput | SortOrder
     whatsappNumber?: SortOrderInput | SortOrder
     paymentNotes?: SortOrderInput | SortOrder
+    mensalPlanPriceInCents?: SortOrder
+    trimestralPlanPriceInCents?: SortOrder
+    semestralPlanPriceInCents?: SortOrder
+    anualPlanPriceInCents?: SortOrder
+    mentoriaPlanPriceInCents?: SortOrder
+    readingClubPriceInCents?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -23097,6 +23272,12 @@ export namespace Prisma {
     pixKey?: StringNullableFilter<"PlatformSettings"> | string | null
     whatsappNumber?: StringNullableFilter<"PlatformSettings"> | string | null
     paymentNotes?: StringNullableFilter<"PlatformSettings"> | string | null
+    mensalPlanPriceInCents?: IntFilter<"PlatformSettings"> | number
+    trimestralPlanPriceInCents?: IntFilter<"PlatformSettings"> | number
+    semestralPlanPriceInCents?: IntFilter<"PlatformSettings"> | number
+    anualPlanPriceInCents?: IntFilter<"PlatformSettings"> | number
+    mentoriaPlanPriceInCents?: IntFilter<"PlatformSettings"> | number
+    readingClubPriceInCents?: IntFilter<"PlatformSettings"> | number
     createdAt?: DateTimeFilter<"PlatformSettings"> | Date | string
     updatedAt?: DateTimeFilter<"PlatformSettings"> | Date | string
   }, "id">
@@ -23111,11 +23292,19 @@ export namespace Prisma {
     pixKey?: SortOrderInput | SortOrder
     whatsappNumber?: SortOrderInput | SortOrder
     paymentNotes?: SortOrderInput | SortOrder
+    mensalPlanPriceInCents?: SortOrder
+    trimestralPlanPriceInCents?: SortOrder
+    semestralPlanPriceInCents?: SortOrder
+    anualPlanPriceInCents?: SortOrder
+    mentoriaPlanPriceInCents?: SortOrder
+    readingClubPriceInCents?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: PlatformSettingsCountOrderByAggregateInput
+    _avg?: PlatformSettingsAvgOrderByAggregateInput
     _max?: PlatformSettingsMaxOrderByAggregateInput
     _min?: PlatformSettingsMinOrderByAggregateInput
+    _sum?: PlatformSettingsSumOrderByAggregateInput
   }
 
   export type PlatformSettingsScalarWhereWithAggregatesInput = {
@@ -23131,6 +23320,12 @@ export namespace Prisma {
     pixKey?: StringNullableWithAggregatesFilter<"PlatformSettings"> | string | null
     whatsappNumber?: StringNullableWithAggregatesFilter<"PlatformSettings"> | string | null
     paymentNotes?: StringNullableWithAggregatesFilter<"PlatformSettings"> | string | null
+    mensalPlanPriceInCents?: IntWithAggregatesFilter<"PlatformSettings"> | number
+    trimestralPlanPriceInCents?: IntWithAggregatesFilter<"PlatformSettings"> | number
+    semestralPlanPriceInCents?: IntWithAggregatesFilter<"PlatformSettings"> | number
+    anualPlanPriceInCents?: IntWithAggregatesFilter<"PlatformSettings"> | number
+    mentoriaPlanPriceInCents?: IntWithAggregatesFilter<"PlatformSettings"> | number
+    readingClubPriceInCents?: IntWithAggregatesFilter<"PlatformSettings"> | number
     createdAt?: DateTimeWithAggregatesFilter<"PlatformSettings"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"PlatformSettings"> | Date | string
   }
@@ -23149,6 +23344,7 @@ export namespace Prisma {
     expertise?: StringNullableFilter<"RegistrationSession"> | string | null
     plan?: EnumStudentPlanNullableFilter<"RegistrationSession"> | $Enums.StudentPlan | null
     readingClub?: BoolFilter<"RegistrationSession"> | boolean
+    mentoring?: BoolFilter<"RegistrationSession"> | boolean
     acceptedPrivacyPolicy?: BoolFilter<"RegistrationSession"> | boolean
     acceptedTerms?: BoolFilter<"RegistrationSession"> | boolean
     selectedPaymentMethod?: EnumPaymentMethodNullableFilter<"RegistrationSession"> | $Enums.PaymentMethod | null
@@ -23177,6 +23373,7 @@ export namespace Prisma {
     expertise?: SortOrderInput | SortOrder
     plan?: SortOrderInput | SortOrder
     readingClub?: SortOrder
+    mentoring?: SortOrder
     acceptedPrivacyPolicy?: SortOrder
     acceptedTerms?: SortOrder
     selectedPaymentMethod?: SortOrderInput | SortOrder
@@ -23208,6 +23405,7 @@ export namespace Prisma {
     expertise?: StringNullableFilter<"RegistrationSession"> | string | null
     plan?: EnumStudentPlanNullableFilter<"RegistrationSession"> | $Enums.StudentPlan | null
     readingClub?: BoolFilter<"RegistrationSession"> | boolean
+    mentoring?: BoolFilter<"RegistrationSession"> | boolean
     acceptedPrivacyPolicy?: BoolFilter<"RegistrationSession"> | boolean
     acceptedTerms?: BoolFilter<"RegistrationSession"> | boolean
     selectedPaymentMethod?: EnumPaymentMethodNullableFilter<"RegistrationSession"> | $Enums.PaymentMethod | null
@@ -23236,6 +23434,7 @@ export namespace Prisma {
     expertise?: SortOrderInput | SortOrder
     plan?: SortOrderInput | SortOrder
     readingClub?: SortOrder
+    mentoring?: SortOrder
     acceptedPrivacyPolicy?: SortOrder
     acceptedTerms?: SortOrder
     selectedPaymentMethod?: SortOrderInput | SortOrder
@@ -23271,6 +23470,7 @@ export namespace Prisma {
     expertise?: StringNullableWithAggregatesFilter<"RegistrationSession"> | string | null
     plan?: EnumStudentPlanNullableWithAggregatesFilter<"RegistrationSession"> | $Enums.StudentPlan | null
     readingClub?: BoolWithAggregatesFilter<"RegistrationSession"> | boolean
+    mentoring?: BoolWithAggregatesFilter<"RegistrationSession"> | boolean
     acceptedPrivacyPolicy?: BoolWithAggregatesFilter<"RegistrationSession"> | boolean
     acceptedTerms?: BoolWithAggregatesFilter<"RegistrationSession"> | boolean
     selectedPaymentMethod?: EnumPaymentMethodNullableWithAggregatesFilter<"RegistrationSession"> | $Enums.PaymentMethod | null
@@ -23469,6 +23669,7 @@ export namespace Prisma {
     enrollmentNumber?: string | null
     plan?: $Enums.StudentPlan | null
     readingClub?: boolean
+    mentoring?: boolean
     bio?: string | null
     avatarUrl?: string | null
     createdAt?: Date | string
@@ -23485,6 +23686,7 @@ export namespace Prisma {
     enrollmentNumber?: string | null
     plan?: $Enums.StudentPlan | null
     readingClub?: boolean
+    mentoring?: boolean
     bio?: string | null
     avatarUrl?: string | null
     createdAt?: Date | string
@@ -23499,6 +23701,7 @@ export namespace Prisma {
     enrollmentNumber?: NullableStringFieldUpdateOperationsInput | string | null
     plan?: NullableEnumStudentPlanFieldUpdateOperationsInput | $Enums.StudentPlan | null
     readingClub?: BoolFieldUpdateOperationsInput | boolean
+    mentoring?: BoolFieldUpdateOperationsInput | boolean
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -23515,6 +23718,7 @@ export namespace Prisma {
     enrollmentNumber?: NullableStringFieldUpdateOperationsInput | string | null
     plan?: NullableEnumStudentPlanFieldUpdateOperationsInput | $Enums.StudentPlan | null
     readingClub?: BoolFieldUpdateOperationsInput | boolean
+    mentoring?: BoolFieldUpdateOperationsInput | boolean
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -23530,6 +23734,7 @@ export namespace Prisma {
     enrollmentNumber?: string | null
     plan?: $Enums.StudentPlan | null
     readingClub?: boolean
+    mentoring?: boolean
     bio?: string | null
     avatarUrl?: string | null
     createdAt?: Date | string
@@ -23543,6 +23748,7 @@ export namespace Prisma {
     enrollmentNumber?: NullableStringFieldUpdateOperationsInput | string | null
     plan?: NullableEnumStudentPlanFieldUpdateOperationsInput | $Enums.StudentPlan | null
     readingClub?: BoolFieldUpdateOperationsInput | boolean
+    mentoring?: BoolFieldUpdateOperationsInput | boolean
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -23557,6 +23763,7 @@ export namespace Prisma {
     enrollmentNumber?: NullableStringFieldUpdateOperationsInput | string | null
     plan?: NullableEnumStudentPlanFieldUpdateOperationsInput | $Enums.StudentPlan | null
     readingClub?: BoolFieldUpdateOperationsInput | boolean
+    mentoring?: BoolFieldUpdateOperationsInput | boolean
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -24647,6 +24854,12 @@ export namespace Prisma {
     pixKey?: string | null
     whatsappNumber?: string | null
     paymentNotes?: string | null
+    mensalPlanPriceInCents?: number
+    trimestralPlanPriceInCents?: number
+    semestralPlanPriceInCents?: number
+    anualPlanPriceInCents?: number
+    mentoriaPlanPriceInCents?: number
+    readingClubPriceInCents?: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -24661,6 +24874,12 @@ export namespace Prisma {
     pixKey?: string | null
     whatsappNumber?: string | null
     paymentNotes?: string | null
+    mensalPlanPriceInCents?: number
+    trimestralPlanPriceInCents?: number
+    semestralPlanPriceInCents?: number
+    anualPlanPriceInCents?: number
+    mentoriaPlanPriceInCents?: number
+    readingClubPriceInCents?: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -24675,6 +24894,12 @@ export namespace Prisma {
     pixKey?: NullableStringFieldUpdateOperationsInput | string | null
     whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
     paymentNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    mensalPlanPriceInCents?: IntFieldUpdateOperationsInput | number
+    trimestralPlanPriceInCents?: IntFieldUpdateOperationsInput | number
+    semestralPlanPriceInCents?: IntFieldUpdateOperationsInput | number
+    anualPlanPriceInCents?: IntFieldUpdateOperationsInput | number
+    mentoriaPlanPriceInCents?: IntFieldUpdateOperationsInput | number
+    readingClubPriceInCents?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -24689,6 +24914,12 @@ export namespace Prisma {
     pixKey?: NullableStringFieldUpdateOperationsInput | string | null
     whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
     paymentNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    mensalPlanPriceInCents?: IntFieldUpdateOperationsInput | number
+    trimestralPlanPriceInCents?: IntFieldUpdateOperationsInput | number
+    semestralPlanPriceInCents?: IntFieldUpdateOperationsInput | number
+    anualPlanPriceInCents?: IntFieldUpdateOperationsInput | number
+    mentoriaPlanPriceInCents?: IntFieldUpdateOperationsInput | number
+    readingClubPriceInCents?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -24703,6 +24934,12 @@ export namespace Prisma {
     pixKey?: string | null
     whatsappNumber?: string | null
     paymentNotes?: string | null
+    mensalPlanPriceInCents?: number
+    trimestralPlanPriceInCents?: number
+    semestralPlanPriceInCents?: number
+    anualPlanPriceInCents?: number
+    mentoriaPlanPriceInCents?: number
+    readingClubPriceInCents?: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -24717,6 +24954,12 @@ export namespace Prisma {
     pixKey?: NullableStringFieldUpdateOperationsInput | string | null
     whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
     paymentNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    mensalPlanPriceInCents?: IntFieldUpdateOperationsInput | number
+    trimestralPlanPriceInCents?: IntFieldUpdateOperationsInput | number
+    semestralPlanPriceInCents?: IntFieldUpdateOperationsInput | number
+    anualPlanPriceInCents?: IntFieldUpdateOperationsInput | number
+    mentoriaPlanPriceInCents?: IntFieldUpdateOperationsInput | number
+    readingClubPriceInCents?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -24731,6 +24974,12 @@ export namespace Prisma {
     pixKey?: NullableStringFieldUpdateOperationsInput | string | null
     whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
     paymentNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    mensalPlanPriceInCents?: IntFieldUpdateOperationsInput | number
+    trimestralPlanPriceInCents?: IntFieldUpdateOperationsInput | number
+    semestralPlanPriceInCents?: IntFieldUpdateOperationsInput | number
+    anualPlanPriceInCents?: IntFieldUpdateOperationsInput | number
+    mentoriaPlanPriceInCents?: IntFieldUpdateOperationsInput | number
+    readingClubPriceInCents?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -24746,6 +24995,7 @@ export namespace Prisma {
     expertise?: string | null
     plan?: $Enums.StudentPlan | null
     readingClub?: boolean
+    mentoring?: boolean
     acceptedPrivacyPolicy?: boolean
     acceptedTerms?: boolean
     selectedPaymentMethod?: $Enums.PaymentMethod | null
@@ -24773,6 +25023,7 @@ export namespace Prisma {
     expertise?: string | null
     plan?: $Enums.StudentPlan | null
     readingClub?: boolean
+    mentoring?: boolean
     acceptedPrivacyPolicy?: boolean
     acceptedTerms?: boolean
     selectedPaymentMethod?: $Enums.PaymentMethod | null
@@ -24800,6 +25051,7 @@ export namespace Prisma {
     expertise?: NullableStringFieldUpdateOperationsInput | string | null
     plan?: NullableEnumStudentPlanFieldUpdateOperationsInput | $Enums.StudentPlan | null
     readingClub?: BoolFieldUpdateOperationsInput | boolean
+    mentoring?: BoolFieldUpdateOperationsInput | boolean
     acceptedPrivacyPolicy?: BoolFieldUpdateOperationsInput | boolean
     acceptedTerms?: BoolFieldUpdateOperationsInput | boolean
     selectedPaymentMethod?: NullableEnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod | null
@@ -24827,6 +25079,7 @@ export namespace Prisma {
     expertise?: NullableStringFieldUpdateOperationsInput | string | null
     plan?: NullableEnumStudentPlanFieldUpdateOperationsInput | $Enums.StudentPlan | null
     readingClub?: BoolFieldUpdateOperationsInput | boolean
+    mentoring?: BoolFieldUpdateOperationsInput | boolean
     acceptedPrivacyPolicy?: BoolFieldUpdateOperationsInput | boolean
     acceptedTerms?: BoolFieldUpdateOperationsInput | boolean
     selectedPaymentMethod?: NullableEnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod | null
@@ -24854,6 +25107,7 @@ export namespace Prisma {
     expertise?: string | null
     plan?: $Enums.StudentPlan | null
     readingClub?: boolean
+    mentoring?: boolean
     acceptedPrivacyPolicy?: boolean
     acceptedTerms?: boolean
     selectedPaymentMethod?: $Enums.PaymentMethod | null
@@ -24881,6 +25135,7 @@ export namespace Prisma {
     expertise?: NullableStringFieldUpdateOperationsInput | string | null
     plan?: NullableEnumStudentPlanFieldUpdateOperationsInput | $Enums.StudentPlan | null
     readingClub?: BoolFieldUpdateOperationsInput | boolean
+    mentoring?: BoolFieldUpdateOperationsInput | boolean
     acceptedPrivacyPolicy?: BoolFieldUpdateOperationsInput | boolean
     acceptedTerms?: BoolFieldUpdateOperationsInput | boolean
     selectedPaymentMethod?: NullableEnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod | null
@@ -24907,6 +25162,7 @@ export namespace Prisma {
     expertise?: NullableStringFieldUpdateOperationsInput | string | null
     plan?: NullableEnumStudentPlanFieldUpdateOperationsInput | $Enums.StudentPlan | null
     readingClub?: BoolFieldUpdateOperationsInput | boolean
+    mentoring?: BoolFieldUpdateOperationsInput | boolean
     acceptedPrivacyPolicy?: BoolFieldUpdateOperationsInput | boolean
     acceptedTerms?: BoolFieldUpdateOperationsInput | boolean
     selectedPaymentMethod?: NullableEnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod | null
@@ -25255,6 +25511,7 @@ export namespace Prisma {
     enrollmentNumber?: SortOrder
     plan?: SortOrder
     readingClub?: SortOrder
+    mentoring?: SortOrder
     bio?: SortOrder
     avatarUrl?: SortOrder
     createdAt?: SortOrder
@@ -25269,6 +25526,7 @@ export namespace Prisma {
     enrollmentNumber?: SortOrder
     plan?: SortOrder
     readingClub?: SortOrder
+    mentoring?: SortOrder
     bio?: SortOrder
     avatarUrl?: SortOrder
     createdAt?: SortOrder
@@ -25283,6 +25541,7 @@ export namespace Prisma {
     enrollmentNumber?: SortOrder
     plan?: SortOrder
     readingClub?: SortOrder
+    mentoring?: SortOrder
     bio?: SortOrder
     avatarUrl?: SortOrder
     createdAt?: SortOrder
@@ -26063,8 +26322,23 @@ export namespace Prisma {
     pixKey?: SortOrder
     whatsappNumber?: SortOrder
     paymentNotes?: SortOrder
+    mensalPlanPriceInCents?: SortOrder
+    trimestralPlanPriceInCents?: SortOrder
+    semestralPlanPriceInCents?: SortOrder
+    anualPlanPriceInCents?: SortOrder
+    mentoriaPlanPriceInCents?: SortOrder
+    readingClubPriceInCents?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type PlatformSettingsAvgOrderByAggregateInput = {
+    mensalPlanPriceInCents?: SortOrder
+    trimestralPlanPriceInCents?: SortOrder
+    semestralPlanPriceInCents?: SortOrder
+    anualPlanPriceInCents?: SortOrder
+    mentoriaPlanPriceInCents?: SortOrder
+    readingClubPriceInCents?: SortOrder
   }
 
   export type PlatformSettingsMaxOrderByAggregateInput = {
@@ -26077,6 +26351,12 @@ export namespace Prisma {
     pixKey?: SortOrder
     whatsappNumber?: SortOrder
     paymentNotes?: SortOrder
+    mensalPlanPriceInCents?: SortOrder
+    trimestralPlanPriceInCents?: SortOrder
+    semestralPlanPriceInCents?: SortOrder
+    anualPlanPriceInCents?: SortOrder
+    mentoriaPlanPriceInCents?: SortOrder
+    readingClubPriceInCents?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -26091,8 +26371,23 @@ export namespace Prisma {
     pixKey?: SortOrder
     whatsappNumber?: SortOrder
     paymentNotes?: SortOrder
+    mensalPlanPriceInCents?: SortOrder
+    trimestralPlanPriceInCents?: SortOrder
+    semestralPlanPriceInCents?: SortOrder
+    anualPlanPriceInCents?: SortOrder
+    mentoriaPlanPriceInCents?: SortOrder
+    readingClubPriceInCents?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type PlatformSettingsSumOrderByAggregateInput = {
+    mensalPlanPriceInCents?: SortOrder
+    trimestralPlanPriceInCents?: SortOrder
+    semestralPlanPriceInCents?: SortOrder
+    anualPlanPriceInCents?: SortOrder
+    mentoriaPlanPriceInCents?: SortOrder
+    readingClubPriceInCents?: SortOrder
   }
 
   export type EnumPaymentMethodNullableFilter<$PrismaModel = never> = {
@@ -26125,6 +26420,7 @@ export namespace Prisma {
     expertise?: SortOrder
     plan?: SortOrder
     readingClub?: SortOrder
+    mentoring?: SortOrder
     acceptedPrivacyPolicy?: SortOrder
     acceptedTerms?: SortOrder
     selectedPaymentMethod?: SortOrder
@@ -26156,6 +26452,7 @@ export namespace Prisma {
     expertise?: SortOrder
     plan?: SortOrder
     readingClub?: SortOrder
+    mentoring?: SortOrder
     acceptedPrivacyPolicy?: SortOrder
     acceptedTerms?: SortOrder
     selectedPaymentMethod?: SortOrder
@@ -26183,6 +26480,7 @@ export namespace Prisma {
     expertise?: SortOrder
     plan?: SortOrder
     readingClub?: SortOrder
+    mentoring?: SortOrder
     acceptedPrivacyPolicy?: SortOrder
     acceptedTerms?: SortOrder
     selectedPaymentMethod?: SortOrder
@@ -27929,6 +28227,7 @@ export namespace Prisma {
     enrollmentNumber?: string | null
     plan?: $Enums.StudentPlan | null
     readingClub?: boolean
+    mentoring?: boolean
     bio?: string | null
     avatarUrl?: string | null
     createdAt?: Date | string
@@ -27943,6 +28242,7 @@ export namespace Prisma {
     enrollmentNumber?: string | null
     plan?: $Enums.StudentPlan | null
     readingClub?: boolean
+    mentoring?: boolean
     bio?: string | null
     avatarUrl?: string | null
     createdAt?: Date | string
@@ -28029,6 +28329,7 @@ export namespace Prisma {
     expertise?: string | null
     plan?: $Enums.StudentPlan | null
     readingClub?: boolean
+    mentoring?: boolean
     acceptedPrivacyPolicy?: boolean
     acceptedTerms?: boolean
     selectedPaymentMethod?: $Enums.PaymentMethod | null
@@ -28055,6 +28356,7 @@ export namespace Prisma {
     expertise?: string | null
     plan?: $Enums.StudentPlan | null
     readingClub?: boolean
+    mentoring?: boolean
     acceptedPrivacyPolicy?: boolean
     acceptedTerms?: boolean
     selectedPaymentMethod?: $Enums.PaymentMethod | null
@@ -28160,6 +28462,7 @@ export namespace Prisma {
     enrollmentNumber?: NullableStringFieldUpdateOperationsInput | string | null
     plan?: NullableEnumStudentPlanFieldUpdateOperationsInput | $Enums.StudentPlan | null
     readingClub?: BoolFieldUpdateOperationsInput | boolean
+    mentoring?: BoolFieldUpdateOperationsInput | boolean
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -28174,6 +28477,7 @@ export namespace Prisma {
     enrollmentNumber?: NullableStringFieldUpdateOperationsInput | string | null
     plan?: NullableEnumStudentPlanFieldUpdateOperationsInput | $Enums.StudentPlan | null
     readingClub?: BoolFieldUpdateOperationsInput | boolean
+    mentoring?: BoolFieldUpdateOperationsInput | boolean
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -28282,6 +28586,7 @@ export namespace Prisma {
     expertise?: StringNullableFilter<"RegistrationSession"> | string | null
     plan?: EnumStudentPlanNullableFilter<"RegistrationSession"> | $Enums.StudentPlan | null
     readingClub?: BoolFilter<"RegistrationSession"> | boolean
+    mentoring?: BoolFilter<"RegistrationSession"> | boolean
     acceptedPrivacyPolicy?: BoolFilter<"RegistrationSession"> | boolean
     acceptedTerms?: BoolFilter<"RegistrationSession"> | boolean
     selectedPaymentMethod?: EnumPaymentMethodNullableFilter<"RegistrationSession"> | $Enums.PaymentMethod | null
@@ -29276,6 +29581,7 @@ export namespace Prisma {
     enrollmentNumber?: string | null
     plan?: $Enums.StudentPlan | null
     readingClub?: boolean
+    mentoring?: boolean
     bio?: string | null
     avatarUrl?: string | null
     createdAt?: Date | string
@@ -29291,6 +29597,7 @@ export namespace Prisma {
     enrollmentNumber?: string | null
     plan?: $Enums.StudentPlan | null
     readingClub?: boolean
+    mentoring?: boolean
     bio?: string | null
     avatarUrl?: string | null
     createdAt?: Date | string
@@ -29387,6 +29694,7 @@ export namespace Prisma {
     enrollmentNumber?: NullableStringFieldUpdateOperationsInput | string | null
     plan?: NullableEnumStudentPlanFieldUpdateOperationsInput | $Enums.StudentPlan | null
     readingClub?: BoolFieldUpdateOperationsInput | boolean
+    mentoring?: BoolFieldUpdateOperationsInput | boolean
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -29402,6 +29710,7 @@ export namespace Prisma {
     enrollmentNumber?: NullableStringFieldUpdateOperationsInput | string | null
     plan?: NullableEnumStudentPlanFieldUpdateOperationsInput | $Enums.StudentPlan | null
     readingClub?: BoolFieldUpdateOperationsInput | boolean
+    mentoring?: BoolFieldUpdateOperationsInput | boolean
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -30862,6 +31171,7 @@ export namespace Prisma {
     expertise?: string | null
     plan?: $Enums.StudentPlan | null
     readingClub?: boolean
+    mentoring?: boolean
     acceptedPrivacyPolicy?: boolean
     acceptedTerms?: boolean
     selectedPaymentMethod?: $Enums.PaymentMethod | null
@@ -30978,6 +31288,7 @@ export namespace Prisma {
     expertise?: NullableStringFieldUpdateOperationsInput | string | null
     plan?: NullableEnumStudentPlanFieldUpdateOperationsInput | $Enums.StudentPlan | null
     readingClub?: BoolFieldUpdateOperationsInput | boolean
+    mentoring?: BoolFieldUpdateOperationsInput | boolean
     acceptedPrivacyPolicy?: BoolFieldUpdateOperationsInput | boolean
     acceptedTerms?: BoolFieldUpdateOperationsInput | boolean
     selectedPaymentMethod?: NullableEnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod | null
@@ -31004,6 +31315,7 @@ export namespace Prisma {
     expertise?: NullableStringFieldUpdateOperationsInput | string | null
     plan?: NullableEnumStudentPlanFieldUpdateOperationsInput | $Enums.StudentPlan | null
     readingClub?: BoolFieldUpdateOperationsInput | boolean
+    mentoring?: BoolFieldUpdateOperationsInput | boolean
     acceptedPrivacyPolicy?: BoolFieldUpdateOperationsInput | boolean
     acceptedTerms?: BoolFieldUpdateOperationsInput | boolean
     selectedPaymentMethod?: NullableEnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod | null
@@ -31030,6 +31342,7 @@ export namespace Prisma {
     expertise?: NullableStringFieldUpdateOperationsInput | string | null
     plan?: NullableEnumStudentPlanFieldUpdateOperationsInput | $Enums.StudentPlan | null
     readingClub?: BoolFieldUpdateOperationsInput | boolean
+    mentoring?: BoolFieldUpdateOperationsInput | boolean
     acceptedPrivacyPolicy?: BoolFieldUpdateOperationsInput | boolean
     acceptedTerms?: BoolFieldUpdateOperationsInput | boolean
     selectedPaymentMethod?: NullableEnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod | null

@@ -14,12 +14,22 @@ type SettingsData = {
   pixKey?: string | null;
   whatsappNumber?: string | null;
   paymentNotes?: string | null;
+  mensalPlanPriceInCents?: number | null;
+  trimestralPlanPriceInCents?: number | null;
+  semestralPlanPriceInCents?: number | null;
+  anualPlanPriceInCents?: number | null;
+  mentoriaPlanPriceInCents?: number | null;
+  readingClubPriceInCents?: number | null;
 };
 
 const fieldPanelClassName =
   'admin-field-panel theme-field-panel space-y-2 rounded-[24px] p-4';
 const fieldClassName =
   'admin-form-input theme-field w-full rounded-2xl px-4 py-3 text-sm';
+
+function formatPriceInput(amountInCents?: number | null) {
+  return typeof amountInCents === 'number' ? (amountInCents / 100).toFixed(2).replace('.', ',') : '';
+}
 
 export function AdminSettingsForm({ initialSettings }: { initialSettings: SettingsData }) {
   const [loading, setLoading] = useState(false);
@@ -43,12 +53,12 @@ export function AdminSettingsForm({ initialSettings }: { initialSettings: Settin
 
     if (!response.ok) {
       const payload = await response.json().catch(() => ({}));
-      setError(payload.error || 'N\u00E3o foi poss\u00EDvel salvar as configura\u00E7\u00F5es.');
+      setError(payload.error || 'Não foi possível salvar as configurações.');
       setLoading(false);
       return;
     }
 
-    setMessage('Configura\u00E7\u00F5es salvas com sucesso.');
+    setMessage('Configurações salvas com sucesso.');
     setLoading(false);
   };
 
@@ -62,9 +72,53 @@ export function AdminSettingsForm({ initialSettings }: { initialSettings: Settin
         </p>
       </div>
 
+      <div className="space-y-3">
+        <div>
+          <p className="admin-form-label text-sm font-semibold">Preços dos planos</p>
+          <p className="admin-form-help mt-1 text-xs leading-5">Valores usados na vitrine, no cadastro e no checkout de novos alunos.</p>
+        </div>
+        <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+          <label className={fieldPanelClassName}>
+            <span className="admin-form-label block text-sm font-semibold">Mensal</span>
+            <span className="admin-form-help block text-xs leading-5">Valor em reais.</span>
+            <input name="mensalPlanPrice" defaultValue={formatPriceInput(initialSettings.mensalPlanPriceInCents)} placeholder="80,00" inputMode="decimal" className={fieldClassName} />
+          </label>
+
+          <label className={fieldPanelClassName}>
+            <span className="admin-form-label block text-sm font-semibold">Trimestral</span>
+            <span className="admin-form-help block text-xs leading-5">Valor em reais.</span>
+            <input name="trimestralPlanPrice" defaultValue={formatPriceInput(initialSettings.trimestralPlanPriceInCents)} placeholder="218,00" inputMode="decimal" className={fieldClassName} />
+          </label>
+
+          <label className={fieldPanelClassName}>
+            <span className="admin-form-label block text-sm font-semibold">Semestral</span>
+            <span className="admin-form-help block text-xs leading-5">Valor em reais.</span>
+            <input name="semestralPlanPrice" defaultValue={formatPriceInput(initialSettings.semestralPlanPriceInCents)} placeholder="413,00" inputMode="decimal" className={fieldClassName} />
+          </label>
+
+          <label className={fieldPanelClassName}>
+            <span className="admin-form-label block text-sm font-semibold">Anual</span>
+            <span className="admin-form-help block text-xs leading-5">Valor em reais.</span>
+            <input name="anualPlanPrice" defaultValue={formatPriceInput(initialSettings.anualPlanPriceInCents)} placeholder="768,00" inputMode="decimal" className={fieldClassName} />
+          </label>
+
+          <label className={fieldPanelClassName}>
+            <span className="admin-form-label block text-sm font-semibold">Mentoria</span>
+            <span className="admin-form-help block text-xs leading-5">Valor em reais.</span>
+            <input name="mentoriaPlanPrice" defaultValue={formatPriceInput(initialSettings.mentoriaPlanPriceInCents)} placeholder="120,00" inputMode="decimal" className={fieldClassName} />
+          </label>
+
+          <label className={fieldPanelClassName}>
+            <span className="admin-form-label block text-sm font-semibold">Clube de Leitura</span>
+            <span className="admin-form-help block text-xs leading-5">Complemento opcional.</span>
+            <input name="readingClubPrice" defaultValue={formatPriceInput(initialSettings.readingClubPriceInCents)} placeholder="30,00" inputMode="decimal" className={fieldClassName} />
+          </label>
+        </div>
+      </div>
+
       <div className="grid gap-3 md:grid-cols-2">
         <label className={fieldPanelClassName}>
-          <span className="admin-form-label block text-sm font-semibold">Titular / raz\u00E3o social</span>
+          <span className="admin-form-label block text-sm font-semibold">Titular / razão social</span>
           <span className="admin-form-help block text-xs leading-5">Nome da pessoa ou empresa que vai receber os pagamentos da plataforma.</span>
           <input name="bankRecipientName" defaultValue={initialSettings.bankRecipientName ?? ''} placeholder="Escreva Mais" className={fieldClassName} />
         </label>
@@ -82,27 +136,27 @@ export function AdminSettingsForm({ initialSettings }: { initialSettings: Settin
         </label>
 
         <label className={fieldPanelClassName}>
-          <span className="admin-form-label block text-sm font-semibold">Ag\u00EAncia</span>
-          <span className="admin-form-help block text-xs leading-5">N\u00FAmero da ag\u00EAncia banc\u00E1ria vinculada a essa conta.</span>
+          <span className="admin-form-label block text-sm font-semibold">Agência</span>
+          <span className="admin-form-help block text-xs leading-5">Número da agência bancária vinculada a essa conta.</span>
           <input name="bankAgency" defaultValue={initialSettings.bankAgency ?? ''} placeholder="0001" className={fieldClassName} />
         </label>
 
         <label className={fieldPanelClassName}>
           <span className="admin-form-label block text-sm font-semibold">Conta</span>
-          <span className="admin-form-help block text-xs leading-5">N\u00FAmero da conta com d\u00EDgito, usada para recebimentos.</span>
+          <span className="admin-form-help block text-xs leading-5">Número da conta com dígito, usada para recebimentos.</span>
           <input name="bankAccount" defaultValue={initialSettings.bankAccount ?? ''} placeholder="12345-6" className={fieldClassName} />
         </label>
 
         <label className={fieldPanelClassName}>
           <span className="admin-form-label block text-sm font-semibold">Chave PIX</span>
-          <span className="admin-form-help block text-xs leading-5">Chave PIX oficial usada para transfer\u00EAncias e repasses.</span>
+          <span className="admin-form-help block text-xs leading-5">Chave PIX oficial usada para transferências e repasses.</span>
           <input name="pixKey" defaultValue={initialSettings.pixKey ?? ''} placeholder="financeiro@redacao360.com" className={fieldClassName} />
         </label>
 
         <label className={`${fieldPanelClassName} md:col-span-2`}>
           <span className="admin-form-label block text-sm font-semibold">WhatsApp oficial com DDI</span>
           <span className="admin-form-help block text-xs leading-5">
-            N\u00FAmero que ser\u00E1 usado na plataforma para atendimento, suporte e contato com usu\u00E1rios. Ex.:
+            Número que será usado na plataforma para atendimento, suporte e contato com usuários. Ex.:
             +55 (11) 99999-9999.
           </span>
           <input
@@ -118,15 +172,15 @@ export function AdminSettingsForm({ initialSettings }: { initialSettings: Settin
       </div>
 
       <label className={`${fieldPanelClassName} block`}>
-        <span className="admin-form-label block text-sm font-semibold">Observa\u00E7\u00F5es internas</span>
+        <span className="admin-form-label block text-sm font-semibold">Observações internas</span>
         <span className="admin-form-help block text-xs leading-5">
-          Instru\u00E7\u00F5es administrativas sobre pagamentos, repasses, atendimento ou qualquer regra operacional da plataforma.
+          Instruções administrativas sobre pagamentos, repasses, atendimento ou qualquer regra operacional da plataforma.
         </span>
         <textarea
           name="paymentNotes"
           defaultValue={initialSettings.paymentNotes ?? ''}
           rows={4}
-          placeholder="Observa\u00E7\u00F5es internas sobre pagamentos, repasses e atendimento."
+          placeholder="Observações internas sobre pagamentos, repasses e atendimento."
           className={`${fieldClassName} min-h-[120px] resize-y`}
         />
       </label>
@@ -137,7 +191,7 @@ export function AdminSettingsForm({ initialSettings }: { initialSettings: Settin
       <div className="flex justify-end pt-1">
         <Button type="submit" disabled={loading} className="min-w-[220px] justify-center">
           {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
-          Salvar configura\u00E7\u00F5es
+          Salvar configurações
         </Button>
       </div>
     </form>

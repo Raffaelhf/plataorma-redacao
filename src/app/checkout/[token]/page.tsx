@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 import { CircleAlert, CircleCheckBig, Clock3 } from 'lucide-react';
 import { RegistrationCheckout } from '@/components/auth/registration-checkout';
-import { formatCurrencyFromCents, READING_CLUB_PRICE_IN_CENTS, STUDENT_PLAN_CATALOG } from '@/lib/plans';
+import { calculateDiscountedMentoringPrice, formatCurrencyFromCents, getMentoringPriceFromSettings, getPlatformPlanSettings, getReadingClubPriceInCents, getStudentPlanCatalog } from '@/lib/plans';
 import { prisma } from '@/lib/prisma';
 
 export default async function CheckoutPage({
@@ -27,8 +27,10 @@ export default async function CheckoutPage({
     redirect('/login');
   }
 
-  const plan = session.plan ? STUDENT_PLAN_CATALOG[session.plan] : null;
-  const planLabel = plan ? `${plan.label}${session.readingClub ? ' + Clube de Leitura' : ''}` : null;
+  const [catalog, readingClubPriceInCents, settings] = await Promise.all([getStudentPlanCatalog(), getReadingClubPriceInCents(), getPlatformPlanSettings()]);
+  const plan = session.plan ? catalog[session.plan] : null;
+  const mentoringPriceInCents = session.plan ? calculateDiscountedMentoringPrice(session.plan, getMentoringPriceFromSettings(settings)) : 0;
+  const planLabel = plan ? [plan.label, session.readingClub ? 'Clube de Leitura' : null, session.mentoring ? 'Mentoria' : null].filter(Boolean).join(' + ') : null;
 
   return (
     <main className="mx-auto min-h-screen w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-10">
@@ -108,7 +110,12 @@ export default async function CheckoutPage({
           ) : null}
           {session.readingClub ? (
             <p>
-              Clube de Leitura: <span className="font-semibold text-[#22347e]">{formatCurrencyFromCents(READING_CLUB_PRICE_IN_CENTS)}</span>
+              Clube de Leitura: <span className="font-semibold text-[#22347e]">{formatCurrencyFromCents(readingClubPriceInCents)}</span>
+            </p>
+          ) : null}
+          {session.mentoring ? (
+            <p>
+              Mentoria: <span className="font-semibold text-[#22347e]">{formatCurrencyFromCents(mentoringPriceInCents)}</span>
             </p>
           ) : null}
           <p>

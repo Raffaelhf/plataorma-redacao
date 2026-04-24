@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getAuthSession } from '@/lib/auth';
 import { normalizeWhatsAppNumber } from '@/lib/phone';
+import { MENTORING_PLAN_PRICE_IN_CENTS, READING_CLUB_PRICE_IN_CENTS, STUDENT_PLAN_CATALOG } from '@/lib/plans';
 import { prisma } from '@/lib/prisma';
 
 const SETTINGS_ID = 'platform';
@@ -8,6 +9,22 @@ const SETTINGS_ID = 'platform';
 function asOptionalString(value: unknown) {
   const normalized = String(value ?? '').trim();
   return normalized ? normalized : null;
+}
+
+function parsePriceInCents(value: unknown, fallback: number) {
+  const raw = String(value ?? '').replace('R$', '').trim();
+  if (!raw) return fallback;
+
+  const normalized = raw.includes(',')
+    ? raw.replace(/\./g, '').replace(',', '.')
+    : raw;
+  const amount = Number(normalized.replace(/[^0-9.-]/g, ''));
+
+  if (!Number.isFinite(amount) || amount < 0) {
+    return null;
+  }
+
+  return Math.round(amount * 100);
 }
 
 export async function GET() {
@@ -31,6 +48,12 @@ export async function GET() {
       pixKey: null,
       whatsappNumber: null,
       paymentNotes: null,
+      mensalPlanPriceInCents: STUDENT_PLAN_CATALOG.MENSAL.amountInCents,
+      trimestralPlanPriceInCents: STUDENT_PLAN_CATALOG.TRIMESTRAL.amountInCents,
+      semestralPlanPriceInCents: STUDENT_PLAN_CATALOG.SEMESTRAL.amountInCents,
+      anualPlanPriceInCents: STUDENT_PLAN_CATALOG.ANUAL.amountInCents,
+      mentoriaPlanPriceInCents: MENTORING_PLAN_PRICE_IN_CENTS,
+      readingClubPriceInCents: READING_CLUB_PRICE_IN_CENTS,
     },
   );
 }
@@ -43,6 +66,27 @@ export async function PUT(req: Request) {
 
   const body = await req.json();
   const whatsappNumber = normalizeWhatsAppNumber(body.whatsappNumber);
+  const parsedPlanPrices = {
+    mensalPlanPriceInCents: parsePriceInCents(body.mensalPlanPrice, STUDENT_PLAN_CATALOG.MENSAL.amountInCents),
+    trimestralPlanPriceInCents: parsePriceInCents(body.trimestralPlanPrice, STUDENT_PLAN_CATALOG.TRIMESTRAL.amountInCents),
+    semestralPlanPriceInCents: parsePriceInCents(body.semestralPlanPrice, STUDENT_PLAN_CATALOG.SEMESTRAL.amountInCents),
+    anualPlanPriceInCents: parsePriceInCents(body.anualPlanPrice, STUDENT_PLAN_CATALOG.ANUAL.amountInCents),
+    mentoriaPlanPriceInCents: parsePriceInCents(body.mentoriaPlanPrice, MENTORING_PLAN_PRICE_IN_CENTS),
+    readingClubPriceInCents: parsePriceInCents(body.readingClubPrice, READING_CLUB_PRICE_IN_CENTS),
+  };
+
+  if (Object.values(parsedPlanPrices).some((price) => price === null)) {
+    return NextResponse.json({ error: 'Informe preços válidos para os planos.' }, { status: 400 });
+  }
+
+  const planPrices = {
+    mensalPlanPriceInCents: parsedPlanPrices.mensalPlanPriceInCents ?? STUDENT_PLAN_CATALOG.MENSAL.amountInCents,
+    trimestralPlanPriceInCents: parsedPlanPrices.trimestralPlanPriceInCents ?? STUDENT_PLAN_CATALOG.TRIMESTRAL.amountInCents,
+    semestralPlanPriceInCents: parsedPlanPrices.semestralPlanPriceInCents ?? STUDENT_PLAN_CATALOG.SEMESTRAL.amountInCents,
+    anualPlanPriceInCents: parsedPlanPrices.anualPlanPriceInCents ?? STUDENT_PLAN_CATALOG.ANUAL.amountInCents,
+    mentoriaPlanPriceInCents: parsedPlanPrices.mentoriaPlanPriceInCents ?? MENTORING_PLAN_PRICE_IN_CENTS,
+    readingClubPriceInCents: parsedPlanPrices.readingClubPriceInCents ?? READING_CLUB_PRICE_IN_CENTS,
+  };
 
   const settings = await prisma.platformSettings.upsert({
     where: { id: SETTINGS_ID },
@@ -55,6 +99,7 @@ export async function PUT(req: Request) {
       pixKey: asOptionalString(body.pixKey),
       whatsappNumber: asOptionalString(whatsappNumber),
       paymentNotes: asOptionalString(body.paymentNotes),
+      ...planPrices,
     },
     create: {
       id: SETTINGS_ID,
@@ -66,6 +111,7 @@ export async function PUT(req: Request) {
       pixKey: asOptionalString(body.pixKey),
       whatsappNumber: asOptionalString(whatsappNumber),
       paymentNotes: asOptionalString(body.paymentNotes),
+      ...planPrices,
     },
   });
 

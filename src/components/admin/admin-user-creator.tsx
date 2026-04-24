@@ -44,6 +44,7 @@ export function AdminUserCreator() {
         enrollmentNumber: formData.get('enrollmentNumber'),
         plan: formData.get('plan') || null,
         readingClub: formData.get('readingClub') === 'on',
+        mentoring: formData.get('mentoring') === 'on',
         expertise: formData.get('expertise'),
       }),
     });
@@ -72,7 +73,7 @@ export function AdminUserCreator() {
           <p className="text-sm font-semibold text-[#5a69a1]">Novo cadastro</p>
           <h2 className="mt-1 text-xl font-semibold text-[#22347e]">Criar perfil de aluno ou professor</h2>
           <p className="mt-2 max-w-[42rem] text-sm leading-7 text-[#5f6d98]">
-            Use esta área para cadastrar usuários manualmente. Para alunos, o plano e o Clube de Leitura ficam registrados no perfil.
+            Use esta área para cadastrar usuários manualmente. Para alunos, o plano, o Clube de Leitura e a Mentoria ficam registrados no perfil.
           </p>
         </div>
         <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,#eef2ff_0%,#fff1eb_100%)] text-[#4250d4]">
@@ -171,7 +172,7 @@ export function AdminUserCreator() {
         </div>
 
         {role === 'STUDENT' ? (
-          <div className="grid gap-4 md:grid-cols-[1fr_auto]">
+          <div className="grid gap-4 md:grid-cols-[1fr_auto_auto]">
             <div className="space-y-2">
               <label className="text-sm font-medium text-[#52618f]">Plano</label>
               <select
@@ -190,6 +191,10 @@ export function AdminUserCreator() {
             <label className="admin-card-soft flex items-center gap-3 rounded-[24px] px-4 py-4 text-sm font-medium text-[#22347e] md:self-end">
               <input type="checkbox" name="readingClub" className="h-4 w-4 accent-[#4250d4]" />
               Clube de Leitura
+            </label>
+            <label className="admin-card-soft flex items-center gap-3 rounded-[24px] px-4 py-4 text-sm font-medium text-[#22347e] md:self-end">
+              <input type="checkbox" name="mentoring" className="h-4 w-4 accent-[#4250d4]" />
+              Mentoria
             </label>
           </div>
         ) : null}

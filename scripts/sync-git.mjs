@@ -10,7 +10,7 @@ function run(command, commandArgs, options = {}) {
   const result = spawnSync(command, commandArgs, {
     encoding: "utf8",
     stdio: options.capture ? "pipe" : "inherit",
-    shell: false,
+    shell: process.platform === "win32" && command.endsWith(".cmd"),
   });
 
   if (result.error) {

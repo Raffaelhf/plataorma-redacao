@@ -88,6 +88,7 @@ export async function PATCH(req: Request, context: RouteContext) {
           enrollmentNumber: true,
           plan: true,
           readingClub: true,
+          mentoring: true,
         },
       },
     },

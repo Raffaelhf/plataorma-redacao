@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import { AdminSettingsForm } from '@/components/admin/admin-settings-form';
 import { getAuthSession } from '@/lib/auth';
+import { MENTORING_PLAN_PRICE_IN_CENTS, READING_CLUB_PRICE_IN_CENTS, STUDENT_PLAN_CATALOG } from '@/lib/plans';
 import { prisma } from '@/lib/prisma';
 
 export default async function AdminSettingsPage() {
@@ -29,7 +30,18 @@ export default async function AdminSettingsPage() {
         </div>
       </section>
 
-      <AdminSettingsForm initialSettings={settings ?? {}} />
+      <AdminSettingsForm
+        initialSettings={
+          settings ?? {
+            mensalPlanPriceInCents: STUDENT_PLAN_CATALOG.MENSAL.amountInCents,
+            trimestralPlanPriceInCents: STUDENT_PLAN_CATALOG.TRIMESTRAL.amountInCents,
+            semestralPlanPriceInCents: STUDENT_PLAN_CATALOG.SEMESTRAL.amountInCents,
+            anualPlanPriceInCents: STUDENT_PLAN_CATALOG.ANUAL.amountInCents,
+            mentoriaPlanPriceInCents: MENTORING_PLAN_PRICE_IN_CENTS,
+            readingClubPriceInCents: READING_CLUB_PRICE_IN_CENTS,
+          }
+        }
+      />
     </div>
   );
 }

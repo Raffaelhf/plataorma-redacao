@@ -20,6 +20,7 @@ type ManagedUser = {
     enrollmentNumber: string | null;
     plan: 'MENSAL' | 'TRIMESTRAL' | 'SEMESTRAL' | 'ANUAL' | null;
     readingClub: boolean;
+    mentoring: boolean;
   } | null;
 };
 
@@ -359,6 +360,9 @@ export function AdminUsersManager({ initialUsers }: { initialUsers: ManagedUser[
                         </span>
                         <span className="rounded-full bg-[#edf8f2] px-3 py-1 text-xs font-semibold text-[#1b7f62]">
                           Clube de Leitura: {user.studentProfile?.readingClub ? 'Sim' : 'Não'}
+                        </span>
+                        <span className="rounded-full bg-[#eef2ff] px-3 py-1 text-xs font-semibold text-[#4250d4]">
+                          Mentoria: {user.studentProfile?.mentoring ? 'Sim' : 'Não'}
                         </span>
                         <span className="rounded-full bg-[#fff3ea] px-3 py-1 text-xs font-semibold text-[#c96a2f]">
                           Série: {user.studentProfile?.gradeLevel || 'Não informada'}

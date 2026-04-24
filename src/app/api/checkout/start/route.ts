@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import type { PaymentMethod } from '@/generated/prisma';
 import { getAppUrl } from '@/lib/app-url';
 import { createMercadoPagoPreference } from '@/lib/mercadopago';
-import { formatCurrencyFromCents, READING_CLUB_PRICE_IN_CENTS, STUDENT_PLAN_CATALOG } from '@/lib/plans';
+import { calculateDiscountedMentoringPrice, formatCurrencyFromCents, getMentoringPriceFromSettings, getPlatformPlanSettings, getReadingClubPriceInCents, getStudentPlanCatalog } from '@/lib/plans';
 import { prisma } from '@/lib/prisma';
 
 const allowedMethods: PaymentMethod[] = ['PIX', 'CREDIT_CARD', 'DEBIT_CARD', 'BOLETO'];
@@ -44,10 +44,13 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Não foi possível identificar a URL pública da aplicação.' }, { status: 500 });
     }
 
-    const plan = STUDENT_PLAN_CATALOG[session.plan];
-    const description = session.readingClub
-      ? `${plan.label} + Clube de Leitura (${formatCurrencyFromCents(READING_CLUB_PRICE_IN_CENTS)})`
-      : plan.label;
+    const [catalog, readingClubPriceInCents, settings] = await Promise.all([getStudentPlanCatalog(), getReadingClubPriceInCents(), getPlatformPlanSettings()]);
+    const plan = catalog[session.plan];
+    const mentoringPriceInCents = calculateDiscountedMentoringPrice(session.plan, getMentoringPriceFromSettings(settings));
+    const descriptionParts = [plan.label];
+    if (session.readingClub) descriptionParts.push(`Clube de Leitura (${formatCurrencyFromCents(readingClubPriceInCents)})`);
+    if (session.mentoring) descriptionParts.push(`Mentoria (${formatCurrencyFromCents(mentoringPriceInCents)})`);
+    const description = descriptionParts.join(' + ');
 
     const preference = await createMercadoPagoPreference({
       title: `Assinatura ${plan.label} - Escreva Mais`,

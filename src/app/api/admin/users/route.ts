@@ -29,6 +29,7 @@ export async function POST(req: Request) {
   const enrollmentNumber = String(body.enrollmentNumber || '').trim();
   const expertise = String(body.expertise || '').trim();
   const readingClub = Boolean(body.readingClub);
+  const mentoring = Boolean(body.mentoring);
   const plan =
     typeof body.plan === 'string' && body.plan in planMap ? planMap[body.plan as keyof typeof planMap] : null;
 
@@ -38,6 +39,10 @@ export async function POST(req: Request) {
 
   if (role === 'STUDENT' && readingClub && !plan) {
     return NextResponse.json({ error: 'Selecione um plano para adicionar o Clube de Leitura.' }, { status: 400 });
+  }
+
+  if (role === 'STUDENT' && mentoring && !plan) {
+    return NextResponse.json({ error: 'Selecione um plano para adicionar a Mentoria.' }, { status: 400 });
   }
 
   if (role === 'STUDENT' && gradeLevel && !isValidGradeLevel(gradeLevel)) {
@@ -69,6 +74,7 @@ export async function POST(req: Request) {
                 enrollmentNumber: enrollmentNumber || generatedEnrollmentNumber,
                 plan,
                 readingClub,
+                mentoring,
               },
             }
           : undefined,
@@ -95,6 +101,7 @@ export async function POST(req: Request) {
           enrollmentNumber: true,
           plan: true,
           readingClub: true,
+          mentoring: true,
         },
       },
     },
