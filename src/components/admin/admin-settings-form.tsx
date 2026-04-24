@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, type FormEvent } from 'react';
+import { useRouter } from 'next/navigation';
 import { Loader2, Save } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { formatWhatsAppNumber, normalizeWhatsAppNumber } from '@/lib/phone';
@@ -32,16 +33,19 @@ function formatPriceInput(amountInCents?: number | null) {
 }
 
 export function AdminSettingsForm({ initialSettings }: { initialSettings: SettingsData }) {
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [whatsAppNumber, setWhatsAppNumber] = useState(() => formatWhatsAppNumber(initialSettings.whatsappNumber));
 
-  const handleSubmit = async (formData: FormData) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     setLoading(true);
     setMessage(null);
     setError(null);
 
+    const formData = new FormData(event.currentTarget);
     const body = Object.fromEntries(formData.entries());
     body.whatsappNumber = normalizeWhatsAppNumber(String(body.whatsappNumber ?? ''));
 
@@ -59,11 +63,12 @@ export function AdminSettingsForm({ initialSettings }: { initialSettings: Settin
     }
 
     setMessage('Configurações salvas com sucesso.');
+    router.refresh();
     setLoading(false);
   };
 
   return (
-    <form action={handleSubmit} className="admin-card space-y-5 rounded-[30px] p-5">
+    <form onSubmit={handleSubmit} className="admin-card space-y-5 rounded-[30px] p-5">
       <div>
         <p className="admin-overline text-sm font-semibold">Financeiro e atendimento</p>
         <h2 className="admin-title mt-1 text-xl font-semibold">Dados operacionais da plataforma</h2>
