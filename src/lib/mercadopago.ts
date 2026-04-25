@@ -90,6 +90,59 @@ export async function createMercadoPagoPreference({
   }>;
 }
 
+export async function createMercadoPagoPixPayment({
+  description,
+  amountInCents,
+  payerEmail,
+  externalReference,
+  notificationUrl,
+}: {
+  description: string;
+  amountInCents: number;
+  payerEmail: string;
+  externalReference: string;
+  notificationUrl: string;
+}) {
+  const accessToken = getAccessToken();
+  const response = await fetch('https://api.mercadopago.com/v1/payments', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      'Content-Type': 'application/json',
+      'X-Idempotency-Key': randomUUID(),
+    },
+    body: JSON.stringify({
+      transaction_amount: amountInCents / 100,
+      description,
+      payment_method_id: 'pix',
+      payer: {
+        email: payerEmail,
+      },
+      external_reference: externalReference,
+      notification_url: notificationUrl,
+    }),
+    cache: 'no-store',
+  });
+
+  if (!response.ok) {
+    const payload = await response.text();
+    throw new Error(`Falha ao criar pagamento Pix no Mercado Pago: ${payload}`);
+  }
+
+  return response.json() as Promise<{
+    id: number | string;
+    status: string;
+    external_reference?: string;
+    point_of_interaction?: {
+      transaction_data?: {
+        qr_code?: string;
+        qr_code_base64?: string;
+        ticket_url?: string;
+      };
+    };
+  }>;
+}
+
 export async function getMercadoPagoPayment(paymentId: string) {
   const accessToken = getAccessToken();
   const response = await fetch(`https://api.mercadopago.com/v1/payments/${paymentId}`, {

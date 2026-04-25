@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { PaymentMethod } from '@/generated/prisma';
 import { getAppUrl } from '@/lib/app-url';
-import { createMercadoPagoPreference } from '@/lib/mercadopago';
+import { createMercadoPagoPixPayment, createMercadoPagoPreference } from '@/lib/mercadopago';
 import { calculateDiscountedMentoringPrice, formatCurrencyFromCents, getMentoringPriceFromSettings, getPlatformPlanSettings, getReadingClubPriceInCents, getStudentPlanCatalog } from '@/lib/plans';
 import { prisma } from '@/lib/prisma';
 
@@ -51,6 +51,48 @@ export async function POST(req: Request) {
     if (session.readingClub) descriptionParts.push(`Clube de Leitura (${formatCurrencyFromCents(readingClubPriceInCents)})`);
     if (session.mentoring) descriptionParts.push(`Mentoria (${formatCurrencyFromCents(mentoringPriceInCents)})`);
     const description = descriptionParts.join(' + ');
+
+    if (selectedPaymentMethod === 'PIX') {
+      const payment = await createMercadoPagoPixPayment({
+        description: `Assinatura ${description} - Escreva Mais`,
+        amountInCents: session.amountInCents,
+        payerEmail: session.email,
+        externalReference: session.id,
+        notificationUrl: `${baseUrl}/api/payments/mercadopago`,
+      });
+
+      const transactionData = payment.point_of_interaction?.transaction_data;
+      const qrCode = transactionData?.qr_code;
+      const qrCodeBase64 = transactionData?.qr_code_base64;
+      const ticketUrl = transactionData?.ticket_url;
+
+      if (!qrCode && !qrCodeBase64 && !ticketUrl) {
+        throw new Error('Mercado Pago nao retornou os dados do Pix.');
+      }
+
+      await prisma.registrationSession.update({
+        where: { id: session.id },
+        data: {
+          acceptedPrivacyPolicy,
+          acceptedTerms,
+          selectedPaymentMethod,
+          provider: 'MERCADO_PAGO',
+          providerPreferenceId: null,
+          providerPaymentId: String(payment.id),
+          checkoutUrl: ticketUrl || null,
+          status: 'PAYMENT_PENDING',
+        },
+      });
+
+      return NextResponse.json({
+        pix: {
+          paymentId: String(payment.id),
+          qrCode,
+          qrCodeBase64,
+          ticketUrl,
+        },
+      });
+    }
 
     const preference = await createMercadoPagoPreference({
       title: `Assinatura ${plan.label} - Escreva Mais`,

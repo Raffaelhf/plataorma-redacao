@@ -1,12 +1,20 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useState } from 'react';
-import { Banknote, CreditCard, Landmark, Loader2, QrCode, ShieldCheck } from 'lucide-react';
+import { Banknote, Check, Copy, CreditCard, ExternalLink, Landmark, Loader2, QrCode, ShieldCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
 type PaymentMethod = 'PIX' | 'CREDIT_CARD' | 'DEBIT_CARD' | 'BOLETO';
+
+type PixPayment = {
+  paymentId: string;
+  qrCode?: string;
+  qrCodeBase64?: string;
+  ticketUrl?: string;
+};
 
 const methodOptions: Array<{
   value: PaymentMethod;
@@ -35,10 +43,31 @@ export function RegistrationCheckout({
   const [acceptedPolicies, setAcceptedPolicies] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [pixPayment, setPixPayment] = useState<PixPayment | null>(null);
+  const [copySuccess, setCopySuccess] = useState(false);
+
+  const handleMethodSelect = (method: PaymentMethod) => {
+    setSelectedMethod(method);
+    setPixPayment(null);
+    setCopySuccess(false);
+    setError(null);
+  };
+
+  const handleCopyPixCode = async () => {
+    if (!pixPayment?.qrCode) return;
+
+    try {
+      await navigator.clipboard.writeText(pixPayment.qrCode);
+      setCopySuccess(true);
+    } catch {
+      setError('Não foi possível copiar automaticamente. Selecione o código Pix e copie manualmente.');
+    }
+  };
 
   const handleContinue = async () => {
     setLoading(true);
     setError(null);
+    setCopySuccess(false);
 
     const response = await fetch('/api/checkout/start', {
       method: 'POST',
@@ -55,6 +84,18 @@ export function RegistrationCheckout({
 
     if (!response.ok) {
       setError(payload.error || 'Não foi possível iniciar o checkout.');
+      setLoading(false);
+      return;
+    }
+
+    if (payload.pix) {
+      setPixPayment(payload.pix);
+      setLoading(false);
+      return;
+    }
+
+    if (!payload.checkoutUrl) {
+      setError('Não foi possível abrir o pagamento. Tente novamente.');
       setLoading(false);
       return;
     }
@@ -86,7 +127,7 @@ export function RegistrationCheckout({
               <button
                 key={method.value}
                 type="button"
-                onClick={() => setSelectedMethod(method.value)}
+                onClick={() => handleMethodSelect(method.value)}
                 className={cn(
                   'rounded-[24px] border px-4 py-4 text-left transition-colors',
                   active
@@ -140,10 +181,62 @@ export function RegistrationCheckout({
 
         {error ? <p className="mt-4 rounded-2xl border border-[#ffd0cf] bg-[#fff1f1] px-4 py-3 text-sm text-[#b14545] dark:border-red-400/40 dark:bg-red-950/35 dark:text-red-100">{error}</p> : null}
 
-        <Button type="button" onClick={handleContinue} disabled={loading} className="mt-5 w-full sm:w-auto">
-          {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-          Ir para o pagamento seguro
-        </Button>
+        {pixPayment ? (
+          <div className="mt-5 rounded-[24px] border border-[#c9d2ff] bg-[#f7f9ff] p-4 text-[#22347e] dark:border-indigo-400/45 dark:bg-slate-900 dark:text-slate-100">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
+              {pixPayment.qrCodeBase64 ? (
+                <div className="mx-auto flex h-44 w-44 shrink-0 items-center justify-center rounded-[20px] border border-[#dde3fb] bg-white p-3 dark:border-slate-600 dark:bg-white">
+                  <Image
+                    src={`data:image/png;base64,${pixPayment.qrCodeBase64}`}
+                    alt="QR Code Pix"
+                    width={152}
+                    height={152}
+                    unoptimized
+                    className="h-full w-full object-contain"
+                  />
+                </div>
+              ) : null}
+
+              <div className="min-w-0 flex-1">
+                <p className="text-sm font-semibold text-[#22347e] dark:text-white">Pix gerado com sucesso</p>
+                <p className="mt-1 text-xs leading-6 text-[#61719b] dark:text-slate-300">
+                  Escaneie o QR Code ou use o código copia e cola. A conta será liberada automaticamente depois da confirmação do pagamento.
+                </p>
+
+                {pixPayment.qrCode ? (
+                  <div className="mt-3 space-y-2">
+                    <textarea
+                      readOnly
+                      value={pixPayment.qrCode}
+                      className="h-24 w-full resize-none rounded-2xl border border-[#c9d2ff] bg-white px-3 py-2 text-xs leading-5 text-[#24305f] outline-none dark:border-slate-600 dark:bg-slate-950 dark:text-slate-100"
+                    />
+                    <Button type="button" variant="secondary" onClick={handleCopyPixCode} className="w-full sm:w-auto">
+                      {copySuccess ? <Check className="mr-2 h-4 w-4" /> : <Copy className="mr-2 h-4 w-4" />}
+                      {copySuccess ? 'Código copiado' : 'Copiar código Pix'}
+                    </Button>
+                  </div>
+                ) : null}
+
+                {pixPayment.ticketUrl ? (
+                  <a
+                    href={pixPayment.ticketUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="mt-3 inline-flex items-center rounded-xl border border-[#c9d2ff] bg-white px-4 py-2 text-sm font-semibold text-[#4250d4] transition-colors hover:border-[#9daaff] dark:border-slate-600 dark:bg-slate-950 dark:text-indigo-200 dark:hover:border-indigo-400"
+                  >
+                    Abrir Pix no Mercado Pago
+                    <ExternalLink className="ml-2 h-4 w-4" />
+                  </a>
+                ) : null}
+              </div>
+            </div>
+          </div>
+        ) : (
+          <Button type="button" onClick={handleContinue} disabled={loading} className="mt-5 w-full sm:w-auto">
+            {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+            {selectedMethod === 'PIX' ? 'Gerar QR Code Pix' : 'Ir para o pagamento seguro'}
+          </Button>
+        )}
       </section>
 
       <aside className="rounded-[30px] border border-[#d9def8] bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(247,248,255,0.92))] p-5 shadow-[0_22px_60px_rgba(74,73,140,0.1)] dark:border-slate-700 dark:bg-[linear-gradient(180deg,rgba(15,23,42,0.96),rgba(17,24,39,0.92))] dark:shadow-[0_22px_60px_rgba(0,0,0,0.32)] sm:p-6">
