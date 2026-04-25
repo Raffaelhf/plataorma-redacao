@@ -114,6 +114,8 @@ export default async function CheckoutPage({
           role="STUDENT"
           planLabel={planLabel}
           totalLabel={formatCurrencyFromCents(session.amountInCents)}
+          amountInCents={session.amountInCents}
+          payerEmail={session.email}
         />
       )}
 

@@ -2,12 +2,12 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
-import { Check, Copy, ExternalLink, Loader2, QrCode, ShieldCheck } from 'lucide-react';
+import { useCallback, useEffect, useState } from 'react';
+import { Check, Copy, CreditCard, ExternalLink, Loader2, QrCode, ShieldCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
-type PaymentMethod = 'PIX';
+type PaymentMethod = 'PIX' | 'CARD';
 
 type PixPayment = {
   paymentId: string;
@@ -16,6 +16,61 @@ type PixPayment = {
   ticketUrl?: string;
 };
 
+type CardPaymentFormData = {
+  token: string;
+  issuer_id?: string | number | null;
+  payment_method_id: string;
+  transaction_amount: number;
+  installments: number;
+  payer?: {
+    identification?: {
+      type?: string;
+      number?: string;
+    };
+  };
+};
+
+const mercadoPagoPublicKey = process.env.NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY;
+
+type MercadoPagoBrickController = {
+  unmount: () => void;
+};
+
+type MercadoPagoBrickBuilder = {
+  create: (type: 'cardPayment', containerId: string, settings: object) => Promise<MercadoPagoBrickController>;
+};
+
+type MercadoPagoInstance = {
+  bricks: () => MercadoPagoBrickBuilder;
+};
+
+declare global {
+  interface Window {
+    MercadoPago?: new (publicKey: string, options?: { locale?: 'pt-BR' }) => MercadoPagoInstance;
+  }
+}
+
+function loadMercadoPagoSdk() {
+  return new Promise<void>((resolve, reject) => {
+    if (typeof window === 'undefined') return reject(new Error('Janela indisponível.'));
+    if (window.MercadoPago) return resolve();
+
+    const existingScript = document.querySelector<HTMLScriptElement>('script[src="https://sdk.mercadopago.com/js/v2"]');
+    if (existingScript) {
+      existingScript.addEventListener('load', () => resolve(), { once: true });
+      existingScript.addEventListener('error', () => reject(new Error('Falha ao carregar Mercado Pago.')), { once: true });
+      return;
+    }
+
+    const script = document.createElement('script');
+    script.src = 'https://sdk.mercadopago.com/js/v2';
+    script.async = true;
+    script.onload = () => resolve();
+    script.onerror = () => reject(new Error('Falha ao carregar Mercado Pago.'));
+    document.body.appendChild(script);
+  });
+}
+
 const methodOptions: Array<{
   value: PaymentMethod;
   label: string;
@@ -23,6 +78,7 @@ const methodOptions: Array<{
   icon: typeof QrCode;
 }> = [
   { value: 'PIX', label: 'Pix', description: 'Aprovação rápida por QR Code ou código copia e cola, sem login no Mercado Pago.', icon: QrCode },
+  { value: 'CARD', label: 'Cartão', description: 'Pagamento por cartão dentro da plataforma, sem login no Mercado Pago.', icon: CreditCard },
 ];
 
 export function RegistrationCheckout({
@@ -30,11 +86,15 @@ export function RegistrationCheckout({
   role,
   planLabel,
   totalLabel,
+  amountInCents,
+  payerEmail,
 }: {
   publicToken: string;
   role: 'STUDENT' | 'TEACHER';
   planLabel?: string | null;
   totalLabel: string;
+  amountInCents: number;
+  payerEmail: string;
 }) {
   const [selectedMethod, setSelectedMethod] = useState<PaymentMethod>('PIX');
   const [acceptedPolicies, setAcceptedPolicies] = useState(false);
@@ -43,10 +103,13 @@ export function RegistrationCheckout({
   const [pixPayment, setPixPayment] = useState<PixPayment | null>(null);
   const [copySuccess, setCopySuccess] = useState(false);
   const [paymentStatusMessage, setPaymentStatusMessage] = useState<string | null>(null);
+  const [pendingPaymentId, setPendingPaymentId] = useState<string | null>(null);
+  const [cardBrickReady, setCardBrickReady] = useState(false);
 
   const handleMethodSelect = (method: PaymentMethod) => {
     setSelectedMethod(method);
     setPixPayment(null);
+    setPendingPaymentId(null);
     setCopySuccess(false);
     setPaymentStatusMessage(null);
     setError(null);
@@ -90,6 +153,7 @@ export function RegistrationCheckout({
 
     if (payload.pix) {
       setPixPayment(payload.pix);
+      setPendingPaymentId(payload.pix.paymentId);
       setPaymentStatusMessage('Aguardando confirmação do pagamento...');
       setLoading(false);
       return;
@@ -104,8 +168,109 @@ export function RegistrationCheckout({
     window.location.href = payload.checkoutUrl;
   };
 
+  const handleCardSubmit = useCallback(async (formData: CardPaymentFormData) => {
+    setLoading(true);
+    setError(null);
+    setPaymentStatusMessage(null);
+    setPendingPaymentId(null);
+
+    if (!acceptedPolicies) {
+      setLoading(false);
+      setError('Você precisa aceitar a política de privacidade e os termos para continuar.');
+      throw new Error('Políticas não aceitas.');
+    }
+
+    const response = await fetch('/api/checkout/card', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        token: publicToken,
+        acceptedPrivacyPolicy: acceptedPolicies,
+        acceptedTerms: acceptedPolicies,
+        formData,
+      }),
+    });
+
+    const payload = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+      setError(payload.error || 'Não foi possível processar o pagamento com cartão.');
+      setLoading(false);
+      throw new Error(payload.error || 'Pagamento recusado.');
+    }
+
+    if (payload.redirectUrl) {
+      setPaymentStatusMessage('Pagamento confirmado. Redirecionando...');
+      window.location.href = payload.redirectUrl;
+      return;
+    }
+
+    setPendingPaymentId(payload.paymentId || null);
+    setPaymentStatusMessage('Pagamento em análise. Aguardando confirmação...');
+    setLoading(false);
+  }, [acceptedPolicies, publicToken]);
+
   useEffect(() => {
-    if (!pixPayment) return;
+    if (selectedMethod !== 'CARD' || !acceptedPolicies || !mercadoPagoPublicKey) return;
+
+    let active = true;
+    let controller: MercadoPagoBrickController | null = null;
+
+    const renderCardBrick = async () => {
+      try {
+        setCardBrickReady(false);
+        await loadMercadoPagoSdk();
+
+        if (!active || !window.MercadoPago) return;
+
+        const mercadoPago = new window.MercadoPago(mercadoPagoPublicKey, { locale: 'pt-BR' });
+        const bricksBuilder = mercadoPago.bricks();
+
+        controller = await bricksBuilder.create('cardPayment', 'cardPaymentBrick_container', {
+          initialization: {
+            amount: amountInCents / 100,
+            payer: {
+              email: payerEmail,
+            },
+          },
+          customization: {
+            paymentMethods: {
+              minInstallments: 1,
+              maxInstallments: 12,
+              types: {
+                included: ['credit_card', 'debit_card'],
+              },
+            },
+            visual: {
+              hideFormTitle: true,
+            },
+          },
+          callbacks: {
+            onReady: () => {
+              setCardBrickReady(true);
+              setPaymentStatusMessage(null);
+            },
+            onSubmit: (formData: CardPaymentFormData) => handleCardSubmit(formData),
+            onError: () => {
+              setError('Não foi possível carregar o pagamento por cartão. Atualize a página e tente novamente.');
+            },
+          },
+        });
+      } catch {
+        setError('Não foi possível carregar o Checkout Bricks. Atualize a página e tente novamente.');
+      }
+    };
+
+    renderCardBrick();
+
+    return () => {
+      active = false;
+      controller?.unmount();
+    };
+  }, [acceptedPolicies, amountInCents, handleCardSubmit, payerEmail, selectedMethod]);
+
+  useEffect(() => {
+    if (!pixPayment && !pendingPaymentId) return;
 
     let active = true;
 
@@ -139,7 +304,7 @@ export function RegistrationCheckout({
       active = false;
       window.clearInterval(intervalId);
     };
-  }, [pixPayment, publicToken]);
+  }, [pendingPaymentId, pixPayment, publicToken]);
 
   return (
     <div className="grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
@@ -219,7 +384,38 @@ export function RegistrationCheckout({
 
         {error ? <p className="mt-4 rounded-2xl border border-[#ffd0cf] bg-[#fff1f1] px-4 py-3 text-sm text-[#b14545] dark:border-red-400/40 dark:bg-red-950/35 dark:text-red-100">{error}</p> : null}
 
-        {pixPayment ? (
+        {selectedMethod === 'CARD' ? (
+          <div className="mt-5 rounded-[24px] border border-[#c9d2ff] bg-[#f7f9ff] p-4 text-[#22347e] dark:border-indigo-400/45 dark:bg-slate-900 dark:text-slate-100">
+            {!mercadoPagoPublicKey ? (
+              <p className="rounded-2xl border border-[#ffd0cf] bg-[#fff1f1] px-4 py-3 text-sm text-[#b14545] dark:border-red-400/40 dark:bg-red-950/35 dark:text-red-100">
+                Checkout Bricks ainda não está configurado. Defina NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY no ambiente da Vercel.
+              </p>
+            ) : !acceptedPolicies ? (
+              <p className="rounded-2xl border border-[#ffe5bf] bg-[#fff7ea] px-4 py-3 text-sm text-[#996515] dark:border-amber-400/40 dark:bg-amber-950/35 dark:text-amber-100">
+                Aceite os termos e políticas para carregar o formulário seguro do cartão.
+              </p>
+            ) : (
+              <>
+                {!cardBrickReady ? (
+                  <p className="rounded-2xl border border-[#c9d2ff] bg-white px-3 py-2 text-xs font-semibold text-[#4250d4] dark:border-indigo-400/45 dark:bg-slate-950 dark:text-indigo-200">
+                    Carregando formulário seguro...
+                  </p>
+                ) : null}
+                <div id="cardPaymentBrick_container" />
+                {loading ? (
+                  <p className="mt-3 rounded-2xl border border-[#c9d2ff] bg-white px-3 py-2 text-xs font-semibold text-[#4250d4] dark:border-indigo-400/45 dark:bg-slate-950 dark:text-indigo-200">
+                    Processando pagamento...
+                  </p>
+                ) : null}
+                {paymentStatusMessage ? (
+                  <p className="mt-3 rounded-2xl border border-[#c9d2ff] bg-white px-3 py-2 text-xs font-semibold text-[#4250d4] dark:border-indigo-400/45 dark:bg-slate-950 dark:text-indigo-200">
+                    {paymentStatusMessage}
+                  </p>
+                ) : null}
+              </>
+            )}
+          </div>
+        ) : pixPayment ? (
           <div className="mt-5 rounded-[24px] border border-[#c9d2ff] bg-[#f7f9ff] p-4 text-[#22347e] dark:border-indigo-400/45 dark:bg-slate-900 dark:text-slate-100">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
               {pixPayment.qrCodeBase64 ? (
@@ -301,7 +497,7 @@ export function RegistrationCheckout({
 
         <div className="mt-5 space-y-3 text-sm text-[#5f6d98] dark:text-slate-300">
           <p className="rounded-[22px] border border-[#dde3fb] bg-white/80 px-4 py-4 dark:border-slate-700 dark:bg-slate-900">
-            O Pix é gerado sem redirecionar o aluno para a tela de login do Mercado Pago.
+            Pix e cartão são processados sem redirecionar o aluno para a tela de login do Mercado Pago.
           </p>
           <p className="rounded-[22px] border border-[#dde3fb] bg-white/80 px-4 py-4 dark:border-slate-700 dark:bg-slate-900">
             Assim que o provedor confirmar o pagamento, a conta é liberada automaticamente.

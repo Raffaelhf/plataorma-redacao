@@ -187,6 +187,78 @@ export async function createMercadoPagoPixPayment({
   }>;
 }
 
+export async function createMercadoPagoCardPayment({
+  token,
+  issuerId,
+  paymentMethodId,
+  installments,
+  description,
+  amountInCents,
+  payerEmail,
+  payerIdentification,
+  externalReference,
+  notificationUrl,
+}: {
+  token: string;
+  issuerId?: string | number | null;
+  paymentMethodId: string;
+  installments: number;
+  description: string;
+  amountInCents: number;
+  payerEmail: string;
+  payerIdentification?: {
+    type?: string;
+    number?: string;
+  } | null;
+  externalReference: string;
+  notificationUrl: string;
+}) {
+  const accessToken = getAccessToken();
+  const response = await fetch('https://api.mercadopago.com/v1/payments', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      'Content-Type': 'application/json',
+      'X-Idempotency-Key': randomUUID(),
+    },
+    body: JSON.stringify({
+      transaction_amount: amountInCents / 100,
+      token,
+      description,
+      installments,
+      payment_method_id: paymentMethodId,
+      issuer_id: issuerId || undefined,
+      payer: {
+        email: payerEmail,
+        identification:
+          payerIdentification?.type && payerIdentification?.number
+            ? {
+                type: payerIdentification.type,
+                number: payerIdentification.number,
+              }
+            : undefined,
+      },
+      external_reference: externalReference,
+      notification_url: notificationUrl,
+    }),
+    cache: 'no-store',
+  });
+
+  if (!response.ok) {
+    const payload = await response.text();
+    throw new MercadoPagoApiError('Falha ao criar pagamento com cartão no Mercado Pago.', response.status, payload);
+  }
+
+  return response.json() as Promise<{
+    id: number | string;
+    status: string;
+    status_detail?: string;
+    external_reference?: string;
+    payment_method_id?: string;
+    payment_type_id?: string;
+  }>;
+}
+
 export async function getMercadoPagoPayment(paymentId: string) {
   const accessToken = getAccessToken();
   const response = await fetch(`https://api.mercadopago.com/v1/payments/${paymentId}`, {

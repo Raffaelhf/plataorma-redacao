@@ -1,0 +1,176 @@
+import { NextResponse } from 'next/server';
+import { createMercadoPagoCardPayment, MercadoPagoApiError } from '@/lib/mercadopago';
+import { getAppUrl } from '@/lib/app-url';
+import {
+  calculateDiscountedMentoringPrice,
+  formatCurrencyFromCents,
+  getMentoringPriceFromSettings,
+  getPlatformPlanSettings,
+  getReadingClubPriceInCents,
+  getStudentPlanCatalog,
+} from '@/lib/plans';
+import { prisma } from '@/lib/prisma';
+import { createApprovedUserFromRegistrationSession } from '@/lib/registration';
+
+type CardPaymentFormData = {
+  token?: string;
+  issuer_id?: string | number | null;
+  payment_method_id?: string;
+  installments?: number;
+  payer?: {
+    identification?: {
+      type?: string;
+      number?: string;
+    };
+  };
+};
+
+function getStoredPaymentMethod(paymentTypeId?: string): 'CREDIT_CARD' | 'DEBIT_CARD' {
+  return paymentTypeId === 'debit_card' ? 'DEBIT_CARD' : 'CREDIT_CARD';
+}
+
+export async function POST(req: Request) {
+  try {
+    const body = await req.json();
+    const token = String(body.token || '').trim();
+    const acceptedPrivacyPolicy = Boolean(body.acceptedPrivacyPolicy);
+    const acceptedTerms = Boolean(body.acceptedTerms);
+    const formData = (body.formData || {}) as CardPaymentFormData;
+
+    if (!token) {
+      return NextResponse.json({ error: 'Sessão de checkout não informada.' }, { status: 400 });
+    }
+
+    if (!acceptedPrivacyPolicy || !acceptedTerms) {
+      return NextResponse.json({ error: 'Você precisa aceitar a política de privacidade e os termos para continuar.' }, { status: 400 });
+    }
+
+    if (!formData.token || !formData.payment_method_id || !formData.installments) {
+      return NextResponse.json({ error: 'Dados do cartão incompletos. Revise as informações e tente novamente.' }, { status: 400 });
+    }
+
+    const session = await prisma.registrationSession.findUnique({
+      where: { publicToken: token },
+    });
+
+    if (!session || session.status === 'EXPIRED') {
+      return NextResponse.json({ error: 'Sessão de checkout não encontrada ou expirada.' }, { status: 404 });
+    }
+
+    if (session.role !== 'STUDENT' || !session.plan) {
+      return NextResponse.json({ error: 'Apenas cadastros de aluno com plano podem seguir para pagamento.' }, { status: 400 });
+    }
+
+    const baseUrl = getAppUrl();
+    if (!baseUrl) {
+      return NextResponse.json({ error: 'Não foi possível identificar a URL pública da aplicação.' }, { status: 500 });
+    }
+
+    const [catalog, readingClubPriceInCents, settings] = await Promise.all([
+      getStudentPlanCatalog(),
+      getReadingClubPriceInCents(),
+      getPlatformPlanSettings(),
+    ]);
+    const plan = catalog[session.plan];
+    const mentoringPriceInCents = calculateDiscountedMentoringPrice(session.plan, getMentoringPriceFromSettings(settings));
+    const descriptionParts = [plan.label];
+    if (session.readingClub) descriptionParts.push(`Clube de Leitura (${formatCurrencyFromCents(readingClubPriceInCents)})`);
+    if (session.mentoring) descriptionParts.push(`Mentoria (${formatCurrencyFromCents(mentoringPriceInCents)})`);
+    const description = descriptionParts.join(' + ');
+
+    const payment = await createMercadoPagoCardPayment({
+      token: formData.token,
+      issuerId: formData.issuer_id,
+      paymentMethodId: formData.payment_method_id,
+      installments: Number(formData.installments),
+      description: `Assinatura ${description} - Escreva Mais`,
+      amountInCents: session.amountInCents,
+      payerEmail: session.email,
+      payerIdentification: formData.payer?.identification,
+      externalReference: session.id,
+      notificationUrl: `${baseUrl}/api/payments/mercadopago`,
+    });
+
+    if (payment.status === 'approved') {
+      await prisma.registrationSession.update({
+        where: { id: session.id },
+        data: {
+          acceptedPrivacyPolicy,
+          acceptedTerms,
+          selectedPaymentMethod: getStoredPaymentMethod(payment.payment_type_id),
+          provider: 'MERCADO_PAGO',
+          providerPreferenceId: null,
+          providerPaymentId: String(payment.id),
+          checkoutUrl: null,
+          status: 'APPROVED',
+          completedAt: new Date(),
+        },
+      });
+
+      await createApprovedUserFromRegistrationSession(session.id);
+
+      return NextResponse.json({
+        status: 'APPROVED',
+        paymentId: String(payment.id),
+        redirectUrl: '/login?callbackUrl=/dashboard/aluno&checkout=approved',
+      });
+    }
+
+    if (payment.status === 'pending' || payment.status === 'in_process') {
+      await prisma.registrationSession.update({
+        where: { id: session.id },
+        data: {
+          acceptedPrivacyPolicy,
+          acceptedTerms,
+          selectedPaymentMethod: getStoredPaymentMethod(payment.payment_type_id),
+          provider: 'MERCADO_PAGO',
+          providerPreferenceId: null,
+          providerPaymentId: String(payment.id),
+          checkoutUrl: null,
+          status: 'PAYMENT_PENDING',
+        },
+      });
+
+      return NextResponse.json({
+        status: 'PAYMENT_PENDING',
+        paymentId: String(payment.id),
+      });
+    }
+
+    await prisma.registrationSession.update({
+      where: { id: session.id },
+      data: {
+        acceptedPrivacyPolicy,
+        acceptedTerms,
+        selectedPaymentMethod: getStoredPaymentMethod(payment.payment_type_id),
+        provider: 'MERCADO_PAGO',
+        providerPreferenceId: null,
+        providerPaymentId: String(payment.id),
+        checkoutUrl: null,
+        status: 'FAILED',
+      },
+    });
+
+    return NextResponse.json(
+      {
+        error: 'O pagamento não foi aprovado. Revise os dados do cartão ou escolha Pix.',
+        status: 'FAILED',
+        statusDetail: payment.status_detail,
+      },
+      { status: 402 },
+    );
+  } catch (error) {
+    console.error(error);
+    let message = 'Não foi possível processar o pagamento com cartão.';
+
+    if (error instanceof Error && error.message === 'MERCADOPAGO_ACCESS_TOKEN não configurado.') {
+      message = 'O checkout ainda não está configurado. Defina MERCADOPAGO_ACCESS_TOKEN no ambiente para liberar o pagamento.';
+    }
+
+    if (error instanceof MercadoPagoApiError) {
+      message = 'Mercado Pago recusou o processamento do cartão. Revise as credenciais e os dados informados.';
+    }
+
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
+}
