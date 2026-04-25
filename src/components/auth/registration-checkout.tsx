@@ -425,6 +425,9 @@ export function RegistrationCheckout({
                     {paymentStatusMessage}
                   </p>
                 ) : null}
+                <p className="mt-3 text-xs leading-5 text-[#61719b] dark:text-slate-300">
+                  Cartões de teste do Mercado Pago funcionam somente com credenciais TEST. Em produção, use um cartão real.
+                </p>
               </>
             )}
           </div>

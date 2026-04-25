@@ -14,6 +14,22 @@ export class MercadoPagoApiError extends Error {
   hasMessage(fragment: string) {
     return this.payload.toLowerCase().includes(fragment.toLowerCase());
   }
+
+  getPayload() {
+    try {
+      return JSON.parse(this.payload) as {
+        message?: string;
+        error?: string;
+        status?: number;
+        cause?: Array<{
+          code?: string | number;
+          description?: string;
+        }>;
+      };
+    } catch {
+      return null;
+    }
+  }
 }
 
 function getAccessToken() {

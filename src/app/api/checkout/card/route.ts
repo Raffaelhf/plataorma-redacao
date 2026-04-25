@@ -31,6 +31,46 @@ function getStoredPaymentMethod(paymentTypeId?: string): 'CREDIT_CARD' | 'DEBIT_
   return paymentTypeId === 'debit_card' ? 'DEBIT_CARD' : 'CREDIT_CARD';
 }
 
+function getCardPaymentErrorMessage(statusDetail?: string | null) {
+  const messages: Record<string, string> = {
+    cc_rejected_bad_filled_card_number: 'Número do cartão inválido. Revise os dígitos e tente novamente.',
+    cc_rejected_bad_filled_date: 'Data de vencimento inválida. Use o formato MM/AA.',
+    cc_rejected_bad_filled_security_code: 'Código de segurança inválido. Revise o CVV.',
+    cc_rejected_bad_filled_other: 'Dados do cartão inválidos. Revise as informações e tente novamente.',
+    cc_rejected_call_for_authorize: 'O banco do cartão pediu autorização da compra. Entre em contato com o banco ou use outro cartão.',
+    cc_rejected_card_disabled: 'Cartão desabilitado. Use outro cartão ou fale com o banco emissor.',
+    cc_rejected_duplicated_payment: 'O Mercado Pago identificou uma tentativa de pagamento duplicada.',
+    cc_rejected_high_risk: 'Pagamento recusado pela análise de segurança do Mercado Pago.',
+    cc_rejected_insufficient_amount: 'Limite ou saldo insuficiente no cartão.',
+    cc_rejected_invalid_installments: 'Número de parcelas inválido para este cartão.',
+    cc_rejected_max_attempts: 'Limite de tentativas excedido. Aguarde alguns minutos ou use outro cartão.',
+    cc_rejected_other_reason: 'Pagamento recusado pelo Mercado Pago ou pelo banco emissor.',
+  };
+
+  return statusDetail ? messages[statusDetail] ?? `Pagamento recusado. Detalhe: ${statusDetail}.` : 'O pagamento não foi aprovado. Revise os dados do cartão ou escolha Pix.';
+}
+
+function getMercadoPagoApiErrorMessage(error: MercadoPagoApiError) {
+  const payload = error.getPayload();
+  const details = payload?.cause?.map((cause) => cause.description).filter(Boolean).join(' ');
+  const rawMessage = [payload?.message, details].filter(Boolean).join(' ');
+  const normalizedMessage = rawMessage.toLowerCase();
+
+  if (error.status === 401 || normalizedMessage.includes('access_token')) {
+    return 'Credenciais do Mercado Pago inválidas. Confira o MERCADOPAGO_ACCESS_TOKEN na Vercel.';
+  }
+
+  if (normalizedMessage.includes('test') || normalizedMessage.includes('sandbox')) {
+    return 'Para usar cartão de teste, configure as credenciais TEST do Mercado Pago. Com credenciais de produção, use um cartão real.';
+  }
+
+  if (rawMessage) {
+    return `Mercado Pago recusou o cartão: ${rawMessage}`;
+  }
+
+  return 'Mercado Pago recusou o processamento do cartão. Revise as credenciais e os dados informados.';
+}
+
 export async function POST(req: Request) {
   try {
     const body = await req.json();
@@ -159,7 +199,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json(
       {
-        error: 'O pagamento não foi aprovado. Revise os dados do cartão ou escolha Pix.',
+        error: getCardPaymentErrorMessage(payment.status_detail),
         status: 'FAILED',
         statusDetail: payment.status_detail,
       },
@@ -174,7 +214,11 @@ export async function POST(req: Request) {
     }
 
     if (error instanceof MercadoPagoApiError) {
-      message = 'Mercado Pago recusou o processamento do cartão. Revise as credenciais e os dados informados.';
+      console.error('Mercado Pago card payment error', {
+        status: error.status,
+        payload: error.payload,
+      });
+      message = getMercadoPagoApiErrorMessage(error);
     }
 
     return NextResponse.json({ error: message }, { status: 500 });
