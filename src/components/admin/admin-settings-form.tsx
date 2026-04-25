@@ -28,8 +28,51 @@ const fieldPanelClassName =
 const fieldClassName =
   'admin-form-input theme-field w-full rounded-2xl px-4 py-3 text-sm';
 
+const currencyFormatter = new Intl.NumberFormat('pt-BR', {
+  style: 'currency',
+  currency: 'BRL',
+});
+
+const priceFields = [
+  { name: 'mensalPlanPrice', settingsKey: 'mensalPlanPriceInCents', label: 'Mensal', help: 'Valor em reais.', placeholder: 'R$ 80,00' },
+  { name: 'trimestralPlanPrice', settingsKey: 'trimestralPlanPriceInCents', label: 'Trimestral', help: 'Valor em reais.', placeholder: 'R$ 218,00' },
+  { name: 'semestralPlanPrice', settingsKey: 'semestralPlanPriceInCents', label: 'Semestral', help: 'Valor em reais.', placeholder: 'R$ 413,00' },
+  { name: 'anualPlanPrice', settingsKey: 'anualPlanPriceInCents', label: 'Anual', help: 'Valor em reais.', placeholder: 'R$ 768,00' },
+  { name: 'mentoriaPlanPrice', settingsKey: 'mentoriaPlanPriceInCents', label: 'Mentoria', help: 'Valor em reais.', placeholder: 'R$ 120,00' },
+  { name: 'readingClubPrice', settingsKey: 'readingClubPriceInCents', label: 'Clube de Leitura', help: 'Complemento opcional.', placeholder: 'R$ 30,00' },
+] as const;
+
+type PriceInputName = (typeof priceFields)[number]['name'];
+
+function onlyDigits(value: string) {
+  return value.replace(/\D/g, '');
+}
+
 function formatPriceInput(amountInCents?: number | null) {
-  return typeof amountInCents === 'number' ? (amountInCents / 100).toFixed(2).replace('.', ',') : '';
+  return typeof amountInCents === 'number' ? currencyFormatter.format(amountInCents / 100) : '';
+}
+
+function maskPriceInput(value: string) {
+  const digits = onlyDigits(value);
+  if (!digits) return '';
+  return formatPriceInput(Number(digits));
+}
+
+function formatCpfOrCnpj(value?: string | null) {
+  const digits = onlyDigits(String(value ?? '')).slice(0, 14);
+
+  if (digits.length <= 11) {
+    return digits
+      .replace(/^(\d{3})(\d)/, '$1.$2')
+      .replace(/^(\d{3})\.(\d{3})(\d)/, '$1.$2.$3')
+      .replace(/^(\d{3})\.(\d{3})\.(\d{3})(\d)/, '$1.$2.$3-$4');
+  }
+
+  return digits
+    .replace(/^(\d{2})(\d)/, '$1.$2')
+    .replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3')
+    .replace(/^(\d{2})\.(\d{3})\.(\d{3})(\d)/, '$1.$2.$3/$4')
+    .replace(/^(\d{2})\.(\d{3})\.(\d{3})\/(\d{4})(\d)/, '$1.$2.$3/$4-$5');
 }
 
 export function AdminSettingsForm({ initialSettings }: { initialSettings: SettingsData }) {
@@ -38,6 +81,23 @@ export function AdminSettingsForm({ initialSettings }: { initialSettings: Settin
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [whatsAppNumber, setWhatsAppNumber] = useState(() => formatWhatsAppNumber(initialSettings.whatsappNumber));
+  const [bankDocument, setBankDocument] = useState(() => formatCpfOrCnpj(initialSettings.bankDocument));
+  const [priceValues, setPriceValues] = useState<Record<PriceInputName, string>>(() =>
+    priceFields.reduce(
+      (prices, field) => ({
+        ...prices,
+        [field.name]: formatPriceInput(initialSettings[field.settingsKey]),
+      }),
+      {} as Record<PriceInputName, string>,
+    ),
+  );
+
+  const handlePriceChange = (name: PriceInputName, value: string) => {
+    setPriceValues((current) => ({
+      ...current,
+      [name]: maskPriceInput(value),
+    }));
+  };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -83,41 +143,21 @@ export function AdminSettingsForm({ initialSettings }: { initialSettings: Settin
           <p className="admin-form-help mt-1 text-xs leading-5">Valores usados na vitrine, no cadastro e no checkout de novos alunos.</p>
         </div>
         <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-          <label className={fieldPanelClassName}>
-            <span className="admin-form-label block text-sm font-semibold">Mensal</span>
-            <span className="admin-form-help block text-xs leading-5">Valor em reais.</span>
-            <input name="mensalPlanPrice" defaultValue={formatPriceInput(initialSettings.mensalPlanPriceInCents)} placeholder="80,00" inputMode="decimal" className={fieldClassName} />
-          </label>
-
-          <label className={fieldPanelClassName}>
-            <span className="admin-form-label block text-sm font-semibold">Trimestral</span>
-            <span className="admin-form-help block text-xs leading-5">Valor em reais.</span>
-            <input name="trimestralPlanPrice" defaultValue={formatPriceInput(initialSettings.trimestralPlanPriceInCents)} placeholder="218,00" inputMode="decimal" className={fieldClassName} />
-          </label>
-
-          <label className={fieldPanelClassName}>
-            <span className="admin-form-label block text-sm font-semibold">Semestral</span>
-            <span className="admin-form-help block text-xs leading-5">Valor em reais.</span>
-            <input name="semestralPlanPrice" defaultValue={formatPriceInput(initialSettings.semestralPlanPriceInCents)} placeholder="413,00" inputMode="decimal" className={fieldClassName} />
-          </label>
-
-          <label className={fieldPanelClassName}>
-            <span className="admin-form-label block text-sm font-semibold">Anual</span>
-            <span className="admin-form-help block text-xs leading-5">Valor em reais.</span>
-            <input name="anualPlanPrice" defaultValue={formatPriceInput(initialSettings.anualPlanPriceInCents)} placeholder="768,00" inputMode="decimal" className={fieldClassName} />
-          </label>
-
-          <label className={fieldPanelClassName}>
-            <span className="admin-form-label block text-sm font-semibold">Mentoria</span>
-            <span className="admin-form-help block text-xs leading-5">Valor em reais.</span>
-            <input name="mentoriaPlanPrice" defaultValue={formatPriceInput(initialSettings.mentoriaPlanPriceInCents)} placeholder="120,00" inputMode="decimal" className={fieldClassName} />
-          </label>
-
-          <label className={fieldPanelClassName}>
-            <span className="admin-form-label block text-sm font-semibold">Clube de Leitura</span>
-            <span className="admin-form-help block text-xs leading-5">Complemento opcional.</span>
-            <input name="readingClubPrice" defaultValue={formatPriceInput(initialSettings.readingClubPriceInCents)} placeholder="30,00" inputMode="decimal" className={fieldClassName} />
-          </label>
+          {priceFields.map((field) => (
+            <label key={field.name} className={fieldPanelClassName}>
+              <span className="admin-form-label block text-sm font-semibold">{field.label}</span>
+              <span className="admin-form-help block text-xs leading-5">{field.help}</span>
+              <input
+                name={field.name}
+                value={priceValues[field.name]}
+                onChange={(event) => handlePriceChange(field.name, event.target.value)}
+                placeholder={field.placeholder}
+                inputMode="numeric"
+                autoComplete="off"
+                className={fieldClassName}
+              />
+            </label>
+          ))}
         </div>
       </div>
 
@@ -131,7 +171,15 @@ export function AdminSettingsForm({ initialSettings }: { initialSettings: Settin
         <label className={fieldPanelClassName}>
           <span className="admin-form-label block text-sm font-semibold">CPF ou CNPJ</span>
           <span className="admin-form-help block text-xs leading-5">Documento do titular da conta de recebimento.</span>
-          <input name="bankDocument" defaultValue={initialSettings.bankDocument ?? ''} placeholder="00.000.000/0001-00" className={fieldClassName} />
+          <input
+            name="bankDocument"
+            value={bankDocument}
+            onChange={(event) => setBankDocument(formatCpfOrCnpj(event.target.value))}
+            placeholder="000.000.000-00 ou 00.000.000/0000-00"
+            inputMode="numeric"
+            autoComplete="off"
+            className={fieldClassName}
+          />
         </label>
 
         <label className={fieldPanelClassName}>
