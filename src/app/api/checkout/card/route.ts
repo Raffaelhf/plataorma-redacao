@@ -12,6 +12,8 @@ import {
 import { prisma } from '@/lib/prisma';
 import { createApprovedUserFromRegistrationSession } from '@/lib/registration';
 
+const MIN_CARD_PAYMENT_AMOUNT_IN_CENTS = 100;
+
 type CardPaymentFormData = {
   token?: string;
   issuer_id?: string | number | null;
@@ -59,6 +61,10 @@ export async function POST(req: Request) {
 
     if (session.role !== 'STUDENT' || !session.plan) {
       return NextResponse.json({ error: 'Apenas cadastros de aluno com plano podem seguir para pagamento.' }, { status: 400 });
+    }
+
+    if (session.amountInCents < MIN_CARD_PAYMENT_AMOUNT_IN_CENTS) {
+      return NextResponse.json({ error: 'Pagamento por cartão está disponível a partir de R$ 1,00.' }, { status: 400 });
     }
 
     const baseUrl = getAppUrl();

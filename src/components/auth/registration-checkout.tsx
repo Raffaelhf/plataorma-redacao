@@ -31,6 +31,14 @@ type CardPaymentFormData = {
 };
 
 const mercadoPagoPublicKey = process.env.NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY;
+const MIN_CARD_PAYMENT_AMOUNT_IN_CENTS = 100;
+
+function formatCurrencyFromCents(amountInCents: number) {
+  return new Intl.NumberFormat('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+  }).format(amountInCents / 100);
+}
 
 type MercadoPagoBrickController = {
   unmount: () => void;
@@ -105,6 +113,7 @@ export function RegistrationCheckout({
   const [paymentStatusMessage, setPaymentStatusMessage] = useState<string | null>(null);
   const [pendingPaymentId, setPendingPaymentId] = useState<string | null>(null);
   const [cardBrickReady, setCardBrickReady] = useState(false);
+  const cardPaymentAvailable = amountInCents >= MIN_CARD_PAYMENT_AMOUNT_IN_CENTS;
 
   const handleMethodSelect = (method: PaymentMethod) => {
     setSelectedMethod(method);
@@ -211,7 +220,7 @@ export function RegistrationCheckout({
   }, [acceptedPolicies, publicToken]);
 
   useEffect(() => {
-    if (selectedMethod !== 'CARD' || !acceptedPolicies || !mercadoPagoPublicKey) return;
+    if (selectedMethod !== 'CARD' || !acceptedPolicies || !mercadoPagoPublicKey || !cardPaymentAvailable) return;
 
     let active = true;
     let controller: MercadoPagoBrickController | null = null;
@@ -267,7 +276,7 @@ export function RegistrationCheckout({
       active = false;
       controller?.unmount();
     };
-  }, [acceptedPolicies, amountInCents, handleCardSubmit, payerEmail, selectedMethod]);
+  }, [acceptedPolicies, amountInCents, cardPaymentAvailable, handleCardSubmit, payerEmail, selectedMethod]);
 
   useEffect(() => {
     if (!pixPayment && !pendingPaymentId) return;
@@ -389,6 +398,10 @@ export function RegistrationCheckout({
             {!mercadoPagoPublicKey ? (
               <p className="rounded-2xl border border-[#ffd0cf] bg-[#fff1f1] px-4 py-3 text-sm text-[#b14545] dark:border-red-400/40 dark:bg-red-950/35 dark:text-red-100">
                 Checkout Bricks ainda não está configurado. Defina NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY no ambiente da Vercel.
+              </p>
+            ) : !cardPaymentAvailable ? (
+              <p className="rounded-2xl border border-[#ffe5bf] bg-[#fff7ea] px-4 py-3 text-sm text-[#996515] dark:border-amber-400/40 dark:bg-amber-950/35 dark:text-amber-100">
+                Pagamento por cartão está disponível a partir de {formatCurrencyFromCents(MIN_CARD_PAYMENT_AMOUNT_IN_CENTS)}. O valor atual é {totalLabel}.
               </p>
             ) : !acceptedPolicies ? (
               <p className="rounded-2xl border border-[#ffe5bf] bg-[#fff7ea] px-4 py-3 text-sm text-[#996515] dark:border-amber-400/40 dark:bg-amber-950/35 dark:text-amber-100">
