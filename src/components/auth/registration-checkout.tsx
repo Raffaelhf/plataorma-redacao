@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Banknote, Check, Copy, CreditCard, ExternalLink, Landmark, Loader2, QrCode, ShieldCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -45,11 +45,13 @@ export function RegistrationCheckout({
   const [error, setError] = useState<string | null>(null);
   const [pixPayment, setPixPayment] = useState<PixPayment | null>(null);
   const [copySuccess, setCopySuccess] = useState(false);
+  const [paymentStatusMessage, setPaymentStatusMessage] = useState<string | null>(null);
 
   const handleMethodSelect = (method: PaymentMethod) => {
     setSelectedMethod(method);
     setPixPayment(null);
     setCopySuccess(false);
+    setPaymentStatusMessage(null);
     setError(null);
   };
 
@@ -68,6 +70,7 @@ export function RegistrationCheckout({
     setLoading(true);
     setError(null);
     setCopySuccess(false);
+    setPaymentStatusMessage(null);
 
     const response = await fetch('/api/checkout/start', {
       method: 'POST',
@@ -90,6 +93,7 @@ export function RegistrationCheckout({
 
     if (payload.pix) {
       setPixPayment(payload.pix);
+      setPaymentStatusMessage('Aguardando confirmação do pagamento...');
       setLoading(false);
       return;
     }
@@ -102,6 +106,43 @@ export function RegistrationCheckout({
 
     window.location.href = payload.checkoutUrl;
   };
+
+  useEffect(() => {
+    if (!pixPayment) return;
+
+    let active = true;
+
+    const checkPaymentStatus = async () => {
+      const response = await fetch(`/api/checkout/status?token=${encodeURIComponent(publicToken)}`, {
+        cache: 'no-store',
+      });
+      const payload = await response.json().catch(() => ({}));
+
+      if (!active || !response.ok) return;
+
+      if (payload.approved && payload.redirectUrl) {
+        setPaymentStatusMessage('Pagamento confirmado. Redirecionando...');
+        window.location.href = payload.redirectUrl;
+        return;
+      }
+
+      if (payload.status === 'FAILED') {
+        setError('O pagamento não foi aprovado. Tente gerar um novo Pix ou escolha outro meio de pagamento.');
+        setPaymentStatusMessage(null);
+        return;
+      }
+
+      setPaymentStatusMessage('Aguardando confirmação do pagamento...');
+    };
+
+    checkPaymentStatus();
+    const intervalId = window.setInterval(checkPaymentStatus, 5000);
+
+    return () => {
+      active = false;
+      window.clearInterval(intervalId);
+    };
+  }, [pixPayment, publicToken]);
 
   return (
     <div className="grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
@@ -202,6 +243,11 @@ export function RegistrationCheckout({
                 <p className="mt-1 text-xs leading-6 text-[#61719b] dark:text-slate-300">
                   Escaneie o QR Code ou use o código copia e cola. A conta será liberada automaticamente depois da confirmação do pagamento.
                 </p>
+                {paymentStatusMessage ? (
+                  <p className="mt-3 rounded-2xl border border-[#c9d2ff] bg-white px-3 py-2 text-xs font-semibold text-[#4250d4] dark:border-indigo-400/45 dark:bg-slate-950 dark:text-indigo-200">
+                    {paymentStatusMessage}
+                  </p>
+                ) : null}
 
                 {pixPayment.qrCode ? (
                   <div className="mt-3 space-y-2">

@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -21,6 +21,9 @@ type FormData = z.infer<typeof schema>;
 
 export function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get('callbackUrl');
+  const checkoutApproved = searchParams.get('checkout') === 'approved';
   const {
     register,
     handleSubmit,
@@ -47,7 +50,7 @@ export function LoginForm() {
 
     const sessionResponse = await fetch('/api/auth/session');
     const session = (await sessionResponse.json()) as { user?: { role?: string } };
-    const target = getDashboardPathByRole(session.user?.role);
+    const target = callbackUrl?.startsWith('/') ? callbackUrl : getDashboardPathByRole(session.user?.role);
 
     router.push(target);
     router.refresh();
@@ -57,6 +60,11 @@ export function LoginForm() {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <div className="space-y-2">
+        {checkoutApproved ? (
+          <p className="rounded-2xl border border-emerald-300/30 bg-emerald-300/12 px-3 py-2 text-sm text-emerald-50">
+            Pagamento confirmado. Entre com o e-mail e a senha do cadastro para acessar a área do aluno.
+          </p>
+        ) : null}
         <label className="text-sm text-white/78">Login ou e-mail</label>
         <Input
           placeholder="Seu login ou e-mail"

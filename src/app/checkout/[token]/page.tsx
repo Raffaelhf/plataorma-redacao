@@ -104,8 +104,8 @@ export default async function CheckoutPage({
           <p className="mt-3 text-sm leading-7">
             Sua assinatura foi ativada com sucesso. O acesso ja pode ser feito com o e-mail e a senha informados no cadastro.
           </p>
-          <Link href="/login" className="mt-5 inline-flex rounded-full bg-[#1b7f62] px-5 py-3 text-sm font-semibold text-white">
-            Ir para o login
+          <Link href="/login?callbackUrl=/dashboard/aluno&checkout=approved" className="mt-5 inline-flex rounded-full bg-[#1b7f62] px-5 py-3 text-sm font-semibold text-white">
+            Entrar na area do aluno
           </Link>
         </div>
       ) : (
