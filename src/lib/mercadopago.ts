@@ -1,6 +1,21 @@
 import { randomUUID } from 'crypto';
 import type { PaymentMethod } from '@/generated/prisma';
 
+export class MercadoPagoApiError extends Error {
+  constructor(
+    message: string,
+    readonly status: number,
+    readonly payload: string,
+  ) {
+    super(message);
+    this.name = 'MercadoPagoApiError';
+  }
+
+  hasMessage(fragment: string) {
+    return this.payload.toLowerCase().includes(fragment.toLowerCase());
+  }
+}
+
 function getAccessToken() {
   const token = process.env.MERCADOPAGO_ACCESS_TOKEN;
   if (!token) {
@@ -80,7 +95,7 @@ export async function createMercadoPagoPreference({
 
   if (!response.ok) {
     const payload = await response.text();
-    throw new Error(`Falha ao criar preferência no Mercado Pago: ${payload}`);
+    throw new MercadoPagoApiError('Falha ao criar preferencia no Mercado Pago.', response.status, payload);
   }
 
   return response.json() as Promise<{
@@ -126,7 +141,7 @@ export async function createMercadoPagoPixPayment({
 
   if (!response.ok) {
     const payload = await response.text();
-    throw new Error(`Falha ao criar pagamento Pix no Mercado Pago: ${payload}`);
+    throw new MercadoPagoApiError('Falha ao criar pagamento Pix no Mercado Pago.', response.status, payload);
   }
 
   return response.json() as Promise<{
@@ -155,7 +170,7 @@ export async function getMercadoPagoPayment(paymentId: string) {
 
   if (!response.ok) {
     const payload = await response.text();
-    throw new Error(`Falha ao consultar pagamento no Mercado Pago: ${payload}`);
+    throw new MercadoPagoApiError('Falha ao consultar pagamento no Mercado Pago.', response.status, payload);
   }
 
   return response.json() as Promise<{

@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { PaymentMethod } from '@/generated/prisma';
 import { getAppUrl } from '@/lib/app-url';
-import { createMercadoPagoPixPayment, createMercadoPagoPreference } from '@/lib/mercadopago';
+import { MercadoPagoApiError, createMercadoPagoPixPayment, createMercadoPagoPreference } from '@/lib/mercadopago';
 import { calculateDiscountedMentoringPrice, formatCurrencyFromCents, getMentoringPriceFromSettings, getPlatformPlanSettings, getReadingClubPriceInCents, getStudentPlanCatalog } from '@/lib/plans';
 import { prisma } from '@/lib/prisma';
 
@@ -125,10 +125,16 @@ export async function POST(req: Request) {
     return NextResponse.json({ checkoutUrl: preference.init_point });
   } catch (error) {
     console.error(error);
-    const message =
-      error instanceof Error && error.message === 'MERCADOPAGO_ACCESS_TOKEN não configurado.'
-        ? 'O checkout ainda não está configurado. Defina MERCADOPAGO_ACCESS_TOKEN no ambiente para liberar o pagamento.'
-        : 'Não foi possível iniciar o pagamento.';
+    let message = 'Não foi possível iniciar o pagamento.';
+
+    if (error instanceof Error && error.message === 'MERCADOPAGO_ACCESS_TOKEN não configurado.') {
+      message = 'O checkout ainda não está configurado. Defina MERCADOPAGO_ACCESS_TOKEN no ambiente para liberar o pagamento.';
+    }
+
+    if (error instanceof MercadoPagoApiError && error.hasMessage('Unauthorized use of live credentials')) {
+      message =
+        'As credenciais do Mercado Pago não estão liberadas para gerar Pix. Ative as credenciais de produção, confirme o escopo de pagamentos e cadastre uma chave Pix na conta Mercado Pago.';
+    }
 
     return NextResponse.json({ error: message }, { status: 500 });
   }
