@@ -1,13 +1,13 @@
 import { NextResponse } from 'next/server';
 import type { PaymentMethod } from '@/generated/prisma';
 import { getAppUrl } from '@/lib/app-url';
-import { MercadoPagoApiError, createMercadoPagoPixPayment, createMercadoPagoPreference } from '@/lib/mercadopago';
+import { MercadoPagoApiError, createMercadoPagoPixPayment } from '@/lib/mercadopago';
 import { calculateDiscountedMentoringPrice, formatCurrencyFromCents, getMentoringPriceFromSettings, getPlatformPlanSettings, getReadingClubPriceInCents, getStudentPlanCatalog } from '@/lib/plans';
 import { prisma } from '@/lib/prisma';
 
-type CheckoutPaymentMethod = Exclude<PaymentMethod, 'DEBIT_CARD'>;
+type CheckoutPaymentMethod = Extract<PaymentMethod, 'PIX'>;
 
-const allowedMethods: CheckoutPaymentMethod[] = ['PIX', 'CREDIT_CARD', 'BOLETO'];
+const allowedMethods: CheckoutPaymentMethod[] = ['PIX'];
 
 function isAllowedPaymentMethod(paymentMethod: PaymentMethod): paymentMethod is CheckoutPaymentMethod {
   return allowedMethods.includes(paymentMethod as CheckoutPaymentMethod);
@@ -30,7 +30,7 @@ export async function POST(req: Request) {
     }
 
     if (!isAllowedPaymentMethod(selectedPaymentMethod)) {
-      return NextResponse.json({ error: 'Selecione um meio de pagamento válido.' }, { status: 400 });
+      return NextResponse.json({ error: 'No momento, use Pix para pagar sem login no Mercado Pago.' }, { status: 400 });
     }
 
     const session = await prisma.registrationSession.findUnique({
@@ -58,62 +58,22 @@ export async function POST(req: Request) {
     if (session.mentoring) descriptionParts.push(`Mentoria (${formatCurrencyFromCents(mentoringPriceInCents)})`);
     const description = descriptionParts.join(' + ');
 
-    if (selectedPaymentMethod === 'PIX') {
-      const payment = await createMercadoPagoPixPayment({
-        description: `Assinatura ${description} - Escreva Mais`,
-        amountInCents: session.amountInCents,
-        payerEmail: session.email,
-        externalReference: session.id,
-        notificationUrl: `${baseUrl}/api/payments/mercadopago`,
-      });
-
-      const transactionData = payment.point_of_interaction?.transaction_data;
-      const qrCode = transactionData?.qr_code;
-      const qrCodeBase64 = transactionData?.qr_code_base64;
-      const ticketUrl = transactionData?.ticket_url;
-
-      if (!qrCode && !qrCodeBase64 && !ticketUrl) {
-        throw new Error('Mercado Pago nao retornou os dados do Pix.');
-      }
-
-      await prisma.registrationSession.update({
-        where: { id: session.id },
-        data: {
-          acceptedPrivacyPolicy,
-          acceptedTerms,
-          selectedPaymentMethod,
-          provider: 'MERCADO_PAGO',
-          providerPreferenceId: null,
-          providerPaymentId: String(payment.id),
-          checkoutUrl: ticketUrl || null,
-          status: 'PAYMENT_PENDING',
-        },
-      });
-
-      return NextResponse.json({
-        pix: {
-          paymentId: String(payment.id),
-          qrCode,
-          qrCodeBase64,
-          ticketUrl,
-        },
-      });
-    }
-
-    const preference = await createMercadoPagoPreference({
-      title: `Assinatura ${plan.label} - Escreva Mais`,
-      description,
+    const payment = await createMercadoPagoPixPayment({
+      description: `Assinatura ${description} - Escreva Mais`,
       amountInCents: session.amountInCents,
       payerEmail: session.email,
       externalReference: session.id,
       notificationUrl: `${baseUrl}/api/payments/mercadopago`,
-      backUrls: {
-        success: `${baseUrl}/checkout/${session.publicToken}?state=success`,
-        pending: `${baseUrl}/checkout/${session.publicToken}?state=pending`,
-        failure: `${baseUrl}/checkout/${session.publicToken}?state=failure`,
-      },
-      selectedPaymentMethod,
     });
+
+    const transactionData = payment.point_of_interaction?.transaction_data;
+    const qrCode = transactionData?.qr_code;
+    const qrCodeBase64 = transactionData?.qr_code_base64;
+    const ticketUrl = transactionData?.ticket_url;
+
+    if (!qrCode && !qrCodeBase64 && !ticketUrl) {
+      throw new Error('Mercado Pago nao retornou os dados do Pix.');
+    }
 
     await prisma.registrationSession.update({
       where: { id: session.id },
@@ -122,13 +82,21 @@ export async function POST(req: Request) {
         acceptedTerms,
         selectedPaymentMethod,
         provider: 'MERCADO_PAGO',
-        providerPreferenceId: preference.id,
-        checkoutUrl: preference.init_point,
+        providerPreferenceId: null,
+        providerPaymentId: String(payment.id),
+        checkoutUrl: ticketUrl || null,
         status: 'PAYMENT_PENDING',
       },
     });
 
-    return NextResponse.json({ checkoutUrl: preference.init_point });
+    return NextResponse.json({
+      pix: {
+        paymentId: String(payment.id),
+        qrCode,
+        qrCodeBase64,
+        ticketUrl,
+      },
+    });
   } catch (error) {
     console.error(error);
     let message = 'Não foi possível iniciar o pagamento.';

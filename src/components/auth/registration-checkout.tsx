@@ -3,11 +3,11 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
-import { Banknote, Check, Copy, CreditCard, ExternalLink, Loader2, QrCode, ShieldCheck } from 'lucide-react';
+import { Check, Copy, ExternalLink, Loader2, QrCode, ShieldCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
-type PaymentMethod = 'PIX' | 'CREDIT_CARD' | 'BOLETO';
+type PaymentMethod = 'PIX';
 
 type PixPayment = {
   paymentId: string;
@@ -22,9 +22,7 @@ const methodOptions: Array<{
   description: string;
   icon: typeof QrCode;
 }> = [
-  { value: 'PIX', label: 'Pix', description: 'Aprovação rápida por QR Code ou código copia e cola.', icon: QrCode },
-  { value: 'CREDIT_CARD', label: 'Cartão de crédito', description: 'Pague como convidado, sem criar conta no Mercado Pago.', icon: CreditCard },
-  { value: 'BOLETO', label: 'Boleto bancário', description: 'Emissão de boleto sem exigir conta no Mercado Pago.', icon: Banknote },
+  { value: 'PIX', label: 'Pix', description: 'Aprovação rápida por QR Code ou código copia e cola, sem login no Mercado Pago.', icon: QrCode },
 ];
 
 export function RegistrationCheckout({
@@ -279,7 +277,7 @@ export function RegistrationCheckout({
         ) : (
           <Button type="button" onClick={handleContinue} disabled={loading} className="mt-5 w-full sm:w-auto">
             {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-            {selectedMethod === 'PIX' ? 'Gerar QR Code Pix' : 'Pagar sem criar conta'}
+            Gerar QR Code Pix
           </Button>
         )}
       </section>
@@ -303,10 +301,10 @@ export function RegistrationCheckout({
 
         <div className="mt-5 space-y-3 text-sm text-[#5f6d98] dark:text-slate-300">
           <p className="rounded-[22px] border border-[#dde3fb] bg-white/80 px-4 py-4 dark:border-slate-700 dark:bg-slate-900">
-            O checkout externo reduz o risco de exposição de dados sensíveis, porque cartões e autenticações bancárias não passam pelo seu backend.
+            O Pix é gerado sem redirecionar o aluno para a tela de login do Mercado Pago.
           </p>
           <p className="rounded-[22px] border border-[#dde3fb] bg-white/80 px-4 py-4 dark:border-slate-700 dark:bg-slate-900">
-            Pix e boleto podem permanecer pendentes até a compensação. Assim que o provedor confirmar o pagamento, a conta é liberada automaticamente.
+            Assim que o provedor confirmar o pagamento, a conta é liberada automaticamente.
           </p>
         </div>
       </aside>
