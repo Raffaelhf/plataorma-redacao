@@ -5,7 +5,13 @@ import { MercadoPagoApiError, createMercadoPagoPixPayment, createMercadoPagoPref
 import { calculateDiscountedMentoringPrice, formatCurrencyFromCents, getMentoringPriceFromSettings, getPlatformPlanSettings, getReadingClubPriceInCents, getStudentPlanCatalog } from '@/lib/plans';
 import { prisma } from '@/lib/prisma';
 
-const allowedMethods: PaymentMethod[] = ['PIX', 'CREDIT_CARD', 'DEBIT_CARD', 'BOLETO'];
+type CheckoutPaymentMethod = Exclude<PaymentMethod, 'DEBIT_CARD'>;
+
+const allowedMethods: CheckoutPaymentMethod[] = ['PIX', 'CREDIT_CARD', 'BOLETO'];
+
+function isAllowedPaymentMethod(paymentMethod: PaymentMethod): paymentMethod is CheckoutPaymentMethod {
+  return allowedMethods.includes(paymentMethod as CheckoutPaymentMethod);
+}
 
 export async function POST(req: Request) {
   try {
@@ -23,7 +29,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Você precisa aceitar a política de privacidade e os termos para continuar.' }, { status: 400 });
     }
 
-    if (!allowedMethods.includes(selectedPaymentMethod)) {
+    if (!isAllowedPaymentMethod(selectedPaymentMethod)) {
       return NextResponse.json({ error: 'Selecione um meio de pagamento válido.' }, { status: 400 });
     }
 

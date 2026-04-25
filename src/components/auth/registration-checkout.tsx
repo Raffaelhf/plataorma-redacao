@@ -3,11 +3,11 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
-import { Banknote, Check, Copy, CreditCard, ExternalLink, Landmark, Loader2, QrCode, ShieldCheck } from 'lucide-react';
+import { Banknote, Check, Copy, CreditCard, ExternalLink, Loader2, QrCode, ShieldCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
-type PaymentMethod = 'PIX' | 'CREDIT_CARD' | 'DEBIT_CARD' | 'BOLETO';
+type PaymentMethod = 'PIX' | 'CREDIT_CARD' | 'BOLETO';
 
 type PixPayment = {
   paymentId: string;
@@ -23,9 +23,8 @@ const methodOptions: Array<{
   icon: typeof QrCode;
 }> = [
   { value: 'PIX', label: 'Pix', description: 'Aprovação rápida por QR Code ou código copia e cola.', icon: QrCode },
-  { value: 'CREDIT_CARD', label: 'Cartão de crédito', description: 'Pagamento parcelado ou à vista em ambiente seguro.', icon: CreditCard },
-  { value: 'DEBIT_CARD', label: 'Cartão de débito', description: 'Débito processado diretamente pelo provedor de pagamento.', icon: Landmark },
-  { value: 'BOLETO', label: 'Boleto bancário', description: 'Emissão de boleto para pagamento dentro do vencimento.', icon: Banknote },
+  { value: 'CREDIT_CARD', label: 'Cartão de crédito', description: 'Pague como convidado, sem criar conta no Mercado Pago.', icon: CreditCard },
+  { value: 'BOLETO', label: 'Boleto bancário', description: 'Emissão de boleto sem exigir conta no Mercado Pago.', icon: Banknote },
 ];
 
 export function RegistrationCheckout({
@@ -280,7 +279,7 @@ export function RegistrationCheckout({
         ) : (
           <Button type="button" onClick={handleContinue} disabled={loading} className="mt-5 w-full sm:w-auto">
             {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-            {selectedMethod === 'PIX' ? 'Gerar QR Code Pix' : 'Ir para o pagamento seguro'}
+            {selectedMethod === 'PIX' ? 'Gerar QR Code Pix' : 'Pagar sem criar conta'}
           </Button>
         )}
       </section>

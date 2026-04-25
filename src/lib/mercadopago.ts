@@ -24,18 +24,45 @@ function getAccessToken() {
   return token;
 }
 
-function getExcludedPaymentTypes(selectedPaymentMethod: PaymentMethod) {
+type CheckoutProPaymentMethod = Exclude<PaymentMethod, 'DEBIT_CARD'>;
+
+function getExcludedPaymentTypes(selectedPaymentMethod: CheckoutProPaymentMethod) {
   const allTypes = ['bank_transfer', 'ticket', 'credit_card', 'debit_card'] as const;
-  const selectedTypeByMethod: Record<PaymentMethod, (typeof allTypes)[number]> = {
+  const selectedTypeByMethod: Record<CheckoutProPaymentMethod, (typeof allTypes)[number]> = {
     PIX: 'bank_transfer',
     BOLETO: 'ticket',
     CREDIT_CARD: 'credit_card',
-    DEBIT_CARD: 'debit_card',
   };
 
   const selectedType = selectedTypeByMethod[selectedPaymentMethod];
   return allTypes.filter((type) => type !== selectedType).map((id) => ({ id }));
 }
+
+type MercadoPagoPreferencePayload = {
+  items: Array<{
+    id: string;
+    title: string;
+    description: string;
+    quantity: number;
+    currency_id: 'BRL';
+    unit_price: number;
+  }>;
+  payer: {
+    email: string;
+  };
+  external_reference: string;
+  notification_url: string;
+  back_urls: {
+    success: string;
+    pending: string;
+    failure: string;
+  };
+  auto_return: 'approved';
+  payment_methods: {
+    excluded_payment_types: Array<{ id: string }>;
+  };
+  // Do not add purpose: "wallet_purchase"; Mercado Pago uses it to require a registered buyer account.
+};
 
 export async function createMercadoPagoPreference({
   title,
@@ -58,9 +85,32 @@ export async function createMercadoPagoPreference({
     pending: string;
     failure: string;
   };
-  selectedPaymentMethod: PaymentMethod;
+  selectedPaymentMethod: CheckoutProPaymentMethod;
 }) {
   const accessToken = getAccessToken();
+  const preferencePayload = {
+    items: [
+      {
+        id: externalReference,
+        title,
+        description,
+        quantity: 1,
+        currency_id: 'BRL',
+        unit_price: amountInCents / 100,
+      },
+    ],
+    payer: {
+      email: payerEmail,
+    },
+    external_reference: externalReference,
+    notification_url: notificationUrl,
+    back_urls: backUrls,
+    auto_return: 'approved',
+    payment_methods: {
+      excluded_payment_types: getExcludedPaymentTypes(selectedPaymentMethod),
+    },
+  } satisfies MercadoPagoPreferencePayload;
+
   const response = await fetch('https://api.mercadopago.com/checkout/preferences', {
     method: 'POST',
     headers: {
@@ -68,28 +118,7 @@ export async function createMercadoPagoPreference({
       'Content-Type': 'application/json',
       'X-Idempotency-Key': randomUUID(),
     },
-    body: JSON.stringify({
-      items: [
-        {
-          id: externalReference,
-          title,
-          description,
-          quantity: 1,
-          currency_id: 'BRL',
-          unit_price: amountInCents / 100,
-        },
-      ],
-      payer: {
-        email: payerEmail,
-      },
-      external_reference: externalReference,
-      notification_url: notificationUrl,
-      back_urls: backUrls,
-      auto_return: 'approved',
-      payment_methods: {
-        excluded_payment_types: getExcludedPaymentTypes(selectedPaymentMethod),
-      },
-    }),
+    body: JSON.stringify(preferencePayload),
     cache: 'no-store',
   });
 
