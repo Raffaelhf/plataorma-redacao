@@ -4,14 +4,31 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
+import { gradeLevelOptions } from "@/lib/grade-levels";
 import "./_group.css";
 
-export function AlunoPerfil() {
+type StudentProfileView = {
+  name: string;
+  email: string;
+  initials: string;
+  planLabel: string;
+  monthlySubmissions: number;
+  monthlyLimit: number;
+  memberSinceLabel: string;
+  gradeLevel: string | null;
+  bio: string;
+  enrollmentNumber: string | null;
+};
+
+export function AlunoPerfil({ profile }: { profile: StudentProfileView }) {
+  const usagePercent = profile.monthlyLimit > 0 ? Math.min(100, Math.round((profile.monthlySubmissions / profile.monthlyLimit) * 100)) : 0;
+  const usageLabel = profile.monthlyLimit > 0 ? `${profile.monthlySubmissions}/${profile.monthlyLimit} envios` : `${profile.monthlySubmissions} envios`;
+
   return (
     <AppLayout
       role="aluno"
-      userName="Júlia Andrade"
-      userEmail="julia.andrade@email.com"
+      userName={profile.name}
+      userEmail={profile.email}
       pageKicker="Conta · Aluno"
       pageTitle="Seu perfil."
       primaryAction={{ label: "Salvar alterações" }}
@@ -22,21 +39,21 @@ export function AlunoPerfil() {
         <div className="space-y-6">
           <div className="em-card-hard p-6 bg-white flex flex-col items-center text-center">
             <div className="w-24 h-24 rounded-full bg-[var(--em-green)] border-[3px] border-[var(--em-ink)] shadow-[4px_4px_0_0_#0E0F12] grid place-items-center text-[32px] font-extrabold text-[var(--em-ink)] mb-4">
-              JA
+              {profile.initials}
             </div>
-            <h2 className="text-[22px] font-extrabold text-[var(--em-ink)] leading-tight mb-1">Júlia Andrade</h2>
-            <p className="text-[13px] font-semibold text-[var(--em-text-soft)] mb-4">julia.andrade@email.com</p>
+            <h2 className="text-[22px] font-extrabold text-[var(--em-ink)] leading-tight mb-1">{profile.name}</h2>
+            <p className="text-[13px] font-semibold text-[var(--em-text-soft)] mb-4">{profile.email}</p>
             
             <div className="w-full pt-4 border-t border-[var(--em-border)]">
               <div className="flex justify-between items-center mb-3">
                 <span className="text-[12px] font-extrabold text-[var(--em-text-soft)] uppercase">Plano</span>
-                <span className="em-chip bg-[var(--em-yellow)] border-[var(--em-ink)] shadow-[2px_2px_0_0_#0E0F12]">Anual</span>
+                <span className="em-chip bg-[var(--em-yellow)] border-[var(--em-ink)] shadow-[2px_2px_0_0_#0E0F12]">{profile.planLabel}</span>
               </div>
-              <div className="text-[12px] font-bold text-[var(--em-ink)] text-left mb-2">Uso mensal: 23/50 envios</div>
+              <div className="text-[12px] font-bold text-[var(--em-ink)] text-left mb-2">Uso mensal: {usageLabel}</div>
               <div className="h-2 w-full bg-[var(--em-bg)] border border-[var(--em-ink)] rounded-full overflow-hidden">
-                <div className="h-full bg-[var(--em-green)] border-r border-[var(--em-ink)]" style={{ width: '46%' }} />
+                <div className="h-full bg-[var(--em-green)] border-r border-[var(--em-ink)]" style={{ width: `${usagePercent}%` }} />
               </div>
-              <div className="mt-4 text-[12px] font-semibold text-[var(--em-text-mute)]">Membro há 8 meses</div>
+              <div className="mt-4 text-[12px] font-semibold text-[var(--em-text-mute)]">{profile.memberSinceLabel}</div>
             </div>
           </div>
         </div>
@@ -53,46 +70,46 @@ export function AlunoPerfil() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
                 <Label className="text-[13px] font-bold text-[var(--em-ink)]">Nome completo</Label>
-                <Input defaultValue="Júlia Andrade Silva" className="h-[44px] rounded-xl border-[1.5px] border-[var(--em-border-strong)] focus-visible:border-[var(--em-ink)] bg-[var(--em-bg)] focus:bg-white font-medium" />
+                <Input defaultValue={profile.name} className="h-[44px] rounded-xl border-[1.5px] border-[var(--em-border-strong)] focus-visible:border-[var(--em-ink)] bg-[var(--em-bg)] focus:bg-white font-medium" />
               </div>
               <div className="space-y-2">
                 <Label className="text-[13px] font-bold text-[var(--em-ink)]">E-mail</Label>
                 <div className="relative">
-                  <Input defaultValue="julia.andrade@email.com" readOnly className="h-[44px] rounded-xl border-[1.5px] border-[var(--em-border-strong)] bg-[var(--em-bg-alt)] text-[var(--em-text-soft)] font-medium pr-10 cursor-not-allowed" />
+                  <Input defaultValue={profile.email} readOnly className="h-[44px] rounded-xl border-[1.5px] border-[var(--em-border-strong)] bg-[var(--em-bg-alt)] text-[var(--em-text-soft)] font-medium pr-10 cursor-not-allowed" />
                   <Lock className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--em-text-mute)]" />
                 </div>
               </div>
               <div className="space-y-2">
                 <Label className="text-[13px] font-bold text-[var(--em-ink)]">Telefone</Label>
-                <Input defaultValue="(11) 98765-4321" className="h-[44px] rounded-xl border-[1.5px] border-[var(--em-border-strong)] focus-visible:border-[var(--em-ink)] bg-[var(--em-bg)] focus:bg-white font-medium" />
+                <Input placeholder="Não informado" className="h-[44px] rounded-xl border-[1.5px] border-[var(--em-border-strong)] focus-visible:border-[var(--em-ink)] bg-[var(--em-bg)] focus:bg-white font-medium" />
               </div>
               <div className="space-y-2">
                 <Label className="text-[13px] font-bold text-[var(--em-ink)]">Data de nascimento</Label>
-                <Input type="date" defaultValue="2005-04-12" className="h-[44px] rounded-xl border-[1.5px] border-[var(--em-border-strong)] focus-visible:border-[var(--em-ink)] bg-[var(--em-bg)] focus:bg-white font-medium" />
+                <Input type="date" className="h-[44px] rounded-xl border-[1.5px] border-[var(--em-border-strong)] focus-visible:border-[var(--em-ink)] bg-[var(--em-bg)] focus:bg-white font-medium" />
               </div>
               <div className="space-y-2">
                 <Label className="text-[13px] font-bold text-[var(--em-ink)]">Série / Escolaridade</Label>
-                <Select defaultValue="3ano">
+                <Select defaultValue={profile.gradeLevel ?? undefined}>
                   <SelectTrigger className="h-[44px] rounded-xl border-[1.5px] border-[var(--em-border-strong)] bg-[var(--em-bg)] focus:bg-white font-medium">
-                    <SelectValue />
+                    <SelectValue placeholder="Não informado" />
                   </SelectTrigger>
                   <SelectContent className="border-[1.5px] border-[var(--em-ink)] shadow-[4px_4px_0_0_#0E0F12] rounded-xl">
-                    <SelectItem value="1ano">1º ano do Ensino Médio</SelectItem>
-                    <SelectItem value="2ano">2º ano do Ensino Médio</SelectItem>
-                    <SelectItem value="3ano">3º ano do Ensino Médio</SelectItem>
-                    <SelectItem value="cursinho">Cursinho Pré-Vestibular</SelectItem>
+                    {gradeLevelOptions.map((gradeLevel) => (
+                      <SelectItem key={gradeLevel} value={gradeLevel}>{gradeLevel}</SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
               <div className="space-y-2">
                 <Label className="text-[13px] font-bold text-[var(--em-ink)]">Cidade / UF</Label>
-                <Input defaultValue="São Paulo, SP" className="h-[44px] rounded-xl border-[1.5px] border-[var(--em-border-strong)] focus-visible:border-[var(--em-ink)] bg-[var(--em-bg)] focus:bg-white font-medium" />
+                <Input placeholder="Não informado" className="h-[44px] rounded-xl border-[1.5px] border-[var(--em-border-strong)] focus-visible:border-[var(--em-ink)] bg-[var(--em-bg)] focus:bg-white font-medium" />
               </div>
               <div className="md:col-span-2 space-y-2">
                 <Label className="text-[13px] font-bold text-[var(--em-ink)]">Sobre seus objetivos (Bio)</Label>
                 <textarea 
                   className="w-full p-3 rounded-xl border-[1.5px] border-[var(--em-border-strong)] focus-visible:outline-none focus-visible:border-[var(--em-ink)] bg-[var(--em-bg)] focus:bg-white font-medium min-h-[100px] resize-none"
-                  defaultValue="Quero cursar Medicina na USP. Tenho facilidade com a estrutura do ENEM, mas preciso melhorar minha argumentação e uso de repertório na Fuvest."
+                  defaultValue={profile.bio}
+                  placeholder="Conte seus objetivos de estudo."
                 ></textarea>
               </div>
               
