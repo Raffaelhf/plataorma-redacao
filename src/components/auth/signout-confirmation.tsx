@@ -26,6 +26,12 @@ export function SignoutConfirmation({ callbackUrl }: SignoutConfirmationProps) {
   const [isLeaving, setIsLeaving] = useState(false);
   const userName = session?.user?.name?.trim() || 'Estudante Escreva Mais';
   const userEmail = session?.user?.email?.trim() || 'conta conectada';
+  const continueHref =
+    session?.user?.role === 'ADMIN'
+      ? '/dashboard/admin'
+      : session?.user?.role === 'TEACHER'
+        ? '/dashboard/professor'
+        : '/dashboard/aluno';
   const initials = useMemo(() => getInitials(session?.user?.name, session?.user?.email), [session?.user?.email, session?.user?.name]);
 
   async function handleSignOut() {
@@ -108,7 +114,7 @@ export function SignoutConfirmation({ callbackUrl }: SignoutConfirmationProps) {
               </button>
 
               <Link
-                href="/dashboard/aluno"
+                href={continueHref}
                 className="flex w-full items-center justify-center gap-3 rounded-2xl border-2 border-[#0e0f12] bg-white px-5 py-4 text-base font-black text-[#0e0f12] transition-colors hover:bg-[#fff4d0]"
               >
                 <ArrowLeft className="h-5 w-5" />
