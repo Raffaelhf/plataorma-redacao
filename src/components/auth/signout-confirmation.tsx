@@ -47,20 +47,20 @@ export function SignoutConfirmation({ callbackUrl }: SignoutConfirmationProps) {
       <div className="pointer-events-none absolute -left-16 top-24 h-[74vh] w-40 -rotate-6 border-y-2 border-[#0e0f12] bg-[#2bd37b]" />
       <div className="pointer-events-none absolute right-0 top-0 hidden h-full w-[36vw] overflow-hidden border-l-2 border-[#0e0f12] bg-[#101114] lg:block">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_68%_18%,rgba(43,211,123,0.28),transparent_28%),radial-gradient(circle_at_28%_78%,rgba(255,211,77,0.2),transparent_26%)]" />
-        <div className="absolute -right-28 top-20 h-72 w-72 rounded-full border-[42px] border-[#2bd37b]" />
-        <div className="absolute -left-24 bottom-24 h-64 w-64 rounded-full border-[34px] border-[#ffd34d]" />
-        <div className="absolute left-16 top-20 right-16">
+        <div className="absolute -right-28 top-16 h-72 w-72 rounded-full border-[42px] border-[#2bd37b] opacity-70" />
+        <div className="absolute -left-28 bottom-16 h-64 w-64 rounded-full border-[34px] border-[#ffd34d] opacity-70" />
+        <div className="absolute left-12 right-12 top-16 z-10 rounded-[30px] border border-white/14 bg-[#101114]/78 p-7 backdrop-blur-sm xl:left-16 xl:right-16 xl:top-20">
           <div className="mb-8 h-px bg-white/18" />
-          <div className="font-display text-[clamp(3.8rem,7vw,6.5rem)] font-black leading-[0.86] tracking-normal text-white">
+          <div className="font-display text-[clamp(3rem,4.6vw,4.9rem)] font-black leading-[0.88] tracking-normal text-white">
             pausa
             <br />
             inteligente
           </div>
-          <p className="mt-7 max-w-[20rem] text-base font-semibold leading-7 text-white/62">
+          <p className="mt-7 max-w-[22rem] text-[15px] font-semibold leading-7 text-white/72">
             Saia com tranquilidade. Seus dados, envios e progresso continuam organizados para a próxima sessão.
           </p>
         </div>
-        <div className="absolute bottom-28 left-16 right-16 grid grid-cols-2 gap-4">
+        <div className="absolute bottom-28 left-12 right-12 z-10 grid grid-cols-2 gap-4 xl:left-16 xl:right-16">
           <div className="rounded-[24px] border-2 border-[#0e0f12] bg-[#2bd37b] p-5 shadow-[6px_6px_0_0_#0e0f12]">
             <div className="text-[34px] font-black leading-none text-[#0e0f12]">100%</div>
             <div className="mt-2 text-[11px] font-black uppercase tracking-[0.12em] text-[#0e0f12]/70">progresso salvo</div>
