@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useSession } from "next-auth/react";
 import {
   LayoutDashboard,
   FileText,
@@ -74,8 +75,19 @@ export function isActivePath(pathname: string, href: string) {
 
 export function Sidebar({ role, userName, userEmail }: { role: Role; userName: string; userEmail: string }) {
   const pathname = usePathname();
+  const { data: session } = useSession();
   const items = MENUS[role];
   const RoleIcon = ROLE_ICON[role];
+  const displayName = session?.user?.name?.trim() || userName || "Usuário Escreva Mais";
+  const displayEmail = session?.user?.email?.trim() || userEmail || "conta@escrevamais.com";
+  const initials = displayName
+    .split(" ")
+    .filter(Boolean)
+    .map((name) => name[0])
+    .slice(0, 2)
+    .join("")
+    .toUpperCase();
+
   return (
     <aside className="hidden lg:flex w-[256px] shrink-0 h-screen sticky top-0 flex-col border-r border-[var(--em-border)] bg-white/70 backdrop-blur-xl">
       <div className="px-6 pt-7 pb-5">
@@ -147,11 +159,11 @@ export function Sidebar({ role, userName, userEmail }: { role: Role; userName: s
       <div className="m-3 mt-2 p-3 rounded-2xl border border-[var(--em-border)] bg-white/80">
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-full grid place-items-center text-white text-[12px] font-bold shadow" style={{ background: "var(--em-grad-deep)" }}>
-            {userName.split(" ").map((n) => n[0]).slice(0, 2).join("")}
+            {initials}
           </div>
           <div className="min-w-0 flex-1">
-            <div className="text-[12.5px] font-semibold text-[var(--em-deep)] truncate leading-tight">{userName}</div>
-            <div className="text-[10.5px] text-[var(--em-text-mute)] truncate">{userEmail}</div>
+            <div className="text-[12.5px] font-semibold text-[var(--em-deep)] truncate leading-tight">{displayName}</div>
+            <div className="text-[10.5px] text-[var(--em-text-mute)] truncate">{displayEmail}</div>
           </div>
           <Link href="/api/auth/signout?callbackUrl=/login" prefetch={false} className="w-7 h-7 rounded-lg grid place-items-center text-[var(--em-text-mute)] hover:bg-[var(--em-bg-alt)] hover:text-[var(--em-deep)]" aria-label="Sair">
             <LogOut className="w-3.5 h-3.5" />
