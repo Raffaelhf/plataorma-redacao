@@ -45,7 +45,7 @@ export function SignoutConfirmation({ callbackUrl }: SignoutConfirmationProps) {
       <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(14,15,18,0.055)_1px,transparent_1px),linear-gradient(90deg,rgba(14,15,18,0.04)_1px,transparent_1px)] bg-[size:38px_38px]" />
       <div className="pointer-events-none absolute inset-x-0 top-0 h-3 bg-[repeating-linear-gradient(90deg,#2bd37b_0_80px,#ffd34d_80px_140px,#ff7a57_140px_190px,#0e0f12_190px_230px)]" />
       <div className="pointer-events-none absolute -left-16 top-24 h-[74vh] w-40 -rotate-6 border-y-2 border-[#0e0f12] bg-[#2bd37b]" />
-      <div className="pointer-events-none absolute right-0 top-0 hidden h-full w-[36vw] overflow-hidden border-l-2 border-[#0e0f12] bg-[#fffaf1] lg:block">
+      <div className="pointer-events-none absolute right-0 top-0 hidden h-full w-[36vw] overflow-hidden bg-transparent lg:block">
         <div className="absolute inset-0 bg-[linear-gradient(rgba(14,15,18,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(14,15,18,0.035)_1px,transparent_1px)] bg-[size:38px_38px]" />
         <div className="absolute -right-24 top-12 h-72 w-72 rounded-full border-[36px] border-[#2bd37b]" />
         <div className="absolute -left-20 bottom-20 h-52 w-52 rounded-full border-[28px] border-[#ffd34d]" />
