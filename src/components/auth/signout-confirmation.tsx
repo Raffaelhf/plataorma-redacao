@@ -26,10 +26,11 @@ export function SignoutConfirmation({ callbackUrl }: SignoutConfirmationProps) {
   const [isLeaving, setIsLeaving] = useState(false);
   const userName = session?.user?.name?.trim() || 'Estudante Escreva Mais';
   const userEmail = session?.user?.email?.trim() || 'conta conectada';
+  const userRole = (session?.user as { role?: string } | undefined)?.role;
   const continueHref =
-    session?.user?.role === 'ADMIN'
+    userRole === 'ADMIN'
       ? '/dashboard/admin'
-      : session?.user?.role === 'TEACHER'
+      : userRole === 'TEACHER'
         ? '/dashboard/professor'
         : '/dashboard/aluno';
   const initials = useMemo(() => getInitials(session?.user?.name, session?.user?.email), [session?.user?.email, session?.user?.name]);
