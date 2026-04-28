@@ -2,7 +2,6 @@ import {
   Radio, 
   Users, 
   Calendar as CalendarIcon, 
-  TrendingUp, 
   Video, 
   XCircle, 
   Edit, 

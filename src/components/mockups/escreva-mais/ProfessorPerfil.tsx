@@ -1,11 +1,9 @@
 import { 
   User, 
-  Mail, 
   Phone, 
   Calendar, 
   MapPin, 
   CreditCard, 
-  Lock, 
   ShieldCheck, 
   Check, 
   Plus, 

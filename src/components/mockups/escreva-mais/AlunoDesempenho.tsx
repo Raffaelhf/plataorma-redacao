@@ -1,4 +1,4 @@
-import { Share2, TrendingUp, Award, Target, Trophy, Star, ChevronRight, Lock, PenSquare, CheckCircle2 } from "lucide-react";
+import { Share2, TrendingUp, Award, Target, Trophy, Star, Lock, PenSquare, CheckCircle2 } from "lucide-react";
 import { AppLayout } from "./_shared/AppLayout";
 import "./_group.css";
 

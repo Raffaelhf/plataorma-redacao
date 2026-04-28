@@ -10,11 +10,7 @@ import {
   Clock, 
   Users,
   Edit2,
-  Copy,
-  Trash2,
-  CheckCircle2,
   Eye,
-  MessageSquare
 } from "lucide-react";
 import "./_group.css";
 import { AppLayout } from "./_shared/AppLayout";

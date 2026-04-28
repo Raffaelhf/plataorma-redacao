@@ -3,16 +3,10 @@
 import { useState } from "react";
 import { 
   Clock, 
-  FileText, 
   CheckCircle2, 
-  MoreHorizontal, 
-  Plus, 
-  Search, 
   Filter, 
   MessageSquare,
-  AlertCircle,
-  ExternalLink,
-  ChevronRight
+  ExternalLink
 } from "lucide-react";
 import "./_group.css";
 import { AppLayout } from "./_shared/AppLayout";

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { PlayCircle, Video, ChevronDown, CheckCircle2, Clock, Calendar, ArrowRight, LayoutGrid, List } from "lucide-react";
+import { PlayCircle, Video, ChevronDown, CheckCircle2, Clock, Calendar, LayoutGrid } from "lucide-react";
 import "./_group.css";
 import { AppLayout } from "./_shared/AppLayout";
 
@@ -121,7 +121,7 @@ export function AlunoVideoaulas() {
             {/* Desktop visual line connector */}
             <div className="hidden md:block absolute left-6 top-8 bottom-8 w-1 bg-[var(--em-border-strong)] z-0"></div>
 
-            {modules.map((mod, index) => {
+            {modules.map((mod) => {
               const isOpen = openModules.includes(mod.id);
               const isComplete = mod.progress === mod.total;
               
