@@ -45,49 +45,34 @@ export function SignoutConfirmation({ callbackUrl }: SignoutConfirmationProps) {
       <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(14,15,18,0.055)_1px,transparent_1px),linear-gradient(90deg,rgba(14,15,18,0.04)_1px,transparent_1px)] bg-[size:38px_38px]" />
       <div className="pointer-events-none absolute inset-x-0 top-0 h-3 bg-[repeating-linear-gradient(90deg,#2bd37b_0_80px,#ffd34d_80px_140px,#ff7a57_140px_190px,#0e0f12_190px_230px)]" />
       <div className="pointer-events-none absolute -left-16 top-24 h-[74vh] w-40 -rotate-6 border-y-2 border-[#0e0f12] bg-[#2bd37b]" />
-      <div className="pointer-events-none absolute right-0 top-0 hidden h-full w-[36vw] overflow-hidden border-l-2 border-[#0e0f12] bg-[#121417] lg:block">
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(255,255,255,0.055)_1px,transparent_1px),linear-gradient(180deg,rgba(255,255,255,0.035)_1px,transparent_1px)] bg-[size:44px_44px] opacity-70" />
-        <div className="absolute left-10 top-14 h-[calc(100%-7rem)] w-[calc(100%-5rem)] rounded-[32px] border border-white/12 bg-[#1a1d20]/80 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]" />
-        <div className="absolute left-16 top-24 right-16 rounded-[28px] border-2 border-[#0e0f12] bg-[#f7f3ea] p-5 shadow-[8px_8px_0_0_#2bd37b]">
-          <div className="mb-4 flex items-center justify-between gap-4">
-            <div className="rounded-full border-2 border-[#0e0f12] bg-[#ffd34d] px-3 py-1 text-[11px] font-black uppercase tracking-[0.12em] text-[#0e0f12]">
-              Redação
-            </div>
-            <div className="text-[11px] font-black uppercase tracking-[0.16em] text-[#59606b]">rascunho salvo</div>
+      <div className="pointer-events-none absolute right-0 top-0 hidden h-full w-[36vw] overflow-hidden border-l-2 border-[#0e0f12] bg-[#101114] lg:block">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_68%_18%,rgba(43,211,123,0.28),transparent_28%),radial-gradient(circle_at_28%_78%,rgba(255,211,77,0.2),transparent_26%)]" />
+        <div className="absolute -right-28 top-20 h-72 w-72 rounded-full border-[42px] border-[#2bd37b]" />
+        <div className="absolute -left-24 bottom-24 h-64 w-64 rounded-full border-[34px] border-[#ffd34d]" />
+        <div className="absolute left-16 top-20 right-16">
+          <div className="mb-8 h-px bg-white/18" />
+          <div className="font-display text-[clamp(3.8rem,7vw,6.5rem)] font-black leading-[0.86] tracking-normal text-white">
+            pausa
+            <br />
+            inteligente
           </div>
-          <div className="space-y-3">
-            <div className="h-3 w-11/12 rounded-full bg-[#0e0f12]" />
-            <div className="h-3 w-4/5 rounded-full bg-[#3b4149]" />
-            <div className="h-3 w-full rounded-full bg-[#3b4149]" />
-            <div className="h-3 w-7/12 rounded-full bg-[#3b4149]" />
+          <p className="mt-7 max-w-[20rem] text-base font-semibold leading-7 text-white/62">
+            Saia com tranquilidade. Seus dados, envios e progresso continuam organizados para a próxima sessão.
+          </p>
+        </div>
+        <div className="absolute bottom-28 left-16 right-16 grid grid-cols-2 gap-4">
+          <div className="rounded-[24px] border-2 border-[#0e0f12] bg-[#2bd37b] p-5 shadow-[6px_6px_0_0_#0e0f12]">
+            <div className="text-[34px] font-black leading-none text-[#0e0f12]">100%</div>
+            <div className="mt-2 text-[11px] font-black uppercase tracking-[0.12em] text-[#0e0f12]/70">progresso salvo</div>
           </div>
-          <div className="mt-6 grid grid-cols-[1fr_88px] gap-4">
-            <div className="space-y-2">
-              <div className="h-2.5 w-full rounded-full bg-[#d8d2c3]" />
-              <div className="h-2.5 w-5/6 rounded-full bg-[#d8d2c3]" />
-              <div className="h-2.5 w-3/5 rounded-full bg-[#d8d2c3]" />
-            </div>
-            <div className="grid place-items-center rounded-2xl border-2 border-[#0e0f12] bg-[#2bd37b] text-[24px] font-black text-[#0e0f12] shadow-[4px_4px_0_0_#0e0f12]">
-              980
-            </div>
+          <div className="rounded-[24px] border border-white/14 bg-white/[0.08] p-5">
+            <div className="text-[34px] font-black leading-none text-white">24h</div>
+            <div className="mt-2 text-[11px] font-black uppercase tracking-[0.12em] text-white/50">acesso contínuo</div>
           </div>
         </div>
-        <div className="absolute bottom-24 left-16 right-16 rounded-[28px] border border-white/14 bg-white/[0.06] p-5">
-          <div className="mb-4 flex items-center gap-3">
-            <div className="h-10 w-10 rounded-2xl border border-white/15 bg-[#2bd37b]" />
-            <div className="space-y-2">
-              <div className="h-2.5 w-36 rounded-full bg-white/80" />
-              <div className="h-2 w-24 rounded-full bg-white/35" />
-            </div>
-          </div>
-          <div className="grid grid-cols-3 gap-2">
-            <div className="h-16 rounded-2xl border border-white/10 bg-[#ffd34d]" />
-            <div className="h-16 rounded-2xl border border-white/10 bg-white/10" />
-            <div className="h-16 rounded-2xl border border-white/10 bg-[#ff7a57]" />
-          </div>
-        </div>
-        <div className="absolute bottom-12 left-16 right-16 border-y border-white/15 py-5 text-[11px] font-extrabold uppercase tracking-[0.22em] text-white/55">
-          sua evolução continua salva
+        <div className="absolute bottom-12 left-16 right-16 flex items-center justify-between border-t border-white/15 pt-5 text-[11px] font-extrabold uppercase tracking-[0.2em] text-white/45">
+          <span>Escreva Mais</span>
+          <span className="h-2 w-2 rounded-full bg-[#2bd37b]" />
         </div>
       </div>
 
