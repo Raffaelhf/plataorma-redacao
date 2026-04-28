@@ -45,10 +45,49 @@ export function SignoutConfirmation({ callbackUrl }: SignoutConfirmationProps) {
       <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(14,15,18,0.055)_1px,transparent_1px),linear-gradient(90deg,rgba(14,15,18,0.04)_1px,transparent_1px)] bg-[size:38px_38px]" />
       <div className="pointer-events-none absolute inset-x-0 top-0 h-3 bg-[repeating-linear-gradient(90deg,#2bd37b_0_80px,#ffd34d_80px_140px,#ff7a57_140px_190px,#0e0f12_190px_230px)]" />
       <div className="pointer-events-none absolute -left-16 top-24 h-[74vh] w-40 -rotate-6 border-y-2 border-[#0e0f12] bg-[#2bd37b]" />
-      <div className="pointer-events-none absolute right-0 top-0 hidden h-full w-[36vw] border-l-2 border-[#0e0f12] bg-[#0e0f12] lg:block">
-        <div className="absolute inset-0 opacity-35 bg-[linear-gradient(135deg,rgba(43,211,123,0.28)_0_20%,transparent_20%_40%,rgba(255,211,77,0.22)_40%_58%,transparent_58%_100%)] bg-[size:76px_76px]" />
-        <div className="absolute bottom-12 left-10 right-10 border-y border-white/15 py-5 text-[11px] font-extrabold uppercase tracking-[0.22em] text-white/55">
-          pausa feita com cuidado
+      <div className="pointer-events-none absolute right-0 top-0 hidden h-full w-[36vw] overflow-hidden border-l-2 border-[#0e0f12] bg-[#121417] lg:block">
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(255,255,255,0.055)_1px,transparent_1px),linear-gradient(180deg,rgba(255,255,255,0.035)_1px,transparent_1px)] bg-[size:44px_44px] opacity-70" />
+        <div className="absolute left-10 top-14 h-[calc(100%-7rem)] w-[calc(100%-5rem)] rounded-[32px] border border-white/12 bg-[#1a1d20]/80 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]" />
+        <div className="absolute left-16 top-24 right-16 rounded-[28px] border-2 border-[#0e0f12] bg-[#f7f3ea] p-5 shadow-[8px_8px_0_0_#2bd37b]">
+          <div className="mb-4 flex items-center justify-between gap-4">
+            <div className="rounded-full border-2 border-[#0e0f12] bg-[#ffd34d] px-3 py-1 text-[11px] font-black uppercase tracking-[0.12em] text-[#0e0f12]">
+              Redação
+            </div>
+            <div className="text-[11px] font-black uppercase tracking-[0.16em] text-[#59606b]">rascunho salvo</div>
+          </div>
+          <div className="space-y-3">
+            <div className="h-3 w-11/12 rounded-full bg-[#0e0f12]" />
+            <div className="h-3 w-4/5 rounded-full bg-[#3b4149]" />
+            <div className="h-3 w-full rounded-full bg-[#3b4149]" />
+            <div className="h-3 w-7/12 rounded-full bg-[#3b4149]" />
+          </div>
+          <div className="mt-6 grid grid-cols-[1fr_88px] gap-4">
+            <div className="space-y-2">
+              <div className="h-2.5 w-full rounded-full bg-[#d8d2c3]" />
+              <div className="h-2.5 w-5/6 rounded-full bg-[#d8d2c3]" />
+              <div className="h-2.5 w-3/5 rounded-full bg-[#d8d2c3]" />
+            </div>
+            <div className="grid place-items-center rounded-2xl border-2 border-[#0e0f12] bg-[#2bd37b] text-[24px] font-black text-[#0e0f12] shadow-[4px_4px_0_0_#0e0f12]">
+              980
+            </div>
+          </div>
+        </div>
+        <div className="absolute bottom-24 left-16 right-16 rounded-[28px] border border-white/14 bg-white/[0.06] p-5">
+          <div className="mb-4 flex items-center gap-3">
+            <div className="h-10 w-10 rounded-2xl border border-white/15 bg-[#2bd37b]" />
+            <div className="space-y-2">
+              <div className="h-2.5 w-36 rounded-full bg-white/80" />
+              <div className="h-2 w-24 rounded-full bg-white/35" />
+            </div>
+          </div>
+          <div className="grid grid-cols-3 gap-2">
+            <div className="h-16 rounded-2xl border border-white/10 bg-[#ffd34d]" />
+            <div className="h-16 rounded-2xl border border-white/10 bg-white/10" />
+            <div className="h-16 rounded-2xl border border-white/10 bg-[#ff7a57]" />
+          </div>
+        </div>
+        <div className="absolute bottom-12 left-16 right-16 border-y border-white/15 py-5 text-[11px] font-extrabold uppercase tracking-[0.22em] text-white/55">
+          sua evolução continua salva
         </div>
       </div>
 
