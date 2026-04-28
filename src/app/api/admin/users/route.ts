@@ -2,17 +2,54 @@ import { NextResponse } from 'next/server';
 import { getAppUrl } from '@/lib/app-url';
 import { getAuthSession } from '@/lib/auth';
 import { generateEnrollmentNumber } from '@/lib/enrollment-number';
-import { sendPasswordSetupEmail } from '@/lib/mail';
+import { isMailConfigured, sendPasswordSetupEmail } from '@/lib/mail';
 import { createPasswordSetupToken } from '@/lib/password-setup';
 import { prisma } from '@/lib/prisma';
 import { isValidGradeLevel } from '@/lib/grade-levels';
+import type { StudentPlan } from '@/generated/prisma';
 
-const planMap = {
-  mensal: 'MENSAL',
-  trimestral: 'TRIMESTRAL',
-  semestral: 'SEMESTRAL',
-  anual: 'ANUAL',
+const planValues = ['MENSAL', 'TRIMESTRAL', 'SEMESTRAL', 'ANUAL'] as const;
+const validPlans = new Set<string>(planValues);
+
+const userSelect = {
+  id: true,
+  name: true,
+  email: true,
+  role: true,
+  isActive: true,
+  createdAt: true,
+  studentProfile: {
+    select: {
+      gradeLevel: true,
+      cpf: true,
+      enrollmentNumber: true,
+      plan: true,
+      readingClub: true,
+      mentoring: true,
+      bio: true,
+    },
+  },
+  teacherProfile: {
+    select: {
+      expertise: true,
+      bio: true,
+    },
+  },
 } as const;
+
+function cleanString(value: unknown) {
+  return typeof value === 'string' ? value.trim() : '';
+}
+
+function normalizePlan(value: unknown): StudentPlan | null {
+  if (typeof value !== 'string') return null;
+  const plan = value.trim().toUpperCase();
+  return validPlans.has(plan) ? (plan as StudentPlan) : null;
+}
+
+function isUniqueConstraintError(error: unknown) {
+  return Boolean(error && typeof error === 'object' && 'code' in error && error.code === 'P2002');
+}
 
 export async function POST(req: Request) {
   const session = await getAuthSession();
@@ -21,118 +58,129 @@ export async function POST(req: Request) {
   }
 
   const body = await req.json();
-  const name = String(body.name || '').trim();
-  const email = String(body.email || '').trim();
+  const name = cleanString(body.name);
+  const email = cleanString(body.email).toLowerCase();
   const role = body.role === 'TEACHER' ? 'TEACHER' : 'STUDENT';
-  const gradeLevel = String(body.gradeLevel || '').trim();
-  const cpf = String(body.cpf || '').trim();
-  const enrollmentNumber = String(body.enrollmentNumber || '').trim();
-  const expertise = String(body.expertise || '').trim();
+  const gradeLevel = cleanString(body.gradeLevel);
+  const cpf = cleanString(body.cpf);
+  const enrollmentNumber = cleanString(body.enrollmentNumber);
+  const expertise = cleanString(body.expertise);
+  const studentBio = cleanString(body.studentBio);
+  const teacherBio = cleanString(body.teacherBio);
   const readingClub = Boolean(body.readingClub);
   const mentoring = Boolean(body.mentoring);
-  const plan =
-    typeof body.plan === 'string' && body.plan in planMap ? planMap[body.plan as keyof typeof planMap] : null;
+  const plan = normalizePlan(body.plan);
 
   if (!name || !email) {
     return NextResponse.json({ error: 'Informe nome e e-mail.' }, { status: 400 });
   }
 
   if (role === 'STUDENT' && readingClub && !plan) {
-    return NextResponse.json({ error: 'Selecione um plano para adicionar o Clube de Leitura.' }, { status: 400 });
+    return NextResponse.json({ error: 'Selecione um plano para adicionar o Clube do Livro.' }, { status: 400 });
   }
 
   if (role === 'STUDENT' && mentoring && !plan) {
-    return NextResponse.json({ error: 'Selecione um plano para adicionar a Mentoria.' }, { status: 400 });
+    return NextResponse.json({ error: 'Selecione um plano para adicionar a Monitoria.' }, { status: 400 });
   }
 
   if (role === 'STUDENT' && gradeLevel && !isValidGradeLevel(gradeLevel)) {
-    return NextResponse.json({ error: 'Selecione uma série válida para o aluno.' }, { status: 400 });
-  }
-
-  const existing = await prisma.user.findUnique({ where: { email } });
-  if (existing) {
-    return NextResponse.json({ error: 'Já existe um usuário com este e-mail.' }, { status: 409 });
+    return NextResponse.json({ error: 'Selecione uma serie valida para o aluno.' }, { status: 400 });
   }
 
   const generatedEnrollmentNumber =
-    role === 'STUDENT' && !enrollmentNumber
-      ? await generateEnrollmentNumber(prisma)
-      : null;
-
-  const user = await prisma.user.create({
-    data: {
-      name,
-      email,
-      role,
-      passwordHash: null,
-      studentProfile:
-        role === 'STUDENT'
-          ? {
-              create: {
-                gradeLevel: gradeLevel || null,
-                cpf: cpf || null,
-                enrollmentNumber: enrollmentNumber || generatedEnrollmentNumber,
-                plan,
-                readingClub,
-                mentoring,
-              },
-            }
-          : undefined,
-      teacherProfile:
-        role === 'TEACHER'
-          ? {
-              create: {
-                expertise: expertise || null,
-              },
-            }
-          : undefined,
-    },
-    select: {
-      id: true,
-      name: true,
-      email: true,
-      role: true,
-      isActive: true,
-      createdAt: true,
-      studentProfile: {
-        select: {
-          gradeLevel: true,
-          cpf: true,
-          enrollmentNumber: true,
-          plan: true,
-          readingClub: true,
-          mentoring: true,
-        },
-      },
-    },
-  });
+    role === 'STUDENT' && !enrollmentNumber ? await generateEnrollmentNumber(prisma) : null;
 
   try {
-    const { rawToken } = await createPasswordSetupToken(user.id);
-    const baseUrl = getAppUrl();
+    const user = await prisma.user.create({
+      data: {
+        name,
+        email,
+        role,
+        passwordHash: null,
+        studentProfile:
+          role === 'STUDENT'
+            ? {
+                create: {
+                  gradeLevel: gradeLevel || null,
+                  cpf: cpf || null,
+                  enrollmentNumber: enrollmentNumber || generatedEnrollmentNumber,
+                  plan,
+                  readingClub,
+                  mentoring,
+                  bio: studentBio || null,
+                },
+              }
+            : undefined,
+        teacherProfile:
+          role === 'TEACHER'
+            ? {
+                create: {
+                  expertise: expertise || null,
+                  bio: teacherBio || null,
+                },
+              }
+            : undefined,
+      },
+      select: userSelect,
+    });
 
+    const baseUrl = getAppUrl();
     if (!baseUrl) {
-      throw new Error('Não foi possível identificar a URL pública da aplicação para montar o link de definição de senha.');
+      return NextResponse.json(
+        {
+          ...user,
+          message: 'Usuario criado. Configure a URL publica da aplicacao para gerar links de senha.',
+          delivery: 'manual',
+        },
+        { status: 201 },
+      );
     }
 
-    await sendPasswordSetupEmail({
-      to: email,
-      name,
-      roleLabel: role === 'TEACHER' ? 'professor' : 'aluno',
-      link: `${baseUrl}/definir-senha?token=${rawToken}`,
-    });
+    try {
+      const { rawToken } = await createPasswordSetupToken(user.id);
+      const resetLink = `${baseUrl}/definir-senha?token=${rawToken}`;
+
+      if (isMailConfigured()) {
+        await sendPasswordSetupEmail({
+          to: email,
+          name,
+          roleLabel: role === 'TEACHER' ? 'professor' : 'aluno',
+          link: resetLink,
+        });
+
+        return NextResponse.json(
+          { ...user, message: 'E-mail de definicao de senha enviado.', delivery: 'email' },
+          { status: 201 },
+        );
+      }
+
+      return NextResponse.json(
+        {
+          ...user,
+          message: 'SMTP nao configurado. Copie o link de definicao de senha e envie manualmente ao usuario.',
+          resetLink,
+          delivery: 'manual',
+        },
+        { status: 201 },
+      );
+    } catch (error) {
+      console.error(error);
+
+      return NextResponse.json(
+        {
+          ...user,
+          message: 'Usuario criado, mas o envio do convite falhou. Use reset de senha no menu de acoes.',
+          delivery: 'manual',
+        },
+        { status: 201 },
+      );
+    }
   } catch (error) {
+    if (isUniqueConstraintError(error)) {
+      return NextResponse.json({ error: 'Ja existe um usuario com este e-mail.' }, { status: 409 });
+    }
+
     console.error(error);
-
-    await prisma.$transaction([
-      prisma.passwordSetupToken.deleteMany({ where: { userId: user.id } }),
-      prisma.studentProfile.deleteMany({ where: { userId: user.id } }),
-      prisma.teacherProfile.deleteMany({ where: { userId: user.id } }),
-      prisma.user.delete({ where: { id: user.id } }),
-    ]);
-
-    return NextResponse.json({ error: 'Não foi possível enviar o e-mail de definição de senha.' }, { status: 500 });
+    return NextResponse.json({ error: 'Nao foi possivel criar o usuario.' }, { status: 500 });
   }
-
-  return NextResponse.json(user, { status: 201 });
 }

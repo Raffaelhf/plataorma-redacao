@@ -38,20 +38,20 @@ export function SubmitWork({ activityId, existingSubmission }: { activityId: str
 
   if (existingSubmission) {
     return (
-      <div className="space-y-3 rounded-[30px] border border-[#dde3fb] bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(248,249,255,0.9))] p-5 shadow-[0_20px_50px_rgba(74,73,140,0.1)]">
-        <p className="text-sm font-semibold text-[#22347e]">Atividade ja enviada</p>
-        <div className="rounded-2xl border border-[#cfe6d7] bg-[#effaf2] px-4 py-4 text-sm text-[#23533c]">
+      <div className="em-card-hard space-y-3 bg-white p-5">
+        <p className="text-sm font-extrabold text-[var(--em-ink)]">Atividade ja enviada</p>
+        <div className="rounded-2xl border-[1.5px] border-[var(--em-ink)] bg-[var(--em-mint)] px-4 py-4 text-sm text-[var(--em-ink)]">
           <p className="font-semibold">Seu PDF desta atividade ja foi enviado.</p>
           <p className="mt-1">Data do envio: {new Date(existingSubmission.submittedAt).toLocaleString('pt-BR')}</p>
           <p className="mt-1">Status atual: {existingSubmission.status === 'GRADED' ? 'Corrigido' : 'Aguardando correcao'}</p>
-          {existingSubmission.pdfName ? <p className="mt-1 text-xs text-[#3e6a53]">Arquivo: {existingSubmission.pdfName}</p> : null}
+          {existingSubmission.pdfName ? <p className="mt-1 text-xs text-[var(--em-text-soft)]">Arquivo: {existingSubmission.pdfName}</p> : null}
           <div className="mt-3 flex flex-wrap gap-2">
             {existingPdfHref ? (
-              <Link href={existingPdfHref} target="_blank" className="inline-flex rounded-full bg-[#23533c] px-4 py-2 text-xs font-semibold text-white hover:brightness-105">
+              <Link href={existingPdfHref} target="_blank" className="em-btn-primary !px-4 !py-2 text-xs">
                 Abrir PDF enviado
               </Link>
             ) : null}
-            <Link href="/envios" className="inline-flex rounded-full border border-[#23533c] px-4 py-2 text-xs font-semibold text-[#23533c] hover:bg-[#e4f5e9]">
+            <Link href="/envios" className="inline-flex rounded-xl border-[1.5px] border-[var(--em-ink)] bg-white px-4 py-2 text-xs font-extrabold text-[var(--em-ink)]">
               Ver meus envios
             </Link>
           </div>
@@ -113,9 +113,9 @@ export function SubmitWork({ activityId, existingSubmission }: { activityId: str
   };
 
   return (
-    <div className="space-y-3 rounded-[30px] border border-[#dde3fb] bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(248,249,255,0.9))] p-5 shadow-[0_20px_50px_rgba(74,73,140,0.1)]">
-      <p className="text-sm font-semibold text-[#22347e]">Enviar redacao em PDF</p>
-      <p className="text-xs leading-6 text-[#6d79a5]">Ao enviar, sua redacao entra automaticamente na fila de correcoes do professor. Tamanho maximo por envio no deploy atual: {getServerlessUploadLimitLabel()}.</p>
+    <div className="em-card-hard space-y-3 bg-white p-5">
+      <p className="text-sm font-extrabold text-[var(--em-ink)]">Enviar redacao em PDF</p>
+      <p className="text-xs leading-6 text-[var(--em-text-soft)]">Ao enviar, sua redacao entra automaticamente na fila de correcoes do professor. Tamanho maximo por envio no deploy atual: {getServerlessUploadLimitLabel()}.</p>
       <textarea
         value={content}
         onChange={(e) => setContent(e.target.value)}
@@ -123,7 +123,7 @@ export function SubmitWork({ activityId, existingSubmission }: { activityId: str
         rows={4}
         className="theme-field w-full rounded-xl px-4 py-3 text-sm"
       />
-      <label className="theme-field-panel flex cursor-pointer items-center gap-3 rounded-2xl border-dashed px-4 py-4 text-sm text-[#5d50d8] dark:text-[#c7d4ff]">
+      <label className="theme-field-panel flex cursor-pointer items-center gap-3 rounded-2xl border-dashed px-4 py-4 text-sm text-[var(--em-ink)]">
         <FileText className="h-5 w-5" />
         <span className="flex-1">{pdfFile ? pdfFile.name : 'Selecionar arquivo PDF da redacao'}</span>
         <input
@@ -136,16 +136,16 @@ export function SubmitWork({ activityId, existingSubmission }: { activityId: str
       <Button
         disabled={loading || isPending || !pdfFile}
         onClick={handleSubmit}
-        className="w-full rounded-full bg-[linear-gradient(135deg,#ff7f32_0%,#ff5d6c_100%)] text-white shadow-[0_18px_32px_rgba(255,95,108,0.22)] hover:brightness-105"
+        className="w-full"
       >
         {loading || isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Send className="mr-2 h-4 w-4" />} Enviar PDF
       </Button>
       {status ? (
-        <div className="rounded-2xl border border-[#cfe6d7] bg-[#effaf2] px-4 py-3 text-sm text-[#23533c]">
+        <div className="rounded-2xl border-[1.5px] border-[var(--em-ink)] bg-[var(--em-mint)] px-4 py-3 text-sm text-[var(--em-ink)]">
           <p className="font-semibold">Envio confirmado</p>
           <p className="mt-1">{status}</p>
-          {sentFileName ? <p className="mt-1 text-xs text-[#3e6a53]">Arquivo enviado: {sentFileName}</p> : null}
-          <Link href="/envios?sent=1" className="mt-3 inline-flex rounded-full bg-[#23533c] px-4 py-2 text-xs font-semibold text-white hover:brightness-105">
+          {sentFileName ? <p className="mt-1 text-xs text-[var(--em-text-soft)]">Arquivo enviado: {sentFileName}</p> : null}
+          <Link href="/envios?sent=1" className="em-btn-primary mt-3 !px-4 !py-2 text-xs">
             Ver em meus envios
           </Link>
         </div>

@@ -101,19 +101,19 @@ function SectionCard({
   note?: string;
 }) {
   return (
-    <section className="rounded-[30px] border border-[#dbe1fb] bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(248,249,255,0.92))] p-6 shadow-[0_20px_54px_rgba(74,73,140,0.08)] dark:border-slate-700/70 dark:bg-[linear-gradient(180deg,rgba(11,18,32,0.96),rgba(17,24,39,0.92))] dark:shadow-[0_20px_54px_rgba(0,0,0,0.24)] sm:p-7">
+    <section className="rounded-[30px] border border-[#dbe1fb] bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(248,249,255,0.92))] p-6 shadow-[0_20px_54px_rgba(74,73,140,0.08)] sm:p-7">
       <div className="flex items-start gap-4">
-        <div className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,#4350d3_0%,#6972ee_100%)] text-sm font-extrabold tracking-[0.06em] text-white shadow-[0_14px_28px_rgba(67,80,211,0.24)] dark:bg-[linear-gradient(135deg,#4f5ee8_0%,#7a84ff_100%)]">
+        <div className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,#4350d3_0%,#6972ee_100%)] text-sm font-extrabold tracking-[0.06em] text-white shadow-[0_14px_28px_rgba(67,80,211,0.24)]">
           {number}
         </div>
 
         <div className="flex-1">
-          <h2 className="text-[1.6rem] font-extrabold tracking-[-0.04em] text-slate-900 dark:text-slate-50 sm:text-[1.9rem]">
+          <h2 className="text-[1.6rem] font-extrabold tracking-[-0.04em] text-slate-900 sm:text-[1.9rem]">
             {title}
           </h2>
 
           {body ? (
-            <div className="mt-4 space-y-4 text-[1rem] leading-8 text-slate-700 dark:text-slate-300">
+            <div className="mt-4 space-y-4 text-[1rem] leading-8 text-slate-700">
               {body.map((paragraph) => (
                 <p key={paragraph}>{paragraph}</p>
               ))}
@@ -121,10 +121,10 @@ function SectionCard({
           ) : null}
 
           {list ? (
-            <ul className="mt-4 space-y-3 text-[1rem] leading-8 text-slate-700 dark:text-slate-300">
+            <ul className="mt-4 space-y-3 text-[1rem] leading-8 text-slate-700">
               {list.map((item) => (
                 <li key={item} className="flex gap-3">
-                  <span className="mt-2 h-2.5 w-2.5 shrink-0 rounded-full bg-[#5a67e8] dark:bg-indigo-300" />
+                  <span className="mt-2 h-2.5 w-2.5 shrink-0 rounded-full bg-[#5a67e8]" />
                   <span>{item}</span>
                 </li>
               ))}
@@ -132,7 +132,7 @@ function SectionCard({
           ) : null}
 
           {note ? (
-            <div className="mt-5 rounded-[22px] border border-[#e4e8f7] bg-[#f8faff] px-4 py-4 text-sm leading-7 text-[#51608f] dark:border-slate-700 dark:bg-slate-800/72 dark:text-slate-300">
+            <div className="mt-5 rounded-[22px] border border-[#e4e8f7] bg-[#f8faff] px-4 py-4 text-sm leading-7 text-[#51608f]">
               {note}
             </div>
           ) : null}
@@ -152,16 +152,16 @@ export default async function PrivacyPage() {
       description="Este documento explica como a Escreva Mais trata dados pessoais de alunos, professores e visitantes, quais sao as finalidades desse tratamento e como exercer os direitos previstos na Lei Geral de Protecao de Dados."
       updatedAt="18/03/2026"
     >
-      <section className="rounded-[32px] border border-[#dbe1fb] bg-[linear-gradient(135deg,#ffffff_0%,#f5f2ff_54%,#fff5ed_100%)] p-6 shadow-[0_22px_60px_rgba(74,73,140,0.12)] dark:border-slate-700/70 dark:bg-[linear-gradient(135deg,#0f172a_0%,#172033_54%,#241a1a_100%)] dark:shadow-[0_22px_60px_rgba(0,0,0,0.28)] sm:p-8">
+      <section className="rounded-[32px] border border-[#dbe1fb] bg-[linear-gradient(135deg,#ffffff_0%,#f5f2ff_54%,#fff5ed_100%)] p-6 shadow-[0_22px_60px_rgba(74,73,140,0.12)] sm:p-8">
         <div className="flex items-center gap-3">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,#4350d3_0%,#6972ee_100%)] text-white shadow-[0_14px_28px_rgba(67,80,211,0.24)] dark:bg-[linear-gradient(135deg,#4f5ee8_0%,#7a84ff_100%)]">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,#4350d3_0%,#6972ee_100%)] text-white shadow-[0_14px_28px_rgba(67,80,211,0.24)]">
             <Lock className="h-5 w-5" />
           </div>
           <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.14em] text-[#5a69a1] dark:text-indigo-200">
+            <p className="text-sm font-semibold uppercase tracking-[0.14em] text-[#5a69a1]">
               Em resumo
             </p>
-            <p className="mt-1 text-lg font-semibold tracking-[-0.03em] text-slate-900 dark:text-slate-50">
+            <p className="mt-1 text-lg font-semibold tracking-[-0.03em] text-slate-900">
               Tratamos o minimo necessario para prestar o servico, proteger a conta e cumprir obrigacoes legais.
             </p>
           </div>
@@ -174,15 +174,15 @@ export default async function PrivacyPage() {
             return (
               <article
                 key={item.title}
-                className="rounded-[26px] border border-[#e4e8f7] bg-white/84 p-5 shadow-[0_16px_40px_rgba(74,73,140,0.08)] dark:border-slate-700 dark:bg-slate-900/74 dark:shadow-[0_16px_40px_rgba(0,0,0,0.22)]"
+                className="rounded-[26px] border border-[#e4e8f7] bg-white/84 p-5 shadow-[0_16px_40px_rgba(74,73,140,0.08)]"
               >
-                <div className={`inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br ${item.tint} ${item.color} dark:from-slate-800 dark:to-slate-900`}>
+                <div className={`inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br ${item.tint} ${item.color}`}>
                   <Icon className="h-5 w-5" />
                 </div>
-                <h2 className="mt-4 text-lg font-bold tracking-[-0.03em] text-slate-900 dark:text-slate-50">
+                <h2 className="mt-4 text-lg font-bold tracking-[-0.03em] text-slate-900">
                   {item.title}
                 </h2>
-                <p className="mt-2 text-sm leading-7 text-slate-600 dark:text-slate-300">
+                <p className="mt-2 text-sm leading-7 text-slate-600">
                   {item.description}
                 </p>
               </article>
@@ -197,12 +197,12 @@ export default async function PrivacyPage() {
         ))}
       </div>
 
-      <section className="rounded-[30px] border border-[#dbe1fb] bg-[linear-gradient(135deg,#fbfcff_0%,#fff4ee_100%)] p-6 shadow-[0_20px_54px_rgba(74,73,140,0.08)] dark:border-slate-700/70 dark:bg-[linear-gradient(135deg,rgba(15,23,42,0.96),rgba(48,29,41,0.9))] dark:shadow-[0_20px_54px_rgba(0,0,0,0.24)] sm:p-7">
-        <h2 className="text-[1.6rem] font-extrabold tracking-[-0.04em] text-slate-900 dark:text-slate-50 sm:text-[1.9rem]">
+      <section className="rounded-[30px] border border-[#dbe1fb] bg-[linear-gradient(135deg,#fbfcff_0%,#fff4ee_100%)] p-6 shadow-[0_20px_54px_rgba(74,73,140,0.08)] sm:p-7">
+        <h2 className="text-[1.6rem] font-extrabold tracking-[-0.04em] text-slate-900 sm:text-[1.9rem]">
           Como exercer seus direitos
         </h2>
 
-        <div className="mt-4 space-y-4 text-[1rem] leading-8 text-slate-700 dark:text-slate-300">
+        <div className="mt-4 space-y-4 text-[1rem] leading-8 text-slate-700">
           <p>
             Solicitacoes relacionadas a privacidade, acesso, correcao ou exclusao podem ser enviadas pelos canais oficiais de atendimento da plataforma.
           </p>
@@ -214,7 +214,7 @@ export default async function PrivacyPage() {
                 href={whatsappContact.href}
                 target="_blank"
                 rel="noreferrer"
-                className="font-semibold text-[#4250d4] underline decoration-[#cfd6ff] underline-offset-4 dark:text-indigo-300 dark:decoration-slate-600"
+                className="font-semibold text-[#4250d4] underline decoration-[#cfd6ff] underline-offset-4"
               >
                 WhatsApp {whatsappContact.label}
               </a>
@@ -226,7 +226,7 @@ export default async function PrivacyPage() {
             Para detalhes sobre cookies, preferencia de aviso e tecnologias correlatas, consulte a{' '}
             <Link
               href="/politica-de-cookies"
-              className="font-semibold text-[#4250d4] underline decoration-[#cfd6ff] underline-offset-4 dark:text-indigo-300 dark:decoration-slate-600"
+              className="font-semibold text-[#4250d4] underline decoration-[#cfd6ff] underline-offset-4"
             >
               Politica de Cookies
             </Link>

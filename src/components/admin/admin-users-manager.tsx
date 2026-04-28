@@ -280,20 +280,20 @@ export function AdminUsersManager({ initialUsers }: { initialUsers: ManagedUser[
     <div className="space-y-4">
       {error ? <p className="rounded-2xl border border-[#ffd0cf] bg-[#fff1f1] px-4 py-3 text-sm text-[#b14545]">{error}</p> : null}
       {profileSuccess ? (
-        <p className="rounded-2xl border border-[#caeddc] bg-[#edf8f2] px-4 py-3 text-sm text-[#1b7f62]">{profileSuccess}</p>
+        <p className="rounded-2xl border border-[#caeddc] bg-[var(--em-mint)] px-4 py-3 text-sm text-[#1b7f62]">{profileSuccess}</p>
       ) : null}
       {passwordError ? <p className="rounded-2xl border border-[#ffd0cf] bg-[#fff1f1] px-4 py-3 text-sm text-[#b14545]">{passwordError}</p> : null}
       {passwordSuccess ? (
-        <p className="rounded-2xl border border-[#caeddc] bg-[#edf8f2] px-4 py-3 text-sm text-[#1b7f62]">{passwordSuccess}</p>
+        <p className="rounded-2xl border border-[#caeddc] bg-[var(--em-mint)] px-4 py-3 text-sm text-[#1b7f62]">{passwordSuccess}</p>
       ) : null}
       {passwordResetResult?.resetLink ? (
-        <div className="rounded-2xl border border-[#d9def8] bg-white/90 px-4 py-4 text-sm text-[#3141bf]">
-          <p className="font-semibold text-[#22347e]">{passwordResetResult.message}</p>
+        <div className="rounded-2xl border border-[var(--em-border-strong)] bg-white/90 px-4 py-4 text-sm text-[var(--em-ink)]">
+          <p className="font-semibold text-[var(--em-ink)]">{passwordResetResult.message}</p>
           <a
             href={passwordResetResult.resetLink}
             target="_blank"
             rel="noreferrer"
-            className="mt-2 block break-all font-medium text-[#4250d4] underline underline-offset-4"
+            className="mt-2 block break-all font-medium text-[var(--em-ink)] underline underline-offset-4"
           >
             {passwordResetResult.resetLink}
           </a>
@@ -301,7 +301,7 @@ export function AdminUsersManager({ initialUsers }: { initialUsers: ManagedUser[
       ) : null}
 
       <div className="admin-card-soft rounded-[28px] p-4 sm:p-5">
-        <label className="block text-sm font-semibold text-[#22347e]" htmlFor="admin-user-search">
+        <label className="block text-sm font-semibold text-[var(--em-ink)]" htmlFor="admin-user-search">
           Buscar usuário
         </label>
         <div className="relative mt-3">
@@ -314,7 +314,7 @@ export function AdminUsersManager({ initialUsers }: { initialUsers: ManagedUser[
             className={`py-3 pl-11 pr-4 ${adminUserFieldClassName}`}
           />
         </div>
-        <p className="mt-2 text-xs text-[#6d79a5]">
+        <p className="mt-2 text-xs text-[var(--em-text-soft)]">
           {filteredUsers.length === users.length && !search
             ? `${users.length} usuário(s) carregado(s).`
             : `${filteredUsers.length} resultado(s) para a busca atual.`}
@@ -339,32 +339,32 @@ export function AdminUsersManager({ initialUsers }: { initialUsers: ManagedUser[
               <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
                 <div>
                   <div className="flex flex-wrap items-center gap-2">
-                    <p className="text-base font-semibold text-[#22347e]">{user.name || user.email}</p>
-                    <span className="rounded-full bg-[linear-gradient(135deg,#eef2ff_0%,#fff0e8_100%)] px-3 py-1 text-xs font-semibold text-[#4250d4]">
+                    <p className="text-base font-semibold text-[var(--em-ink)]">{user.name || user.email}</p>
+                    <span className="rounded-full bg-[linear-gradient(135deg,#eef2ff_0%,#fff0e8_100%)] px-3 py-1 text-xs font-semibold text-[var(--em-ink)]">
                       {roleLabels[user.role as keyof typeof roleLabels] ?? user.role}
                     </span>
                     <Badge label={user.isActive ? 'Ativo' : 'Cadastro cancelado'} variant={user.isActive ? 'success' : 'warning'} />
                   </div>
-                  <p className="mt-2 text-sm text-[#52618f]">{user.email}</p>
-                  <p className="mt-1 text-xs text-[#6d79a5]">
+                  <p className="mt-2 text-sm text-[var(--em-text-soft)]">{user.email}</p>
+                  <p className="mt-1 text-xs text-[var(--em-text-soft)]">
                     Criado em {new Intl.DateTimeFormat('pt-BR', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(user.createdAt))}
                   </p>
-                  <p className="mt-1 text-xs leading-6 text-[#6d79a5]">
+                  <p className="mt-1 text-xs leading-6 text-[var(--em-text-soft)]">
                     Ao redefinir a senha, o acesso atual é invalidado e um link temporário é enviado para o e-mail cadastrado.
                   </p>
                   {user.role === 'STUDENT' ? (
                     <>
                       <div className="mt-3 flex flex-wrap gap-2">
-                        <span className="rounded-full bg-[#eef2ff] px-3 py-1 text-xs font-semibold text-[#4250d4]">
+                        <span className="rounded-full bg-[var(--em-mint)] px-3 py-1 text-xs font-semibold text-[var(--em-ink)]">
                           Plano: {user.studentProfile?.plan ? planLabels[user.studentProfile.plan] : 'Não informado'}
                         </span>
-                        <span className="rounded-full bg-[#edf8f2] px-3 py-1 text-xs font-semibold text-[#1b7f62]">
+                        <span className="rounded-full bg-[var(--em-mint)] px-3 py-1 text-xs font-semibold text-[#1b7f62]">
                           Clube de Leitura: {user.studentProfile?.readingClub ? 'Sim' : 'Não'}
                         </span>
-                        <span className="rounded-full bg-[#eef2ff] px-3 py-1 text-xs font-semibold text-[#4250d4]">
+                        <span className="rounded-full bg-[var(--em-mint)] px-3 py-1 text-xs font-semibold text-[var(--em-ink)]">
                           Mentoria: {user.studentProfile?.mentoring ? 'Sim' : 'Não'}
                         </span>
-                        <span className="rounded-full bg-[#fff3ea] px-3 py-1 text-xs font-semibold text-[#c96a2f]">
+                        <span className="rounded-full bg-[var(--em-peach)] px-3 py-1 text-xs font-semibold text-[#c96a2f]">
                           Série: {user.studentProfile?.gradeLevel || 'Não informada'}
                         </span>
                         <span className="rounded-full bg-[#f4efff] px-3 py-1 text-xs font-semibold text-[#7a58b5]">
@@ -411,7 +411,7 @@ export function AdminUsersManager({ initialUsers }: { initialUsers: ManagedUser[
                       type="button"
                       disabled={profileLoading}
                       variant="secondary"
-                      className="border border-[#d9def8] bg-white/90 text-[#3141bf] hover:bg-[#eef2ff] hover:text-[#22347e]"
+                      className="border border-[var(--em-border-strong)] bg-white/90 text-[var(--em-ink)] hover:bg-[var(--em-mint)] hover:text-[var(--em-ink)]"
                       onClick={() => handleProfileSave(user)}
                     >
                       {profileLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
@@ -423,7 +423,7 @@ export function AdminUsersManager({ initialUsers }: { initialUsers: ManagedUser[
                     type="button"
                     disabled={passwordLoading}
                     variant="secondary"
-                    className="border border-[#d9def8] bg-white/90 text-[#3141bf] hover:bg-[#eef2ff] hover:text-[#22347e]"
+                    className="border border-[var(--em-border-strong)] bg-white/90 text-[var(--em-ink)] hover:bg-[var(--em-mint)] hover:text-[var(--em-ink)]"
                     onClick={() => handlePasswordReset(user)}
                   >
                     {passwordLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <KeyRound className="mr-2 h-4 w-4" />}
@@ -438,7 +438,7 @@ export function AdminUsersManager({ initialUsers }: { initialUsers: ManagedUser[
                       className={
                         user.isActive
                           ? 'border border-[#ffd0cf] bg-[#fff1f1] text-[#b14545] hover:bg-[#ffe7e7]'
-                          : 'border border-[#d9def8] bg-white/90 text-[#3141bf] hover:bg-[#eef2ff] hover:text-[#22347e]'
+                          : 'border border-[var(--em-border-strong)] bg-white/90 text-[var(--em-ink)] hover:bg-[var(--em-mint)] hover:text-[var(--em-ink)]'
                       }
                       onClick={() => handleToggle(user, !user.isActive)}
                     >
@@ -458,7 +458,7 @@ export function AdminUsersManager({ initialUsers }: { initialUsers: ManagedUser[
           );
         })}
         {filteredUsers.length === 0 ? (
-          <section className="admin-card-soft rounded-[28px] p-6 text-sm text-[#6d79a5]">
+          <section className="admin-card-soft rounded-[28px] p-6 text-sm text-[var(--em-text-soft)]">
             Nenhum usuário encontrado para essa busca.
           </section>
         ) : null}

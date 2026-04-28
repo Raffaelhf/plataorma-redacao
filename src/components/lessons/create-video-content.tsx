@@ -194,10 +194,10 @@ export function CreateVideoContent({ categories, classrooms, modules }: CreateVi
       <form ref={classroomFormRef} action={handleClassroomSubmit} className={panelClassName}>
         <div className="flex items-start justify-between gap-3">
           <div>
-            <p className="text-sm font-semibold text-[#5a69a1] dark:text-[#9fb0d8]">Turmas</p>
-            <h2 className="mt-1 text-lg font-semibold text-[#22347e] dark:text-[#f3f7ff]">Nova turma</h2>
+            <p className="text-sm font-semibold text-[var(--em-text-soft)]">Turmas</p>
+            <h2 className="mt-1 text-lg font-semibold text-[var(--em-ink)]">Nova turma</h2>
           </div>
-          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#eef2ff] text-[#4250d4] dark:bg-[#1b2743] dark:text-[#c7d4ff]">
+          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[var(--em-mint)] text-[var(--em-ink)]">
             <FolderPlus className="h-5 w-5" />
           </div>
         </div>
@@ -209,8 +209,8 @@ export function CreateVideoContent({ categories, classrooms, modules }: CreateVi
         </div>
 
         <div className="mt-3 min-h-4">
-          {classroomError ? <p className="text-xs text-[#c05252] dark:text-[#ffb4b4]">{classroomError}</p> : null}
-          {classroomMessage ? <p className="text-xs text-[#1b7f62] dark:text-[#8fe0b7]">{classroomMessage}</p> : null}
+          {classroomError ? <p className="text-xs text-[#c05252]">{classroomError}</p> : null}
+          {classroomMessage ? <p className="text-xs text-[#1b7f62]">{classroomMessage}</p> : null}
         </div>
 
         <Button type="submit" disabled={loadingClassroom} className="mt-4 w-full">
@@ -222,10 +222,10 @@ export function CreateVideoContent({ categories, classrooms, modules }: CreateVi
       <form ref={moduleFormRef} action={handleModuleSubmit} className={panelClassName}>
         <div className="flex items-start justify-between gap-3">
           <div>
-            <p className="text-sm font-semibold text-[#5a69a1] dark:text-[#9fb0d8]">M\u00F3dulos</p>
-            <h2 className="mt-1 text-lg font-semibold text-[#22347e] dark:text-[#f3f7ff]">Novo m\u00F3dulo</h2>
+            <p className="text-sm font-semibold text-[var(--em-text-soft)]">M\u00F3dulos</p>
+            <h2 className="mt-1 text-lg font-semibold text-[var(--em-ink)]">Novo m\u00F3dulo</h2>
           </div>
-          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#eef9f4] text-[#1b7f62] dark:bg-[#14332b] dark:text-[#8fe0b7]">
+          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[var(--em-mint)] text-[#1b7f62]">
             <Layers3 className="h-5 w-5" />
           </div>
         </div>
@@ -251,8 +251,8 @@ export function CreateVideoContent({ categories, classrooms, modules }: CreateVi
         </div>
 
         <div className="mt-3 min-h-4">
-          {moduleError ? <p className="text-xs text-[#c05252] dark:text-[#ffb4b4]">{moduleError}</p> : null}
-          {moduleMessage ? <p className="text-xs text-[#1b7f62] dark:text-[#8fe0b7]">{moduleMessage}</p> : null}
+          {moduleError ? <p className="text-xs text-[#c05252]">{moduleError}</p> : null}
+          {moduleMessage ? <p className="text-xs text-[#1b7f62]">{moduleMessage}</p> : null}
         </div>
 
         <Button type="submit" disabled={loadingModule} className="mt-4 w-full">
@@ -264,10 +264,10 @@ export function CreateVideoContent({ categories, classrooms, modules }: CreateVi
       <form ref={lessonFormRef} action={handleLessonSubmit} className={panelClassName}>
         <div className="flex items-start justify-between gap-3">
           <div>
-            <p className="text-sm font-semibold text-[#5a69a1] dark:text-[#9fb0d8]">Conte\u00FAdo</p>
-            <h2 className="mt-1 text-lg font-semibold text-[#22347e] dark:text-[#f3f7ff]">Nova videoaula</h2>
+            <p className="text-sm font-semibold text-[var(--em-text-soft)]">Conte\u00FAdo</p>
+            <h2 className="mt-1 text-lg font-semibold text-[var(--em-ink)]">Nova videoaula</h2>
           </div>
-          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#fff1eb] text-[#ff7f32] dark:bg-[#3b231d] dark:text-[#fdba74]">
+          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[var(--em-peach)] text-[#ff7f32]">
             <Film className="h-5 w-5" />
           </div>
         </div>
@@ -293,7 +293,7 @@ export function CreateVideoContent({ categories, classrooms, modules }: CreateVi
             name="moduleId"
             value={lessonModuleId}
             onChange={(event) => setLessonModuleId(event.target.value)}
-            className={`${selectClassName} disabled:cursor-not-allowed disabled:bg-[#f3f5ff] disabled:text-[#8a93b8] dark:disabled:bg-[#18233a] dark:disabled:text-[#7f93bb]`}
+            className={`${selectClassName} disabled:cursor-not-allowed disabled:bg-[#f3f5ff] disabled:text-[#8a93b8]`}
             disabled={!lessonClassroomId || moduleOptions.length === 0}
           >
             <option value="">Sem m\u00F3dulo</option>
@@ -318,8 +318,8 @@ export function CreateVideoContent({ categories, classrooms, modules }: CreateVi
         </div>
 
         <div className="mt-3 min-h-4">
-          {lessonError ? <p className="text-xs text-[#c05252] dark:text-[#ffb4b4]">{lessonError}</p> : null}
-          {lessonMessage ? <p className="text-xs text-[#1b7f62] dark:text-[#8fe0b7]">{lessonMessage}</p> : null}
+          {lessonError ? <p className="text-xs text-[#c05252]">{lessonError}</p> : null}
+          {lessonMessage ? <p className="text-xs text-[#1b7f62]">{lessonMessage}</p> : null}
         </div>
 
         <Button type="submit" disabled={loadingLesson} className="mt-4 w-full">

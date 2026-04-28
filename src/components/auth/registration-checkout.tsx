@@ -6,6 +6,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { Check, Copy, CreditCard, ExternalLink, Loader2, QrCode, ShieldCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import '@/components/mockups/escreva-mais/_group.css';
 
 type PaymentMethod = 'PIX' | 'CARD';
 
@@ -317,15 +318,15 @@ export function RegistrationCheckout({
 
   return (
     <div className="grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
-      <section className="rounded-[30px] border border-[#d9def8] bg-white/92 p-5 shadow-[0_22px_60px_rgba(74,73,140,0.1)] dark:border-slate-700 dark:bg-slate-950/92 dark:shadow-[0_22px_60px_rgba(0,0,0,0.32)] sm:p-6">
+      <section className="em-card-hard bg-white p-5 sm:p-6">
         <div className="flex items-start gap-3">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,#eef2ff_0%,#fff1eb_100%)] text-[#4250d4] dark:bg-slate-800 dark:text-indigo-200">
+          <div className="flex aspect-square h-12 w-12 shrink-0 items-center justify-center rounded-full border-[1.5px] border-[var(--em-ink)] bg-[var(--em-mint)] text-[var(--em-ink)] shadow-[2px_2px_0_0_#0E0F12]">
             <ShieldCheck className="h-5 w-5" />
           </div>
           <div>
-            <p className="text-sm font-semibold text-[#5a69a1] dark:text-indigo-200">Pagamento seguro</p>
-            <h2 className="mt-1 text-xl font-semibold text-[#22347e] dark:text-white">Escolha como deseja pagar</h2>
-            <p className="mt-2 text-sm leading-7 text-[#5f6d98] dark:text-slate-300">
+            <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-[var(--em-text-soft)]">Pagamento seguro</p>
+            <h2 className="mt-1 text-2xl font-extrabold text-[var(--em-ink)]">Escolha como deseja pagar</h2>
+            <p className="mt-2 text-sm font-semibold leading-7 text-[var(--em-text-soft)]">
               Seus dados de pagamento não são armazenados na plataforma. O processamento acontece em ambiente seguro do provedor.
             </p>
           </div>
@@ -341,19 +342,19 @@ export function RegistrationCheckout({
                 type="button"
                 onClick={() => handleMethodSelect(method.value)}
                 className={cn(
-                  'rounded-[24px] border px-4 py-4 text-left transition-colors',
+                  'rounded-[22px] border-[1.5px] px-4 py-4 text-left transition-all',
                   active
-                    ? 'border-[#bfc9ff] bg-[linear-gradient(135deg,#eef2ff_0%,#fff4ee_100%)] dark:border-indigo-400 dark:bg-[linear-gradient(135deg,rgba(49,65,191,0.34),rgba(255,127,50,0.12))]'
-                    : 'border-[#dde3fb] bg-[#fbfcff] hover:border-[#cfd6ff] dark:border-slate-700 dark:bg-slate-900 dark:hover:border-indigo-400/70',
+                    ? 'border-[var(--em-ink)] bg-[var(--em-yellow-soft)] shadow-[4px_4px_0_0_#0E0F12]'
+                    : 'border-[var(--em-border-strong)] bg-[var(--em-bg)] hover:border-[var(--em-ink)] hover:bg-white',
                 )}
               >
                 <div className="flex items-start gap-3">
-                  <div className={cn('mt-0.5 flex h-10 w-10 items-center justify-center rounded-2xl', active ? 'bg-white text-[#4250d4] dark:bg-indigo-500 dark:text-white' : 'bg-[#eef2ff] text-[#6072dd] dark:bg-slate-800 dark:text-indigo-200')}>
+                  <div className={cn('mt-0.5 flex aspect-square h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[var(--em-ink)]', active ? 'bg-white text-[var(--em-ink)] shadow-[2px_2px_0_0_#0E0F12]' : 'bg-white text-[var(--em-text-soft)]')}>
                     <Icon className="h-4 w-4" />
                   </div>
                   <div>
-                    <p className="text-sm font-semibold text-[#22347e] dark:text-white">{method.label}</p>
-                    <p className="mt-1 text-xs leading-6 text-[#61719b] dark:text-slate-300">{method.description}</p>
+                    <p className="text-sm font-extrabold text-[var(--em-ink)]">{method.label}</p>
+                    <p className="mt-1 text-xs font-semibold leading-6 text-[var(--em-text-soft)]">{method.description}</p>
                   </div>
                 </div>
               </button>
@@ -362,80 +363,80 @@ export function RegistrationCheckout({
         </div>
 
         <div className="mt-6 space-y-3">
-          <label className="flex items-start gap-3 rounded-[22px] border border-[#dde3fb] bg-[#fbfcff] px-4 py-4 text-sm text-[#22347e] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
+          <label className="flex items-start gap-3 rounded-[22px] border-[1.5px] border-[var(--em-border-strong)] bg-[var(--em-cream)] px-4 py-4 text-sm text-[var(--em-ink)] transition-colors focus-within:border-[var(--em-ink)]">
             <input
               type="checkbox"
               checked={acceptedPolicies}
               onChange={(event) => setAcceptedPolicies(event.target.checked)}
-              className="mt-1 h-4 w-4 accent-[#4250d4] dark:accent-indigo-400"
+              className="mt-1 h-4 w-4 accent-[var(--em-ink)]"
             />
             <span>
-              <span className="block font-semibold">
+              <span className="block font-extrabold">
                 Concordo com os{' '}
-                <Link href="/termos-de-servico" target="_blank" className="text-[#4250d4] underline decoration-[#cfd6ff] underline-offset-4 dark:text-indigo-200 dark:decoration-indigo-300/50">
+                <Link href="/termos-de-servico" target="_blank" className="text-[var(--em-ink)] underline decoration-[var(--em-yellow)] decoration-2 underline-offset-4">
                   termos de serviço
                 </Link>
                 , com a{' '}
-                <Link href="/privacidade" target="_blank" className="text-[#4250d4] underline decoration-[#cfd6ff] underline-offset-4 dark:text-indigo-200 dark:decoration-indigo-300/50">
+                <Link href="/privacidade" target="_blank" className="text-[var(--em-ink)] underline decoration-[var(--em-yellow)] decoration-2 underline-offset-4">
                   política de privacidade e LGPD
                 </Link>{' '}
                 e com a{' '}
-                <Link href="/politica-de-cookies" target="_blank" className="text-[#4250d4] underline decoration-[#cfd6ff] underline-offset-4 dark:text-indigo-200 dark:decoration-indigo-300/50">
+                <Link href="/politica-de-cookies" target="_blank" className="text-[var(--em-ink)] underline decoration-[var(--em-yellow)] decoration-2 underline-offset-4">
                   política de cookies
                 </Link>
               </span>
-              <span className="mt-1 block text-xs leading-6 text-[#61719b] dark:text-slate-300">
+              <span className="mt-1 block text-xs font-semibold leading-6 text-[var(--em-text-soft)]">
                 Autorizo o uso dos meus dados para cadastro, cobrança e suporte. O acesso é liberado após a confirmação do pagamento pelo provedor escolhido.
               </span>
             </span>
           </label>
         </div>
 
-        {error ? <p className="mt-4 rounded-2xl border border-[#ffd0cf] bg-[#fff1f1] px-4 py-3 text-sm text-[#b14545] dark:border-red-400/40 dark:bg-red-950/35 dark:text-red-100">{error}</p> : null}
+        {error ? <p className="mt-4 rounded-2xl border-[1.5px] border-[var(--em-ink)] bg-[var(--em-rose)] px-4 py-3 text-sm font-bold text-[var(--em-ink)]">{error}</p> : null}
 
         {selectedMethod === 'CARD' ? (
-          <div className="mt-5 rounded-[24px] border border-[#c9d2ff] bg-[#f7f9ff] p-4 text-[#22347e] dark:border-indigo-400/45 dark:bg-slate-900 dark:text-slate-100">
+          <div className="mt-5 rounded-[24px] border-[1.5px] border-[var(--em-ink)] bg-[var(--em-bg)] p-4 text-[var(--em-ink)] shadow-[2px_2px_0_0_#0E0F12]">
             {!mercadoPagoPublicKey ? (
-              <p className="rounded-2xl border border-[#ffd0cf] bg-[#fff1f1] px-4 py-3 text-sm text-[#b14545] dark:border-red-400/40 dark:bg-red-950/35 dark:text-red-100">
+              <p className="rounded-2xl border border-[var(--em-ink)] bg-[var(--em-rose)] px-4 py-3 text-sm font-bold text-[var(--em-ink)]">
                 Checkout Bricks ainda não está configurado. Defina NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY no ambiente da Vercel.
               </p>
             ) : !cardPaymentAvailable ? (
-              <p className="rounded-2xl border border-[#ffe5bf] bg-[#fff7ea] px-4 py-3 text-sm text-[#996515] dark:border-amber-400/40 dark:bg-amber-950/35 dark:text-amber-100">
+              <p className="rounded-2xl border border-[var(--em-ink)] bg-[var(--em-yellow-soft)] px-4 py-3 text-sm font-bold text-[var(--em-ink)]">
                 Pagamento por cartão está disponível a partir de {formatCurrencyFromCents(MIN_CARD_PAYMENT_AMOUNT_IN_CENTS)}. O valor atual é {totalLabel}.
               </p>
             ) : !acceptedPolicies ? (
-              <p className="rounded-2xl border border-[#ffe5bf] bg-[#fff7ea] px-4 py-3 text-sm text-[#996515] dark:border-amber-400/40 dark:bg-amber-950/35 dark:text-amber-100">
+              <p className="rounded-2xl border border-[var(--em-ink)] bg-[var(--em-yellow-soft)] px-4 py-3 text-sm font-bold text-[var(--em-ink)]">
                 Aceite os termos e políticas para carregar o formulário seguro do cartão.
               </p>
             ) : (
               <>
                 {!cardBrickReady ? (
-                  <p className="rounded-2xl border border-[#c9d2ff] bg-white px-3 py-2 text-xs font-semibold text-[#4250d4] dark:border-indigo-400/45 dark:bg-slate-950 dark:text-indigo-200">
+                  <p className="rounded-2xl border border-[var(--em-border-strong)] bg-white px-3 py-2 text-xs font-extrabold text-[var(--em-ink)]">
                     Carregando formulário seguro...
                   </p>
                 ) : null}
                 <div id="cardPaymentBrick_container" />
                 {loading ? (
-                  <p className="mt-3 rounded-2xl border border-[#c9d2ff] bg-white px-3 py-2 text-xs font-semibold text-[#4250d4] dark:border-indigo-400/45 dark:bg-slate-950 dark:text-indigo-200">
+                  <p className="mt-3 rounded-2xl border border-[var(--em-border-strong)] bg-white px-3 py-2 text-xs font-extrabold text-[var(--em-ink)]">
                     Processando pagamento...
                   </p>
                 ) : null}
                 {paymentStatusMessage ? (
-                  <p className="mt-3 rounded-2xl border border-[#c9d2ff] bg-white px-3 py-2 text-xs font-semibold text-[#4250d4] dark:border-indigo-400/45 dark:bg-slate-950 dark:text-indigo-200">
+                  <p className="mt-3 rounded-2xl border border-[var(--em-border-strong)] bg-white px-3 py-2 text-xs font-extrabold text-[var(--em-ink)]">
                     {paymentStatusMessage}
                   </p>
                 ) : null}
-                <p className="mt-3 text-xs leading-5 text-[#61719b] dark:text-slate-300">
+                <p className="mt-3 text-xs font-semibold leading-5 text-[var(--em-text-soft)]">
                   Cartões de teste do Mercado Pago funcionam somente com credenciais TEST. Em produção, use um cartão real.
                 </p>
               </>
             )}
           </div>
         ) : pixPayment ? (
-          <div className="mt-5 rounded-[24px] border border-[#c9d2ff] bg-[#f7f9ff] p-4 text-[#22347e] dark:border-indigo-400/45 dark:bg-slate-900 dark:text-slate-100">
+          <div className="mt-5 rounded-[24px] border-[1.5px] border-[var(--em-ink)] bg-[var(--em-cream)] p-4 text-[var(--em-ink)] shadow-[2px_2px_0_0_#0E0F12]">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
               {pixPayment.qrCodeBase64 ? (
-                <div className="mx-auto flex h-44 w-44 shrink-0 items-center justify-center rounded-[20px] border border-[#dde3fb] bg-white p-3 dark:border-slate-600 dark:bg-white">
+                <div className="mx-auto flex h-44 w-44 shrink-0 items-center justify-center rounded-[20px] border-[1.5px] border-[var(--em-ink)] bg-white p-3 shadow-[4px_4px_0_0_#0E0F12]">
                   <Image
                     src={`data:image/png;base64,${pixPayment.qrCodeBase64}`}
                     alt="QR Code Pix"
@@ -448,12 +449,12 @@ export function RegistrationCheckout({
               ) : null}
 
               <div className="min-w-0 flex-1">
-                <p className="text-sm font-semibold text-[#22347e] dark:text-white">Pix gerado com sucesso</p>
-                <p className="mt-1 text-xs leading-6 text-[#61719b] dark:text-slate-300">
+                <p className="text-sm font-extrabold text-[var(--em-ink)]">Pix gerado com sucesso</p>
+                <p className="mt-1 text-xs font-semibold leading-6 text-[var(--em-text-soft)]">
                   Escaneie o QR Code ou use o código copia e cola. A conta será liberada automaticamente depois da confirmação do pagamento.
                 </p>
                 {paymentStatusMessage ? (
-                  <p className="mt-3 rounded-2xl border border-[#c9d2ff] bg-white px-3 py-2 text-xs font-semibold text-[#4250d4] dark:border-indigo-400/45 dark:bg-slate-950 dark:text-indigo-200">
+                  <p className="mt-3 rounded-2xl border border-[var(--em-border-strong)] bg-white px-3 py-2 text-xs font-extrabold text-[var(--em-ink)]">
                     {paymentStatusMessage}
                   </p>
                 ) : null}
@@ -463,7 +464,7 @@ export function RegistrationCheckout({
                     <textarea
                       readOnly
                       value={pixPayment.qrCode}
-                      className="h-24 w-full resize-none rounded-2xl border border-[#c9d2ff] bg-white px-3 py-2 text-xs leading-5 text-[#24305f] outline-none dark:border-slate-600 dark:bg-slate-950 dark:text-slate-100"
+                      className="h-24 w-full resize-none rounded-2xl border-[1.5px] border-[var(--em-border-strong)] bg-white px-3 py-2 text-xs font-semibold leading-5 text-[var(--em-ink)] outline-none focus:border-[var(--em-ink)]"
                     />
                     <Button type="button" variant="secondary" onClick={handleCopyPixCode} className="w-full sm:w-auto">
                       {copySuccess ? <Check className="mr-2 h-4 w-4" /> : <Copy className="mr-2 h-4 w-4" />}
@@ -477,7 +478,7 @@ export function RegistrationCheckout({
                     href={pixPayment.ticketUrl}
                     target="_blank"
                     rel="noreferrer"
-                    className="mt-3 inline-flex items-center rounded-xl border border-[#c9d2ff] bg-white px-4 py-2 text-sm font-semibold text-[#4250d4] transition-colors hover:border-[#9daaff] dark:border-slate-600 dark:bg-slate-950 dark:text-indigo-200 dark:hover:border-indigo-400"
+                    className="mt-3 inline-flex items-center rounded-xl border-[1.5px] border-[var(--em-ink)] bg-white px-4 py-2 text-sm font-extrabold text-[var(--em-ink)] shadow-[2px_2px_0_0_#0E0F12] transition-colors hover:bg-[var(--em-yellow-soft)]"
                   >
                     Abrir Pix no Mercado Pago
                     <ExternalLink className="ml-2 h-4 w-4" />
@@ -494,28 +495,31 @@ export function RegistrationCheckout({
         )}
       </section>
 
-      <aside className="rounded-[30px] border border-[#d9def8] bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(247,248,255,0.92))] p-5 shadow-[0_22px_60px_rgba(74,73,140,0.1)] dark:border-slate-700 dark:bg-[linear-gradient(180deg,rgba(15,23,42,0.96),rgba(17,24,39,0.92))] dark:shadow-[0_22px_60px_rgba(0,0,0,0.32)] sm:p-6">
-        <p className="text-sm font-semibold text-[#5a69a1] dark:text-indigo-200">Resumo</p>
-        <h2 className="mt-2 text-xl font-semibold text-[#22347e] dark:text-white">{role === 'STUDENT' ? 'Assinatura do aluno' : 'Cadastro do professor'}</h2>
+      <aside className="em-card-hard bg-white p-5 sm:p-6">
+        <div className="mb-5 inline-flex items-center gap-2 rounded-full border-[1.5px] border-[var(--em-ink)] bg-[var(--em-lavender)] px-3 py-1 text-[11px] font-extrabold uppercase tracking-[0.16em] shadow-[2px_2px_0_0_#0E0F12]">
+          <ShieldCheck className="h-3.5 w-3.5" />
+          Resumo
+        </div>
+        <h2 className="text-2xl font-extrabold text-[var(--em-ink)]">{role === 'STUDENT' ? 'Assinatura do aluno' : 'Cadastro do professor'}</h2>
 
-        <div className="mt-5 space-y-3 rounded-[24px] border border-[#dde3fb] bg-white/90 p-4 dark:border-slate-700 dark:bg-slate-950/70">
+        <div className="mt-5 space-y-4 rounded-[22px] border-[1.5px] border-[var(--em-ink)] bg-[var(--em-cream)] p-4">
           {planLabel ? (
             <div className="flex items-center justify-between gap-3 text-sm">
-              <span className="text-[#61719b] dark:text-slate-300">Plano</span>
-              <span className="text-right font-semibold text-[#22347e] dark:text-white">{planLabel}</span>
+              <span className="font-bold text-[var(--em-text-soft)]">Plano</span>
+              <span className="text-right font-extrabold text-[var(--em-ink)]">{planLabel}</span>
             </div>
           ) : null}
           <div className="flex items-center justify-between gap-3 text-sm">
-            <span className="text-[#61719b] dark:text-slate-300">Total</span>
-            <span className="text-lg font-extrabold tracking-[-0.03em] text-[#22347e] dark:text-white">{totalLabel}</span>
+            <span className="font-bold text-[var(--em-text-soft)]">Total</span>
+            <span className="rounded-xl border-[1.5px] border-[var(--em-ink)] bg-[var(--em-yellow)] px-3 py-1 text-lg font-extrabold text-[var(--em-ink)] shadow-[2px_2px_0_0_#0E0F12]">{totalLabel}</span>
           </div>
         </div>
 
-        <div className="mt-5 space-y-3 text-sm text-[#5f6d98] dark:text-slate-300">
-          <p className="rounded-[22px] border border-[#dde3fb] bg-white/80 px-4 py-4 dark:border-slate-700 dark:bg-slate-900">
+        <div className="mt-5 space-y-3 text-sm font-semibold text-[var(--em-text-soft)]">
+          <p className="rounded-[22px] border border-[var(--em-border-strong)] bg-[var(--em-mint)] px-4 py-4 text-[var(--em-ink)]">
             Pix e cartão são processados sem redirecionar o aluno para a tela de login do Mercado Pago.
           </p>
-          <p className="rounded-[22px] border border-[#dde3fb] bg-white/80 px-4 py-4 dark:border-slate-700 dark:bg-slate-900">
+          <p className="rounded-[22px] border border-[var(--em-border-strong)] bg-[var(--em-bg)] px-4 py-4">
             Assim que o provedor confirmar o pagamento, a conta é liberada automaticamente.
           </p>
         </div>

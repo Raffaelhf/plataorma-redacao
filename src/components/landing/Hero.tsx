@@ -32,12 +32,12 @@ export function Hero({ whatsappHref }: HeroProps) {
           </Link>
           <Button
             variant="secondary"
-            className="group inline-flex h-14 items-center rounded-full border border-[#d8ddff]/70 bg-[linear-gradient(135deg,rgba(249,250,255,0.96),rgba(234,239,255,0.9))] px-3 pr-6 text-[#24329c] shadow-[0_22px_44px_rgba(17,21,78,0.16)] backdrop-blur-md hover:border-white hover:bg-[linear-gradient(135deg,#ffffff,rgba(240,243,255,0.98))] hover:text-[#1f2b86] sm:h-[60px] sm:pr-7 dark:border-white/14 dark:bg-[linear-gradient(135deg,rgba(14,22,48,0.92),rgba(24,38,82,0.9))] dark:text-white dark:shadow-[0_22px_44px_rgba(0,0,0,0.3)] dark:hover:border-white/24 dark:hover:bg-[linear-gradient(135deg,rgba(18,28,60,0.96),rgba(31,46,98,0.94))] dark:hover:text-white"
+            className="group inline-flex h-14 items-center rounded-full border border-[#d8ddff]/70 bg-[linear-gradient(135deg,rgba(249,250,255,0.96),rgba(234,239,255,0.9))] px-3 pr-6 text-[#24329c] shadow-[0_22px_44px_rgba(17,21,78,0.16)] backdrop-blur-md hover:border-white hover:bg-[linear-gradient(135deg,#ffffff,rgba(240,243,255,0.98))] hover:text-[#1f2b86] sm:h-[60px] sm:pr-7"
           >
-            <span className="mr-4 flex h-10 w-10 items-center justify-center rounded-full bg-[linear-gradient(135deg,#3f4bd5_0%,#5e67ea_100%)] text-white shadow-[0_10px_22px_rgba(63,75,213,0.28)] transition-transform duration-200 group-hover:scale-105 dark:bg-[linear-gradient(135deg,#5b6cff_0%,#7f8aff_100%)] dark:shadow-[0_12px_26px_rgba(91,108,255,0.36)]">
+            <span className="mr-4 flex h-10 w-10 items-center justify-center rounded-full bg-[linear-gradient(135deg,#3f4bd5_0%,#5e67ea_100%)] text-white shadow-[0_10px_22px_rgba(63,75,213,0.28)] transition-transform duration-200 group-hover:scale-105">
               <Play className="ml-0.5 h-4 w-4 fill-current" />
             </span>
-            <span className="flex items-center text-[1rem] font-bold leading-none sm:text-[1.02rem] dark:text-white">
+            <span className="flex items-center text-[1rem] font-bold leading-none sm:text-[1.02rem]">
               Ver vídeo
             </span>
           </Button>

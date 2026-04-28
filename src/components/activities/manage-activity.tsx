@@ -38,7 +38,7 @@ function TextArea(props: TextareaHTMLAttributes<HTMLTextAreaElement>) {
   return (
     <textarea
       {...props}
-      className="w-full rounded-2xl border border-[var(--input-border)] bg-[var(--input-bg)] px-4 py-3 text-sm text-[var(--input-text)] placeholder:text-[var(--input-placeholder)] placeholder:opacity-100 focus:border-[#7b86f8] focus:outline-none focus:ring-2 focus:ring-[#7b86f8]/20 dark:[color-scheme:dark] dark:focus:border-[#7d8eff] dark:focus:ring-[#6278ff]/25"
+      className="theme-field w-full rounded-2xl px-4 py-3 text-sm"
     />
   );
 }
@@ -173,15 +173,15 @@ export function ManageActivity({ activity }: ManageActivityProps) {
   }
 
   return (
-    <section className="rounded-[30px] border border-[#dde3fb] bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(246,248,255,0.94))] p-5 shadow-[0_20px_50px_rgba(74,73,140,0.1)] dark:border-slate-700/80 dark:bg-[linear-gradient(180deg,rgba(10,18,31,0.96),rgba(14,23,42,0.92))] dark:shadow-[0_20px_50px_rgba(0,0,0,0.24)] sm:p-6">
+    <section className="em-card-hard bg-white p-5 sm:p-6">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <p className="text-sm font-semibold text-[#5a69a1] dark:text-[#a9bbf0]">Editar atividade</p>
-          <p className="mt-1 text-sm leading-6 text-[#6d79a5] dark:text-[#b3c3e6]">
+          <p className="text-sm font-extrabold text-[var(--em-ink)]">Editar atividade</p>
+          <p className="mt-1 text-sm leading-6 text-[var(--em-text-soft)]">
             Ajuste os campos do rascunho e publique quando quiser disponibilizar a proposta para os alunos.
           </p>
         </div>
-        <span className="inline-flex w-fit rounded-full bg-[#eef2ff] px-3 py-1 text-xs font-semibold text-[#4250d4] dark:bg-[#1d2b4d] dark:text-[#c8d5ff]">
+        <span className="inline-flex w-fit rounded-full border border-[var(--em-border-strong)] bg-[var(--em-mint)] px-3 py-1 text-xs font-extrabold text-[var(--em-ink)]">
           {status === 'PUBLISHED' ? 'Publicado' : 'Rascunho'}
         </span>
       </div>
@@ -202,12 +202,12 @@ export function ManageActivity({ activity }: ManageActivityProps) {
           <Input value={dueDate} onChange={(event) => setDueDate(event.target.value)} type="date" />
         </div>
 
-        <div className="rounded-2xl border border-[#dde3fb] bg-white/70 p-4 dark:border-slate-700/80 dark:bg-[#0d172b]/80">
-          <div className="flex items-center gap-2 text-sm font-semibold text-[#22347e] dark:text-[#eef4ff]">
+        <div className="theme-field-panel rounded-2xl p-4">
+          <div className="flex items-center gap-2 text-sm font-extrabold text-[var(--em-ink)]">
             <Paperclip className="h-4 w-4" />
             Materiais de apoio
           </div>
-          <p className="mt-1 text-sm text-[#6d79a5] dark:text-[#b3c3e6]">
+          <p className="mt-1 text-sm text-[var(--em-text-soft)]">
             Anexe videos, PDF, Word ou PowerPoint para acompanhar a proposta. Total por envio: ate {getServerlessUploadLimitLabel()}.
           </p>
           <input
@@ -216,9 +216,9 @@ export function ManageActivity({ activity }: ManageActivityProps) {
             multiple
             accept={ACTIVITY_ATTACHMENT_ACCEPT}
             onChange={handleAttachmentSelection}
-            className="mt-3 block w-full text-sm text-[var(--input-text)] file:mr-3 file:rounded-full file:border-0 file:bg-[#eef2ff] file:px-4 file:py-2 file:font-semibold file:text-[#4250d4] hover:file:bg-[#dfe7ff] dark:file:bg-[#1d2b4d] dark:file:text-[#d6e2ff] dark:hover:file:bg-[#26385f]"
+            className="mt-3 block w-full text-sm text-[var(--em-ink)] file:mr-3 file:rounded-xl file:border file:border-[var(--em-ink)] file:bg-[var(--em-yellow)] file:px-4 file:py-2 file:font-extrabold file:text-[var(--em-ink)]"
           />
-          <p className="mt-2 text-xs text-[#6d79a5] dark:text-[#9fb0d8]">
+          <p className="mt-2 text-xs text-[var(--em-text-soft)]">
             Ate {ACTIVITY_ATTACHMENT_MAX_FILES} anexos por atividade.
           </p>
 
@@ -234,18 +234,18 @@ export function ManageActivity({ activity }: ManageActivityProps) {
                     key={attachment.id}
                     className={`flex items-center justify-between gap-3 rounded-xl border px-3 py-2 ${
                       isMarkedForRemoval
-                        ? 'border-[#ffd0cf] bg-[#fff1f1] dark:border-[rgba(111,52,58,0.8)] dark:bg-[rgba(69,31,37,0.42)]'
-                        : 'border-[#dde3fb] bg-white/90 dark:border-slate-700/80 dark:bg-[#10192d]'
+                        ? 'border-[#ffd0cf] bg-[#fff1f1]'
+                        : 'border-[var(--em-border-strong)] bg-white/90'
                     }`}
                   >
                     <div className="min-w-0">
-                      <div className="flex items-center gap-2 text-sm font-semibold text-[#22347e] dark:text-[#eef4ff]">
+                      <div className="flex items-center gap-2 text-sm font-semibold text-[var(--em-ink)]">
                         <AttachmentIcon className="h-4 w-4 shrink-0" />
                         <a href={`/api/activity-attachments/${attachment.id}`} target="_blank" rel="noreferrer" className="truncate hover:underline">
                           {attachment.fileName}
                         </a>
                       </div>
-                      <p className="text-xs text-[#6d79a5] dark:text-[#9fb0d8]">
+                      <p className="text-xs text-[var(--em-text-soft)]">
                         {attachmentKind} • {formatFileSize(attachment.sizeInBytes)}
                         {isMarkedForRemoval ? ' • Sera removido ao salvar' : ''}
                       </p>
@@ -255,8 +255,8 @@ export function ManageActivity({ activity }: ManageActivityProps) {
                       onClick={() => toggleExistingAttachmentRemoval(attachment.id)}
                       className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold ${
                         isMarkedForRemoval
-                          ? 'bg-white text-[#b14545] dark:bg-[#221319] dark:text-[#ffb4b4]'
-                          : 'bg-[#eef2ff] text-[#4250d4] dark:bg-[#1d2b4d] dark:text-[#c8d5ff]'
+                          ? 'bg-white text-[#b14545]'
+                          : 'bg-[var(--em-mint)] text-[var(--em-ink)]'
                       }`}
                     >
                       <Trash2 className="h-3.5 w-3.5" />
@@ -275,20 +275,20 @@ export function ManageActivity({ activity }: ManageActivityProps) {
                 const AttachmentIcon = attachmentKind === 'Video' ? FileVideo : FileText;
 
                 return (
-                  <div key={`${attachment.name}-${attachment.lastModified}-${index}`} className="flex items-center justify-between gap-3 rounded-xl border border-[#dde3fb] bg-white/90 px-3 py-2 dark:border-slate-700/80 dark:bg-[#10192d]">
+                  <div key={`${attachment.name}-${attachment.lastModified}-${index}`} className="flex items-center justify-between gap-3 rounded-xl border border-[var(--em-border-strong)] bg-white/90 px-3 py-2">
                     <div className="min-w-0">
-                      <div className="flex items-center gap-2 text-sm font-semibold text-[#22347e] dark:text-[#eef4ff]">
+                      <div className="flex items-center gap-2 text-sm font-semibold text-[var(--em-ink)]">
                         <AttachmentIcon className="h-4 w-4 shrink-0" />
                         <span className="truncate">{attachment.name}</span>
                       </div>
-                      <p className="text-xs text-[#6d79a5] dark:text-[#9fb0d8]">
+                      <p className="text-xs text-[var(--em-text-soft)]">
                         {attachmentKind} • {formatFileSize(attachment.size)} • Sera enviado ao salvar
                       </p>
                     </div>
                     <button
                       type="button"
                       onClick={() => removeNewAttachment(index)}
-                      className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-[#eef2ff] text-[#4250d4] transition-colors hover:bg-[#dfe7ff] dark:bg-[#1d2b4d] dark:text-[#d6e2ff] dark:hover:bg-[#26385f]"
+                      className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-[var(--em-mint)] text-[var(--em-ink)] transition-colors hover:bg-[#dfe7ff]"
                       aria-label={`Remover ${attachment.name}`}
                     >
                       <X className="h-4 w-4" />
@@ -301,32 +301,32 @@ export function ManageActivity({ activity }: ManageActivityProps) {
         </div>
 
         <div className="flex flex-col gap-3 text-sm sm:flex-row sm:items-center">
-          <label className="flex items-center gap-2 text-[#42507b] dark:text-[#d8e3ff]">
+          <label className="flex items-center gap-2 text-[#42507b]">
             <input
               type="radio"
               name="status"
               value="DRAFT"
               checked={status === 'DRAFT'}
               onChange={() => setStatus('DRAFT')}
-              className="accent-[#4250d4]"
+              className="accent-[var(--em-green-deep)]"
             />
             Manter como rascunho
           </label>
-          <label className="flex items-center gap-2 text-[#42507b] dark:text-[#d8e3ff]">
+          <label className="flex items-center gap-2 text-[#42507b]">
             <input
               type="radio"
               name="status"
               value="PUBLISHED"
               checked={status === 'PUBLISHED'}
               onChange={() => setStatus('PUBLISHED')}
-              className="accent-[#4250d4]"
+              className="accent-[var(--em-green-deep)]"
             />
             Publicar para os alunos
           </label>
         </div>
 
-        {error ? <p className="text-sm text-[#b54752] dark:text-[#ffb4b4]">{error}</p> : null}
-        {success ? <p className="text-sm text-[#227357] dark:text-[#8fe0b7]">{success}</p> : null}
+        {error ? <p className="text-sm text-[#b54752]">{error}</p> : null}
+        {success ? <p className="text-sm text-[#227357]">{success}</p> : null}
 
         <div className="flex flex-col gap-3 sm:flex-row">
           <Button type="submit" disabled={loadingAction !== null} className="sm:flex-1">
@@ -350,7 +350,7 @@ export function ManageActivity({ activity }: ManageActivityProps) {
           variant="ghost"
           disabled={loadingAction !== null}
           onClick={() => void deleteActivity()}
-          className="w-full border-[#ffd0cf] bg-[#fff1f1] text-[#b14545] hover:bg-[#ffe7e7] dark:border-[rgba(111,52,58,0.8)] dark:bg-[rgba(69,31,37,0.42)] dark:text-[#ffb4b4] dark:hover:bg-[rgba(88,39,46,0.52)]"
+          className="w-full border-[var(--em-ink)] bg-[var(--em-rose)] text-[var(--em-ink)] hover:bg-[var(--em-rose)]"
         >
           {loadingAction === 'delete' ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Trash2 className="mr-2 h-4 w-4" />}
           Excluir atividade

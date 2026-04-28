@@ -1,38 +1,24 @@
 'use client';
 
-import { useTheme } from '@/components/providers/theme-provider';
 import { Line, LineChart, CartesianGrid, ResponsiveContainer, XAxis, YAxis, Tooltip } from 'recharts';
 import { Card } from '../ui/card';
 
 type Point = { label: string; score: number };
 
-export function PerformanceChart({ data, light = false }: { data: Point[]; light?: boolean }) {
-  const { theme } = useTheme();
-  const themedLight = light && theme !== 'dark';
-
+export function PerformanceChart({ data }: { data: Point[] }) {
   return (
-    <Card
-      className={
-        themedLight
-          ? 'h-72 border-[#dde3fb] bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(248,249,255,0.9))] shadow-[0_20px_50px_rgba(74,73,140,0.1)] sm:h-80'
-          : 'h-72 sm:h-80'
-      }
-    >
-      <p className={`mb-4 text-lg font-semibold ${themedLight ? 'text-[#22347e]' : 'text-white dark:text-slate-100'}`}>Evolucao</p>
+    <Card className="h-72 bg-white sm:h-80">
+      <p className="mb-4 text-lg font-extrabold text-[var(--em-ink)]">Evolução</p>
       <ResponsiveContainer width="100%" height="100%">
         <LineChart data={data}>
-          <CartesianGrid strokeDasharray="4 4" stroke={themedLight ? '#e3e8fb' : '#334155'} />
-          <XAxis dataKey="label" stroke={themedLight ? '#7b86ae' : '#94a3b8'} tick={{ fontSize: 12 }} />
-          <YAxis domain={[0, 1000]} stroke={themedLight ? '#7b86ae' : '#94a3b8'} />
+          <CartesianGrid strokeDasharray="4 4" stroke="#d8d5ca" />
+          <XAxis dataKey="label" stroke="#6f7279" tick={{ fontSize: 12 }} />
+          <YAxis domain={[0, 1000]} stroke="#6f7279" />
           <Tooltip
-            contentStyle={
-              themedLight
-                ? { backgroundColor: '#ffffff', border: '1px solid #dce3fb', color: '#22347e', borderRadius: 16, boxShadow: '0 18px 36px rgba(74,73,140,0.12)' }
-                : { backgroundColor: '#0f172a', border: '1px solid #334155', color: '#e2e8f0', borderRadius: 16 }
-            }
+            contentStyle={{ backgroundColor: '#ffffff', border: '1.5px solid #0E0F12', color: '#0E0F12', borderRadius: 16, boxShadow: '4px 4px 0 0 #0E0F12' }}
             formatter={(val?: number) => `${val ?? 0}/1000`}
           />
-          <Line type="monotone" dataKey="score" stroke={themedLight ? '#5d50d8' : '#818cf8'} strokeWidth={3} dot={{ strokeWidth: 2, fill: themedLight ? '#ff8d34' : '#a5b4fc' }} />
+          <Line type="monotone" dataKey="score" stroke="#16A35F" strokeWidth={3} dot={{ strokeWidth: 2, fill: '#FFC93D' }} />
         </LineChart>
       </ResponsiveContainer>
     </Card>

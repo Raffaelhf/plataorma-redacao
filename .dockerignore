@@ -1,0 +1,14 @@
+.git
+.next
+.vercel
+node_modules
+npm-debug.log*
+dev-server.*.log
+.next-dev.*.log
+.codex-autosync*.log
+tsconfig.tsbuildinfo
+.env
+.env.*
+!.env.example
+.env.local
+.env.vercel.*

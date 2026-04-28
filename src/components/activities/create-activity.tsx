@@ -114,8 +114,8 @@ export function CreateActivity() {
   return (
     <form ref={formRef} onSubmit={(event) => void handleSubmit(event)} className="theme-form-surface space-y-3 rounded-2xl p-4">
       <div className="flex items-center justify-between gap-3">
-        <p className="text-sm font-semibold text-[#22347e] dark:text-[#f3f7ff]">Nova atividade</p>
-        {success && <span className="text-xs text-[#1b7f62] dark:text-[#8fe0b7]">{isDemoLogin(login) ? 'Simulado!' : 'Salvo!'}</span>}
+        <p className="text-sm font-semibold text-[var(--em-ink)]">Nova atividade</p>
+        {success && <span className="text-xs text-[#1b7f62]">{isDemoLogin(login) ? 'Simulado!' : 'Salvo!'}</span>}
       </div>
       <Input name="title" placeholder="Titulo" required />
       <TextArea name="description" placeholder="Descricao breve" required rows={2} />
@@ -130,7 +130,7 @@ export function CreateActivity() {
           <Paperclip className="h-4 w-4" />
           Materiais de apoio
         </div>
-        <p className="mt-1 text-xs leading-6 text-[#6d79a5] dark:text-[#9db2d8]">
+        <p className="mt-1 text-xs leading-6 text-[var(--em-text-soft)]">
           Anexe ate {ACTIVITY_ATTACHMENT_MAX_FILES} arquivos por atividade. Formatos aceitos: video, PDF, Word e PowerPoint. Total por envio: ate {getServerlessUploadLimitLabel()}.
         </p>
         <input
@@ -139,7 +139,7 @@ export function CreateActivity() {
           multiple
           accept={ACTIVITY_ATTACHMENT_ACCEPT}
           onChange={handleAttachmentSelection}
-          className="mt-3 block w-full text-sm text-[var(--field-text-strong)] file:mr-3 file:rounded-full file:border-0 file:bg-[#eef2ff] file:px-4 file:py-2 file:font-semibold file:text-[#4250d4] hover:file:bg-[#dfe7ff] dark:file:bg-[#1d2b4d] dark:file:text-[#d6e2ff] dark:hover:file:bg-[#26385f]"
+          className="mt-3 block w-full text-sm text-[var(--field-text-strong)] file:mr-3 file:rounded-full file:border-0 file:bg-[var(--em-mint)] file:px-4 file:py-2 file:font-semibold file:text-[var(--em-ink)] hover:file:bg-[#dfe7ff]"
         />
         {attachments.length > 0 ? (
           <div className="mt-3 space-y-2">
@@ -154,14 +154,14 @@ export function CreateActivity() {
                       <AttachmentIcon className="h-4 w-4 shrink-0" />
                       <span className="truncate">{attachment.name}</span>
                     </div>
-                    <p className="text-xs text-[#6d79a5] dark:text-[#9db2d8]">
+                    <p className="text-xs text-[var(--em-text-soft)]">
                       {attachmentKind} • {formatFileSize(attachment.size)}
                     </p>
                   </div>
                   <button
                     type="button"
                     onClick={() => removeAttachment(index)}
-                    className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-[#eef2ff] text-[#4250d4] transition-colors hover:bg-[#dfe7ff] dark:bg-[#1d2b4d] dark:text-[#d6e2ff] dark:hover:bg-[#26385f]"
+                    className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-[var(--em-mint)] text-[var(--em-ink)] transition-colors hover:bg-[#dfe7ff]"
                     aria-label={`Remover ${attachment.name}`}
                   >
                     <X className="h-4 w-4" />
@@ -181,7 +181,7 @@ export function CreateActivity() {
           <input type="radio" name="status" value="PUBLISHED" className="accent-indigo-500" /> Publicar
         </label>
       </div>
-      {error && <p className="text-xs text-[#b14545] dark:text-[#ffb4b4]">{error}</p>}
+      {error && <p className="text-xs text-[#b14545]">{error}</p>}
       <Button type="submit" disabled={loading} className="w-full">
         {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Plus className="mr-2 h-4 w-4" />} Salvar atividade
       </Button>

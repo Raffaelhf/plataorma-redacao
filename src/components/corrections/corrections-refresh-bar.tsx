@@ -29,13 +29,13 @@ export function CorrectionsRefreshBar() {
   };
 
   return (
-    <div className="flex flex-col gap-3 rounded-2xl border border-[#d9def8] bg-white/80 p-4 text-sm text-[#5a69a1] sm:flex-row sm:items-center sm:justify-between">
+    <div className="em-card-hard flex flex-col gap-3 bg-white p-4 text-sm text-[var(--em-text-soft)] sm:flex-row sm:items-center sm:justify-between">
       <p>
         A fila atualiza automaticamente a cada 15 segundos.
         {' '}
         Ultima atualizacao: {lastUpdate.toLocaleTimeString('pt-BR')}
       </p>
-      <Button type="button" onClick={handleRefresh} disabled={isPending} className="rounded-full bg-[#4250d4] text-white hover:brightness-105">
+      <Button type="button" onClick={handleRefresh} disabled={isPending}>
         {isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <RefreshCw className="mr-2 h-4 w-4" />}
         Atualizar fila
       </Button>

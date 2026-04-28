@@ -148,35 +148,35 @@ export default async function HowItWorksPage() {
           </div>
         </div>
 
-        <div className="absolute bottom-[-92px] left-1/2 h-[186px] w-[130%] -translate-x-1/2 rounded-[999px] bg-[#f7f3ff] dark:bg-[#08101d]" />
+        <div className="absolute bottom-[-92px] left-1/2 h-[186px] w-[130%] -translate-x-1/2 rounded-[999px] bg-[#f7f3ff]" />
       </section>
 
       <section className="relative px-5 pb-4 pt-14 sm:px-8 lg:px-12 lg:pt-20">
         <div className="pointer-events-none absolute inset-x-0 top-0 h-[360px] bg-[radial-gradient(circle_at_18%_26%,rgba(88,120,255,0.1),transparent_18%),radial-gradient(circle_at_82%_18%,rgba(255,149,92,0.12),transparent_16%)]" />
         <div className="relative mx-auto grid max-w-[1360px] gap-6 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] lg:items-start">
-          <section className="rounded-[32px] border border-[#dbe1fb] bg-[linear-gradient(135deg,#ffffff_0%,#f5f2ff_54%,#fff5ed_100%)] p-6 shadow-[0_22px_60px_rgba(74,73,140,0.12)] dark:border-slate-700/70 dark:bg-[linear-gradient(135deg,#0f172a_0%,#172033_54%,#241a1a_100%)] dark:shadow-[0_22px_60px_rgba(0,0,0,0.28)] sm:p-8">
-            <p className="inline-flex rounded-full border border-[#dce2fb] bg-white/84 px-4 py-2 text-sm font-semibold text-[#5160a8] dark:border-slate-600 dark:bg-slate-900/78 dark:text-indigo-200">
+          <section className="rounded-[32px] border border-[#dbe1fb] bg-[linear-gradient(135deg,#ffffff_0%,#f5f2ff_54%,#fff5ed_100%)] p-6 shadow-[0_22px_60px_rgba(74,73,140,0.12)] sm:p-8">
+            <p className="inline-flex rounded-full border border-[#dce2fb] bg-white/84 px-4 py-2 text-sm font-semibold text-[#5160a8]">
               Visao pratica
             </p>
-            <h2 className="mt-5 max-w-[12ch] text-[2rem] font-extrabold tracking-[-0.05em] text-slate-900 dark:text-slate-50 sm:text-[2.6rem]">
+            <h2 className="mt-5 max-w-[12ch] text-[2rem] font-extrabold tracking-[-0.05em] text-slate-900 sm:text-[2.6rem]">
               O programa foi desenhado para caber na rotina real.
             </h2>
-            <p className="mt-4 text-[1rem] leading-8 text-slate-600 dark:text-slate-300 sm:text-[1.05rem]">
+            <p className="mt-4 text-[1rem] leading-8 text-slate-600 sm:text-[1.05rem]">
               Em vez de uma pagina longa demais na home, esta area concentra tudo o que o aluno
               precisa entender: o que acontece, com que frequencia e como cada etapa contribui para
               a evolucao da escrita.
             </p>
 
-            <div className="mt-7 rounded-[26px] border border-[#dfe5fb] bg-white/80 p-5 shadow-[0_14px_34px_rgba(74,73,140,0.08)] dark:border-slate-700 dark:bg-slate-900/76 dark:shadow-[0_14px_34px_rgba(0,0,0,0.2)]">
+            <div className="mt-7 rounded-[26px] border border-[#dfe5fb] bg-white/80 p-5 shadow-[0_14px_34px_rgba(74,73,140,0.08)]">
               <div className="flex items-start gap-4">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#eef2ff] text-[#4350c9] dark:bg-slate-800 dark:text-indigo-200">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#eef2ff] text-[#4350c9]">
                   <PenSquare className="h-5 w-5" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold tracking-[-0.03em] text-slate-900 dark:text-slate-50">
+                  <h3 className="text-lg font-semibold tracking-[-0.03em] text-slate-900">
                     Clareza antes da matricula
                   </h3>
-                  <p className="mt-2 text-sm leading-7 text-slate-600 dark:text-slate-300">
+                  <p className="mt-2 text-sm leading-7 text-slate-600">
                     A pagina agora entrega uma leitura mais objetiva, com melhor hierarquia visual e
                     ritmo de navegacao em qualquer tela.
                   </p>
@@ -189,15 +189,15 @@ export default async function HowItWorksPage() {
             {journeySteps.map((step) => (
               <article
                 key={step.title}
-                className="rounded-[28px] border border-white/80 bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(250,250,255,0.92))] p-5 shadow-[0_18px_50px_rgba(74,73,140,0.1)] dark:border-slate-700/70 dark:bg-[linear-gradient(180deg,rgba(11,18,32,0.96),rgba(17,24,39,0.92))] dark:shadow-[0_18px_50px_rgba(0,0,0,0.24)] sm:p-6"
+                className="rounded-[28px] border border-white/80 bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(250,250,255,0.92))] p-5 shadow-[0_18px_50px_rgba(74,73,140,0.1)] sm:p-6"
               >
-                <p className="text-[0.78rem] font-extrabold uppercase tracking-[0.16em] text-[#6270c8] dark:text-indigo-200">
+                <p className="text-[0.78rem] font-extrabold uppercase tracking-[0.16em] text-[#6270c8]">
                   Jornada
                 </p>
-                <h3 className="mt-3 text-[1.2rem] font-extrabold tracking-[-0.04em] text-slate-900 dark:text-slate-50">
+                <h3 className="mt-3 text-[1.2rem] font-extrabold tracking-[-0.04em] text-slate-900">
                   {step.title}
                 </h3>
-                <p className="mt-3 text-sm leading-7 text-slate-600 dark:text-slate-300">
+                <p className="mt-3 text-sm leading-7 text-slate-600">
                   {step.description}
                 </p>
               </article>

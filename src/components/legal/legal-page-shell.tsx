@@ -39,30 +39,30 @@ export async function LegalPageShell({
           </div>
         </div>
 
-        <div className="absolute bottom-[-92px] left-1/2 h-[186px] w-[130%] -translate-x-1/2 rounded-[999px] bg-[#f7f3ff] dark:bg-[#08101d]" />
+        <div className="absolute bottom-[-92px] left-1/2 h-[186px] w-[130%] -translate-x-1/2 rounded-[999px] bg-[#f7f3ff]" />
       </section>
 
       <section className="mx-auto max-w-5xl px-5 pb-20 pt-10 sm:px-8 lg:px-12">
         <div className="space-y-6">{children}</div>
 
-        <div className="mt-8 rounded-[30px] border border-[#d9def8] bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(248,249,255,0.9))] p-5 shadow-[0_18px_48px_rgba(74,73,140,0.08)] dark:border-slate-700/70 dark:bg-[linear-gradient(180deg,rgba(11,18,32,0.96),rgba(17,24,39,0.92))] dark:shadow-[0_18px_48px_rgba(0,0,0,0.24)] sm:p-6">
-          <p className="text-sm font-semibold text-[#5a69a1] dark:text-indigo-200">Documentos relacionados</p>
+        <div className="mt-8 rounded-[30px] border border-[#d9def8] bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(248,249,255,0.9))] p-5 shadow-[0_18px_48px_rgba(74,73,140,0.08)] sm:p-6">
+          <p className="text-sm font-semibold text-[#5a69a1]">Documentos relacionados</p>
           <div className="mt-4 flex flex-wrap gap-3">
             <Link
               href="/privacidade"
-              className="rounded-full border border-[#d7defe] bg-[#f6f8ff] px-4 py-2 text-sm font-semibold text-[#22347e] transition-colors hover:bg-white dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
+              className="rounded-full border border-[#d7defe] bg-[#f6f8ff] px-4 py-2 text-sm font-semibold text-[#22347e] transition-colors hover:bg-white"
             >
               Privacidade e LGPD
             </Link>
             <Link
               href="/politica-de-cookies"
-              className="rounded-full border border-[#d7defe] bg-[#f6f8ff] px-4 py-2 text-sm font-semibold text-[#22347e] transition-colors hover:bg-white dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
+              className="rounded-full border border-[#d7defe] bg-[#f6f8ff] px-4 py-2 text-sm font-semibold text-[#22347e] transition-colors hover:bg-white"
             >
               Politica de Cookies
             </Link>
             <Link
               href="/termos-de-servico"
-              className="rounded-full border border-[#d7defe] bg-[#f6f8ff] px-4 py-2 text-sm font-semibold text-[#22347e] transition-colors hover:bg-white dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
+              className="rounded-full border border-[#d7defe] bg-[#f6f8ff] px-4 py-2 text-sm font-semibold text-[#22347e] transition-colors hover:bg-white"
             >
               Termos de Servico
             </Link>

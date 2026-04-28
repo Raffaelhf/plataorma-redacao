@@ -70,13 +70,13 @@ export function AdminUserCreator() {
     <section className="admin-card rounded-[30px] p-5 sm:p-6">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <p className="text-sm font-semibold text-[#5a69a1]">Novo cadastro</p>
-          <h2 className="mt-1 text-xl font-semibold text-[#22347e]">Criar perfil de aluno ou professor</h2>
+          <p className="text-sm font-semibold text-[var(--em-text-soft)]">Novo cadastro</p>
+          <h2 className="mt-1 text-xl font-semibold text-[var(--em-ink)]">Criar perfil de aluno ou professor</h2>
           <p className="mt-2 max-w-[42rem] text-sm leading-7 text-[#5f6d98]">
             Use esta área para cadastrar usuários manualmente. Para alunos, o plano, o Clube de Leitura e a Mentoria ficam registrados no perfil.
           </p>
         </div>
-        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,#eef2ff_0%,#fff1eb_100%)] text-[#4250d4]">
+        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,#eef2ff_0%,#fff1eb_100%)] text-[var(--em-ink)]">
           <UserPlus className="h-5 w-5" />
         </div>
       </div>
@@ -90,10 +90,10 @@ export function AdminUserCreator() {
               value="STUDENT"
               checked={role === 'STUDENT'}
               onChange={() => setRole('STUDENT')}
-              className="h-4 w-4 accent-[#4250d4]"
+              className="h-4 w-4 accent-[var(--em-green-deep)]"
             />
-            <GraduationCap className="h-4 w-4 text-[#4250d4]" />
-            <span className="text-sm font-semibold text-[#22347e]">Aluno</span>
+            <GraduationCap className="h-4 w-4 text-[var(--em-ink)]" />
+            <span className="text-sm font-semibold text-[var(--em-ink)]">Aluno</span>
           </label>
           <label className="admin-card-soft flex cursor-pointer items-center gap-3 rounded-[24px] px-4 py-4">
             <input
@@ -102,16 +102,16 @@ export function AdminUserCreator() {
               value="TEACHER"
               checked={role === 'TEACHER'}
               onChange={() => setRole('TEACHER')}
-              className="h-4 w-4 accent-[#4250d4]"
+              className="h-4 w-4 accent-[var(--em-green-deep)]"
             />
-            <Users className="h-4 w-4 text-[#4250d4]" />
-            <span className="text-sm font-semibold text-[#22347e]">Professor</span>
+            <Users className="h-4 w-4 text-[var(--em-ink)]" />
+            <span className="text-sm font-semibold text-[var(--em-ink)]">Professor</span>
           </label>
         </div>
 
         <div className="grid gap-4 md:grid-cols-2">
           <div className="space-y-2">
-            <label className="text-sm font-medium text-[#52618f]">Nome</label>
+            <label className="text-sm font-medium text-[var(--em-text-soft)]">Nome</label>
             <Input
               name="name"
               required
@@ -120,7 +120,7 @@ export function AdminUserCreator() {
             />
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium text-[#52618f]">E-mail</label>
+            <label className="text-sm font-medium text-[var(--em-text-soft)]">E-mail</label>
             <Input
               name="email"
               type="email"
@@ -132,7 +132,7 @@ export function AdminUserCreator() {
           {role === 'STUDENT' ? (
             <>
               <div className="space-y-2">
-                <label className="text-sm font-medium text-[#52618f]">Série</label>
+                <label className="text-sm font-medium text-[var(--em-text-soft)]">Série</label>
                 <select name="gradeLevel" defaultValue="" className={creatorSelectClassName}>
                   <option value="">Selecione a série</option>
                   {gradeLevelOptions.map((gradeLevel) => (
@@ -143,7 +143,7 @@ export function AdminUserCreator() {
                 </select>
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium text-[#52618f]">CPF</label>
+                <label className="text-sm font-medium text-[var(--em-text-soft)]">CPF</label>
                 <Input
                   name="cpf"
                   placeholder="Ex.: 123.456.789-00"
@@ -151,7 +151,7 @@ export function AdminUserCreator() {
                 />
               </div>
               <div className="space-y-2 md:col-span-2">
-                <label className="text-sm font-medium text-[#52618f]">Número de matrícula</label>
+                <label className="text-sm font-medium text-[var(--em-text-soft)]">Número de matrícula</label>
                 <Input
                   name="enrollmentNumber"
                   placeholder="Deixe em branco para gerar automaticamente"
@@ -161,7 +161,7 @@ export function AdminUserCreator() {
             </>
           ) : (
             <div className="space-y-2">
-              <label className="text-sm font-medium text-[#52618f]">Especialidade</label>
+              <label className="text-sm font-medium text-[var(--em-text-soft)]">Especialidade</label>
               <Input
                 name="expertise"
                 placeholder="Ex.: Redação ENEM"
@@ -174,7 +174,7 @@ export function AdminUserCreator() {
         {role === 'STUDENT' ? (
           <div className="grid gap-4 md:grid-cols-[1fr_auto_auto]">
             <div className="space-y-2">
-              <label className="text-sm font-medium text-[#52618f]">Plano</label>
+              <label className="text-sm font-medium text-[var(--em-text-soft)]">Plano</label>
               <select
                 name="plan"
                 defaultValue=""
@@ -188,12 +188,12 @@ export function AdminUserCreator() {
                 ))}
               </select>
             </div>
-            <label className="admin-card-soft flex items-center gap-3 rounded-[24px] px-4 py-4 text-sm font-medium text-[#22347e] md:self-end">
-              <input type="checkbox" name="readingClub" className="h-4 w-4 accent-[#4250d4]" />
+            <label className="admin-card-soft flex items-center gap-3 rounded-[24px] px-4 py-4 text-sm font-medium text-[var(--em-ink)] md:self-end">
+              <input type="checkbox" name="readingClub" className="h-4 w-4 accent-[var(--em-green-deep)]" />
               Clube de Leitura
             </label>
-            <label className="admin-card-soft flex items-center gap-3 rounded-[24px] px-4 py-4 text-sm font-medium text-[#22347e] md:self-end">
-              <input type="checkbox" name="mentoring" className="h-4 w-4 accent-[#4250d4]" />
+            <label className="admin-card-soft flex items-center gap-3 rounded-[24px] px-4 py-4 text-sm font-medium text-[var(--em-ink)] md:self-end">
+              <input type="checkbox" name="mentoring" className="h-4 w-4 accent-[var(--em-green-deep)]" />
               Mentoria
             </label>
           </div>

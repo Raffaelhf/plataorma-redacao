@@ -47,12 +47,12 @@ export function DeleteActivityButton({ activityId, activityTitle }: DeleteActivi
         variant="ghost"
         disabled={loading}
         onClick={() => void handleDelete()}
-        className="border-[#ffd0cf] bg-[#fff1f1] px-4 py-2 text-xs font-semibold text-[#b14545] hover:bg-[#ffe7e7] dark:border-[rgba(111,52,58,0.8)] dark:bg-[rgba(69,31,37,0.42)] dark:text-[#ffb4b4] dark:hover:bg-[rgba(88,39,46,0.52)]"
+        className="border-[var(--em-ink)] bg-[var(--em-rose)] px-4 py-2 text-xs font-semibold text-[var(--em-ink)] hover:bg-[var(--em-rose)]"
       >
         {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Trash2 className="mr-2 h-4 w-4" />}
         Excluir atividade
       </Button>
-      {error ? <p className="text-xs text-[#b14545] dark:text-[#ffb4b4]">{error}</p> : null}
+      {error ? <p className="text-xs text-[var(--em-rose-deep)]">{error}</p> : null}
     </div>
   );
 }

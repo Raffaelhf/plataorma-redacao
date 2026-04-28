@@ -11,6 +11,10 @@ function asOptionalString(value: unknown) {
   return normalized ? normalized : null;
 }
 
+function hasOwn(body: Record<string, unknown>, key: string) {
+  return Object.prototype.hasOwnProperty.call(body, key);
+}
+
 function parsePriceInCents(value: unknown, fallback: number) {
   const raw = String(value ?? '').replace('R$', '').trim();
   if (!raw) return fallback;
@@ -64,8 +68,8 @@ export async function PUT(req: Request) {
     return NextResponse.json({ error: 'Acesso negado' }, { status: 401 });
   }
 
-  const body = await req.json();
-  const whatsappNumber = normalizeWhatsAppNumber(body.whatsappNumber);
+  const body = await req.json() as Record<string, unknown>;
+  const whatsappNumber = hasOwn(body, 'whatsappNumber') ? normalizeWhatsAppNumber(String(body.whatsappNumber ?? '')) : undefined;
   const parsedPlanPrices = {
     mensalPlanPriceInCents: parsePriceInCents(body.mensalPlanPrice, STUDENT_PLAN_CATALOG.MENSAL.amountInCents),
     trimestralPlanPriceInCents: parsePriceInCents(body.trimestralPlanPrice, STUDENT_PLAN_CATALOG.TRIMESTRAL.amountInCents),
@@ -91,14 +95,14 @@ export async function PUT(req: Request) {
   const settings = await prisma.platformSettings.upsert({
     where: { id: SETTINGS_ID },
     update: {
-      bankRecipientName: asOptionalString(body.bankRecipientName),
-      bankDocument: asOptionalString(body.bankDocument),
-      bankName: asOptionalString(body.bankName),
-      bankAgency: asOptionalString(body.bankAgency),
-      bankAccount: asOptionalString(body.bankAccount),
-      pixKey: asOptionalString(body.pixKey),
-      whatsappNumber: asOptionalString(whatsappNumber),
-      paymentNotes: asOptionalString(body.paymentNotes),
+      ...(hasOwn(body, 'bankRecipientName') ? { bankRecipientName: asOptionalString(body.bankRecipientName) } : {}),
+      ...(hasOwn(body, 'bankDocument') ? { bankDocument: asOptionalString(body.bankDocument) } : {}),
+      ...(hasOwn(body, 'bankName') ? { bankName: asOptionalString(body.bankName) } : {}),
+      ...(hasOwn(body, 'bankAgency') ? { bankAgency: asOptionalString(body.bankAgency) } : {}),
+      ...(hasOwn(body, 'bankAccount') ? { bankAccount: asOptionalString(body.bankAccount) } : {}),
+      ...(hasOwn(body, 'pixKey') ? { pixKey: asOptionalString(body.pixKey) } : {}),
+      ...(hasOwn(body, 'whatsappNumber') ? { whatsappNumber: asOptionalString(whatsappNumber) } : {}),
+      ...(hasOwn(body, 'paymentNotes') ? { paymentNotes: asOptionalString(body.paymentNotes) } : {}),
       ...planPrices,
     },
     create: {

@@ -1,3 +1,52 @@
+## Rodar tudo com Docker
+
+O projeto ja tem um container para a aplicacao Next.js e outro para o PostgreSQL.
+Cada copia pode ficar isolada usando um `COMPOSE_PROJECT_NAME`, portas e volumes
+proprios.
+
+Primeiro crie o arquivo de ambiente:
+
+```powershell
+Copy-Item .env.example .env
+```
+
+Para uma segunda copia do projeto, edite o `.env` dessa copia e use valores
+diferentes:
+
+```env
+COMPOSE_PROJECT_NAME="redacao-app-copia-2"
+APP_PORT="3003"
+POSTGRES_PORT="5435"
+```
+
+Suba a aplicacao completa:
+
+```bash
+npm run docker:dev
+```
+
+Ou diretamente pelo Docker:
+
+```bash
+docker compose up --build app
+```
+
+Acesse em `http://localhost:3002` ou na porta definida em `APP_PORT`.
+O container do app roda `prisma generate`, aplica o schema no banco e executa o
+seed automaticamente ao iniciar.
+
+Para parar os containers:
+
+```bash
+npm run docker:down
+```
+
+Para apagar tambem o banco/volumes dessa copia:
+
+```bash
+docker compose down -v
+```
+
 ## PostgreSQL com Docker
 
 O projeto usa PostgreSQL rodando em Docker para desenvolvimento local.

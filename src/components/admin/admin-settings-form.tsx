@@ -238,8 +238,8 @@ export function AdminSettingsForm({ initialSettings }: { initialSettings: Settin
         />
       </label>
 
-      {error ? <p className="rounded-2xl border border-[#ffd7d7] bg-[#fff4f4] px-4 py-3 text-sm text-[#b14545] dark:border-[rgba(111,52,58,0.8)] dark:bg-[rgba(69,31,37,0.42)] dark:text-[#ffb4b4]">{error}</p> : null}
-      {message ? <p className="rounded-2xl border border-[#d7ecdf] bg-[#f3fbf7] px-4 py-3 text-sm text-[#1b7f62] dark:border-[rgba(36,94,74,0.8)] dark:bg-[rgba(18,56,44,0.38)] dark:text-[#8fe0b7]">{message}</p> : null}
+      {error ? <p className="rounded-2xl border border-[#ffd7d7] bg-[#fff4f4] px-4 py-3 text-sm text-[#b14545]">{error}</p> : null}
+      {message ? <p className="rounded-2xl border border-[#d7ecdf] bg-[#f3fbf7] px-4 py-3 text-sm text-[#1b7f62]">{message}</p> : null}
 
       <div className="flex justify-end pt-1">
         <Button type="submit" disabled={loading} className="min-w-[220px] justify-center">

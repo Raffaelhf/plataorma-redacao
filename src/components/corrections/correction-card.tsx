@@ -73,11 +73,11 @@ export function CorrectionCard({ submissionId }: { submissionId: string }) {
       <Button
         onClick={handleSave}
         disabled={loading}
-        className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-[linear-gradient(135deg,#4250d4_0%,#6871ee_100%)] text-white shadow-[0_18px_32px_rgba(66,80,212,0.24)] hover:brightness-105"
+        className="flex h-12 w-full items-center justify-center gap-2"
       >
         {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />} Enviar correção
       </Button>
-      {status && <p className="text-xs text-[#6d79a5] dark:text-[#9db2d8]">{status}</p>}
+      {status && <p className="text-xs text-[var(--em-text-soft)]">{status}</p>}
     </div>
   );
 }

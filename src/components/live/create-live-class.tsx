@@ -69,10 +69,10 @@ export function CreateLiveClass() {
     >
       <div className="flex items-start justify-between gap-3">
         <div>
-          <p className="text-sm font-semibold text-[#5a69a1]">Encontro ao vivo</p>
-          <h2 className="mt-1 text-lg font-semibold text-[#22347e]">Agendar aula ao vivo</h2>
+          <p className="text-sm font-semibold text-[var(--em-text-soft)]">Encontro ao vivo</p>
+          <h2 className="mt-1 text-lg font-semibold text-[var(--em-ink)]">Agendar aula ao vivo</h2>
         </div>
-        <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#eef2ff] text-[#4250d4]">
+        <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[var(--em-mint)] text-[var(--em-ink)]">
           <CalendarPlus2 className="h-5 w-5" />
         </div>
       </div>
