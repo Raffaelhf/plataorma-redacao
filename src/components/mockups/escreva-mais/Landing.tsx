@@ -1,9 +1,50 @@
 import Link from "next/link";
 import { ArrowRight, Check, Star, Target, Award, Instagram, Youtube, Linkedin, GraduationCap, TrendingUp, Apple, Play } from "lucide-react";
 import { PlatformLogo } from "@/components/branding/platform-logo";
+import { formatCurrencyFromCents, type getPublicPlanPricing } from "@/lib/plans";
 import "./_group.css";
 
-export function Landing() {
+type LandingPricing = Awaited<ReturnType<typeof getPublicPlanPricing>>;
+
+type LandingProps = {
+  pricing: LandingPricing;
+};
+
+export function Landing({ pricing }: LandingProps) {
+  const publicCourses = [
+    {
+      title: "Clube do Livro",
+      description: "Leitura orientada para ampliar repertório sociocultural e fortalecer seus argumentos.",
+      mentor: "Equipe Escreva Mais",
+      price: formatCurrencyFromCents(pricing.readingClubPriceInCents),
+      color: "var(--em-mint)",
+      img: "https://images.unsplash.com/photo-1521587760476-6c12a4b040da?q=80&w=600&auto=format&fit=crop",
+    },
+    {
+      title: "Redação ENEM: prática orientada",
+      description: "Propostas semanais, estrutura dissertativa e estratégias para evoluir com constância.",
+      mentor: "Profª. Júlia Silva",
+      price: formatCurrencyFromCents(pricing.plans.mensal),
+      color: "var(--em-yellow)",
+      img: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?q=80&w=600&auto=format&fit=crop",
+    },
+    {
+      title: "Monitoria Individualizada",
+      description: "Acompanhamento personalizado para corrigir dificuldades e orientar seu plano de estudo.",
+      mentor: "Prof. Rafael Costa",
+      price: formatCurrencyFromCents(pricing.plans.mentoria),
+      color: "var(--em-coral)",
+      img: "/images/escreva-mais/monitoria-individualizada.png",
+    },
+  ];
+
+  const publicPlans = [
+    { title: "Mensal", price: formatCurrencyFromCents(pricing.plans.mensal), period: "/mês", desc: "Acesso básico", color: "bg-white", slug: "mensal" },
+    { title: "Trimestral", price: formatCurrencyFromCents(pricing.plans.trimestral), period: "/trim", desc: "Foco intensivo", color: "bg-white", slug: "trimestral" },
+    { title: "Semestral", price: formatCurrencyFromCents(pricing.plans.semestral), period: "/sem", desc: "Preparação completa", color: "bg-[var(--em-mint)]", badge: "Mais escolhido", slug: "semestral" },
+    { title: "Anual", price: formatCurrencyFromCents(pricing.plans.anual), period: "/ano", desc: "O ano todo com você", color: "bg-[var(--em-peach)]", badge: "Melhor valor", slug: "anual" },
+  ];
+
   return (
     <div className="em-root min-h-[100dvh] flex flex-col font-['Inter']" style={{ background: "var(--em-bg)" }}>
       {/* 1. HEADER */}
@@ -190,32 +231,7 @@ export function Landing() {
           </div>
           
           <div className="grid gap-6 md:grid-cols-3 md:gap-8">
-              {[
-                {
-                  title: "Clube do Livro",
-                  description: "Leitura orientada para ampliar repertório sociocultural e fortalecer seus argumentos.",
-                  mentor: "Equipe Escreva Mais",
-                  price: "R$ 40",
-                  color: "var(--em-mint)",
-                  img: "https://images.unsplash.com/photo-1521587760476-6c12a4b040da?q=80&w=600&auto=format&fit=crop",
-                },
-                {
-                  title: "Redação ENEM: prática orientada",
-                  description: "Propostas semanais, estrutura dissertativa e estratégias para evoluir com constância.",
-                  mentor: "Profª. Júlia Silva",
-                  price: "R$ 45",
-                  color: "var(--em-yellow)",
-                  img: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?q=80&w=600&auto=format&fit=crop",
-                },
-                {
-                  title: "Monitoria Individualizada",
-                  description: "Acompanhamento personalizado para corrigir dificuldades e orientar seu plano de estudo.",
-                  mentor: "Prof. Rafael Costa",
-                  price: "R$ 70",
-                  color: "var(--em-coral)",
-                  img: "/images/escreva-mais/monitoria-individualizada.png",
-                },
-              ].map((course, i) => (
+              {publicCourses.map((course, i) => (
               <div key={i} className="em-card-hard p-4 flex flex-col group cursor-pointer bg-white">
                 <div className="w-full aspect-[4/3] rounded-xl mb-6 relative overflow-hidden border-2 border-[var(--em-ink)] bg-[var(--em-bg-alt)]">
                   <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${course.img})`, filter: "contrast(1.1) saturate(1.2)" }}></div>
@@ -354,13 +370,8 @@ export function Landing() {
         </div>
         
         <div className="grid items-start gap-6 md:grid-cols-2 lg:grid-cols-4">
-          {[
-            { title: "Mensal", price: "R$ 80", period: "/mês", desc: "Acesso básico", color: "bg-white" },
-            { title: "Trimestral", price: "R$ 218", period: "/trim", desc: "Foco intensivo", color: "bg-white" },
-            { title: "Semestral", price: "R$ 413", period: "/sem", desc: "Preparação completa", color: "bg-[var(--em-mint)]", badge: "Mais escolhido" },
-            { title: "Anual", price: "R$ 768", period: "/ano", desc: "O ano todo com você", color: "bg-[var(--em-peach)]", badge: "Melhor valor" }
-          ].map((plan, i) => (
-            <div key={i} className={`p-8 em-card-hard flex flex-col h-full relative ${plan.color} ${plan.badge ? 'lg:-translate-y-4' : ''}`}>
+          {publicPlans.map((plan) => (
+            <div key={plan.slug} className={`p-8 em-card-hard flex flex-col h-full relative ${plan.color} ${plan.badge ? 'lg:-translate-y-4' : ''}`}>
               {plan.badge && (
                 <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[var(--em-ink)] text-white text-xs font-bold px-4 py-1.5 rounded-full border border-white/20 whitespace-nowrap shadow-md">
                   {plan.badge}
@@ -383,7 +394,7 @@ export function Landing() {
                 ))}
               </ul>
               
-              <a href={`/cadastro?plan=${['mensal', 'trimestral', 'semestral', 'anual'][i]}`} className={`w-full ${plan.badge ? 'em-btn-primary' : 'em-btn-primary bg-white'} justify-center`}>
+              <a href={`/cadastro?plan=${plan.slug}`} className={`w-full ${plan.badge ? 'em-btn-primary' : 'em-btn-primary bg-white'} justify-center`}>
                 Assinar {plan.title}
               </a>
             </div>

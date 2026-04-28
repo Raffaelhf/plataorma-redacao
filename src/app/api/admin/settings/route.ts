@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { getAuthSession } from '@/lib/auth';
 import { normalizeWhatsAppNumber } from '@/lib/phone';
 import { MENTORING_PLAN_PRICE_IN_CENTS, READING_CLUB_PRICE_IN_CENTS, STUDENT_PLAN_CATALOG } from '@/lib/plans';
@@ -118,6 +119,10 @@ export async function PUT(req: Request) {
       ...planPrices,
     },
   });
+
+  revalidatePath('/', 'page');
+  revalidatePath('/cadastro', 'page');
+  revalidatePath('/checkout/[token]', 'page');
 
   return NextResponse.json(settings);
 }
