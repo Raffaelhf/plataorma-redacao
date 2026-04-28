@@ -20,6 +20,7 @@ export const authOptions = {
   session: { strategy: 'jwt' },
   pages: {
     signIn: '/login',
+    signOut: '/sair',
   },
   providers: [
     CredentialsProvider({

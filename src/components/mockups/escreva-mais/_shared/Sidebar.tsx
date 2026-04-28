@@ -165,7 +165,7 @@ export function Sidebar({ role, userName, userEmail }: { role: Role; userName: s
             <div className="text-[12.5px] font-semibold text-[var(--em-deep)] truncate leading-tight">{displayName}</div>
             <div className="text-[10.5px] text-[var(--em-text-mute)] truncate">{displayEmail}</div>
           </div>
-          <Link href="/api/auth/signout?callbackUrl=/login" prefetch={false} className="w-7 h-7 rounded-lg grid place-items-center text-[var(--em-text-mute)] hover:bg-[var(--em-bg-alt)] hover:text-[var(--em-deep)]" aria-label="Sair">
+          <Link href="/sair?callbackUrl=/login" prefetch={false} className="w-7 h-7 rounded-lg grid place-items-center text-[var(--em-text-mute)] hover:bg-[var(--em-bg-alt)] hover:text-[var(--em-deep)]" aria-label="Sair">
             <LogOut className="w-3.5 h-3.5" />
           </Link>
         </div>
