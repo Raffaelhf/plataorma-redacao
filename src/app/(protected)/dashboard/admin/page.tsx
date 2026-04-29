@@ -62,14 +62,14 @@ function percentChange(current: number, previous: number) {
 function relativeTimeLabel(date: Date, now: Date) {
   const diffInMinutes = Math.max(0, Math.round((now.getTime() - date.getTime()) / 60000));
   if (diffInMinutes < 1) return 'agora';
-  if (diffInMinutes < 60) return `ha ${diffInMinutes} min`;
+  if (diffInMinutes < 60) return `há ${diffInMinutes} min`;
 
   const diffInHours = Math.round(diffInMinutes / 60);
-  if (diffInHours < 24) return `ha ${diffInHours}h`;
+  if (diffInHours < 24) return `há ${diffInHours}h`;
 
   const diffInDays = Math.round(diffInHours / 24);
   if (diffInDays === 1) return 'ontem';
-  if (diffInDays < 30) return `ha ${diffInDays} dias`;
+  if (diffInDays < 30) return `há ${diffInDays} dias`;
 
   return formatDateTimeLabel(date);
 }
@@ -233,13 +233,13 @@ export default async function AdminDashboardPage() {
       date: registration.completedAt ?? registration.updatedAt,
     })),
     ...recentSubmissions.map((submission) => ({
-      title: `Redacao enviada por ${submission.student.user.name ?? 'aluno'}`,
+      title: `Redação enviada por ${submission.student.user.name ?? 'aluno'}`,
       time: relativeTimeLabel(submission.submittedAt, now),
       kind: submission.status === 'PENDING' ? ('warning' as const) : ('submission' as const),
       date: submission.submittedAt,
     })),
     ...recentCorrections.slice(0, 4).map((correction) => ({
-      title: `Correcao finalizada: ${correction.submission.student.user.name ?? 'aluno'}`,
+      title: `Correção finalizada: ${correction.submission.student.user.name ?? 'aluno'}`,
       time: relativeTimeLabel(correction.createdAt, now),
       kind: 'success' as const,
       date: correction.createdAt,
@@ -288,7 +288,7 @@ export default async function AdminDashboardPage() {
       statusColor: user.isActive ? 'var(--em-green)' : 'var(--em-coral)',
     })),
     whatsapp: {
-      label: whatsappContact?.label || 'Nao configurado',
+      label: whatsappContact?.label || 'Não configurado',
       href: whatsappContact?.href || null,
     },
     finance: {

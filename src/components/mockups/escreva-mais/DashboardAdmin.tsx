@@ -108,12 +108,12 @@ function formatCompactNumber(value: number) {
   }).format(value);
 }
 
-function displayOrFallback(value: string | null, fallback = "Nao configurado") {
+function displayOrFallback(value: string | null, fallback = "Não configurado") {
   return value?.trim() || fallback;
 }
 
 function maskDocument(value: string | null) {
-  if (!value) return "Nao configurado";
+  if (!value) return "Não configurado";
   const digits = value.replace(/\D/g, "");
   if (digits.length <= 4) return value;
   return `${digits.slice(0, 2)}.***.***/${digits.slice(-6, -2)}-**`;
@@ -154,7 +154,7 @@ export function DashboardAdmin({ summary }: { summary: DashboardAdminSummary }) 
   }, [summary.planDistribution]);
 
   async function copyWhatsApp() {
-    if (!summary.whatsapp.label || summary.whatsapp.label === "Nao configurado") return;
+    if (!summary.whatsapp.label || summary.whatsapp.label === "Não configurado") return;
     await navigator.clipboard.writeText(summary.whatsapp.label);
     setCopyState("copied");
     window.setTimeout(() => setCopyState("idle"), 1800);
@@ -166,12 +166,12 @@ export function DashboardAdmin({ summary }: { summary: DashboardAdminSummary }) 
       userName="Ana Carolina Vieira"
       userEmail="ana@escrevamais.com"
       pageKicker="Painel administrativo"
-      pageTitle="Visao geral da plataforma."
-      primaryAction={{ label: "Adicionar usuario", href: "/admin/usuarios" }}
+      pageTitle="Visão geral da plataforma."
+      primaryAction={{ label: "Adicionar usuário", href: "/admin/usuarios" }}
     >
       <div className="space-y-8">
         <div className="flex flex-col gap-2 rounded-2xl border border-[var(--em-border-strong)] bg-white/80 px-4 py-3 text-[12px] font-bold text-[var(--em-text-soft)] sm:flex-row sm:items-center sm:justify-between">
-          <span>Informacoes atuais do banco de dados da plataforma.</span>
+          <span>Informações atuais do banco de dados da plataforma.</span>
           <span className="text-[var(--em-ink)]">Atualizado em {summary.generatedAtLabel}</span>
         </div>
 
@@ -193,7 +193,7 @@ export function DashboardAdmin({ summary }: { summary: DashboardAdminSummary }) 
             bgColor="var(--em-peach)"
           />
           <KpiCard
-            title="Correcoes pendentes"
+            title="Correções pendentes"
             value={formatNumber(summary.kpis.pendingCorrections.value)}
             trend={summary.kpis.pendingCorrections.trendLabel}
             trendUp={summary.kpis.pendingCorrections.trendUp}
@@ -201,7 +201,7 @@ export function DashboardAdmin({ summary }: { summary: DashboardAdminSummary }) 
             bgColor="var(--em-lavender)"
           />
           <KpiCard
-            title="Receita do mes"
+            title="Receita do mês"
             value={formatCurrencyFromCents(summary.kpis.monthlyRevenueInCents.value)}
             trend={summary.kpis.monthlyRevenueInCents.trendLabel}
             trendUp={summary.kpis.monthlyRevenueInCents.trendUp}
@@ -215,16 +215,16 @@ export function DashboardAdmin({ summary }: { summary: DashboardAdminSummary }) 
             <div className="em-card-hard relative overflow-hidden bg-white p-8">
               <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                 <div>
-                  <h3 className="mb-1 text-[14px] font-bold uppercase tracking-tight text-[var(--em-text-soft)]">Receita do mes</h3>
+                  <h3 className="mb-1 text-[14px] font-bold uppercase tracking-tight text-[var(--em-text-soft)]">Receita do mês</h3>
                   <div className="flex flex-wrap items-baseline gap-4">
                     <div className="text-[32px] font-extrabold tracking-tight text-[var(--em-ink)]">
                       {formatCurrencyFromCents(summary.revenue.currentMonthInCents)}
                     </div>
-                    <TrendBadge label={`${summary.revenue.trendLabel} vs mes anterior`} trendUp={summary.revenue.trendUp} />
+                    <TrendBadge label={`${summary.revenue.trendLabel} vs mês anterior`} trendUp={summary.revenue.trendUp} />
                   </div>
                 </div>
                 <div className="rounded-lg border border-[var(--em-border)] bg-[var(--em-bg)] px-3 py-1.5 text-[13px] font-semibold text-[var(--em-ink)]">
-                  Ultimos 6 meses
+                  Últimos 6 meses
                 </div>
               </div>
 
@@ -263,7 +263,7 @@ export function DashboardAdmin({ summary }: { summary: DashboardAdminSummary }) 
                       <th className="px-6 py-4 text-[11px] font-extrabold uppercase tracking-wider text-[var(--em-ink)]">Tipo</th>
                       <th className="px-6 py-4 text-[11px] font-extrabold uppercase tracking-wider text-[var(--em-ink)]">Plano</th>
                       <th className="px-6 py-4 text-[11px] font-extrabold uppercase tracking-wider text-[var(--em-ink)]">Status</th>
-                      <th className="px-6 py-4 text-right text-[11px] font-extrabold uppercase tracking-wider text-[var(--em-ink)]">Acao</th>
+                      <th className="px-6 py-4 text-right text-[11px] font-extrabold uppercase tracking-wider text-[var(--em-ink)]">Ação</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -409,7 +409,7 @@ export function DashboardAdmin({ summary }: { summary: DashboardAdminSummary }) 
                     <div className="text-[14px] font-bold text-[var(--em-ink)]">
                       {summary.finance.bankAgency || summary.finance.bankAccount
                         ? `${summary.finance.bankAgency ?? "-"} / ${summary.finance.bankAccount ?? "-"}`
-                        : "Nao configurado"}
+                        : "Não configurado"}
                     </div>
                   </div>
                 </div>
@@ -423,13 +423,13 @@ export function DashboardAdmin({ summary }: { summary: DashboardAdminSummary }) 
             <div className="em-card-hard bg-white p-6">
               <div className="mb-5 flex items-center gap-2">
                 <Activity className="h-5 w-5 text-[var(--em-ink)]" />
-                <h3 className="text-[16px] font-extrabold text-[var(--em-ink)]">Saude da plataforma</h3>
+                <h3 className="text-[16px] font-extrabold text-[var(--em-ink)]">Saúde da plataforma</h3>
               </div>
 
               <div className="space-y-3">
                 <HealthRow label="Atividades publicadas" value={formatNumber(summary.health.publishedActivities)} color="var(--em-green)" />
                 <HealthRow label="Envios em 7 dias" value={formatNumber(summary.health.submissionsLast7Days)} color="var(--em-yellow)" />
-                <HealthRow label="Tempo medio correcao" value={summary.health.averageCorrectionTimeLabel} color="var(--em-lavender)" />
+                <HealthRow label="Tempo médio correção" value={summary.health.averageCorrectionTimeLabel} color="var(--em-lavender)" />
               </div>
             </div>
 
