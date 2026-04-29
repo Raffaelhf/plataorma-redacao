@@ -17,6 +17,7 @@ export function Landing({ pricing }: LandingProps) {
       description: "Leitura orientada para ampliar repertório sociocultural e fortalecer seus argumentos.",
       mentor: "Equipe Escreva Mais",
       price: formatCurrencyFromCents(pricing.readingClubPriceInCents),
+      href: "/cadastro?readingClub=1",
       color: "var(--em-mint)",
       img: "https://images.unsplash.com/photo-1521587760476-6c12a4b040da?q=80&w=600&auto=format&fit=crop",
     },
@@ -25,6 +26,7 @@ export function Landing({ pricing }: LandingProps) {
       description: "Propostas semanais, estrutura dissertativa e estratégias para evoluir com constância.",
       mentor: "Profª. Júlia Silva",
       price: formatCurrencyFromCents(pricing.plans.mensal),
+      href: "/cadastro?plan=mensal",
       color: "var(--em-yellow)",
       img: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?q=80&w=600&auto=format&fit=crop",
     },
@@ -33,6 +35,7 @@ export function Landing({ pricing }: LandingProps) {
       description: "Acompanhamento personalizado para corrigir dificuldades e orientar seu plano de estudo.",
       mentor: "Prof. Rafael Costa",
       price: formatCurrencyFromCents(pricing.plans.mentoria),
+      href: "/cadastro?mentoring=1",
       color: "var(--em-coral)",
       img: "/images/escreva-mais/monitoria-individualizada.png",
     },
@@ -260,7 +263,7 @@ export function Landing({ pricing }: LandingProps) {
           
           <div className="grid gap-6 md:grid-cols-3 md:gap-8">
               {publicCourses.map((course, i) => (
-              <div key={i} className="em-card-hard p-4 flex flex-col group cursor-pointer bg-white">
+              <Link key={i} href={course.href} className="em-card-hard p-4 flex flex-col group cursor-pointer bg-white">
                 <div className="w-full aspect-[4/3] rounded-xl mb-6 relative overflow-hidden border-2 border-[var(--em-ink)] bg-[var(--em-bg-alt)]">
                   <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${course.img})`, filter: "contrast(1.1) saturate(1.2)" }}></div>
                   <div className="absolute inset-0 opacity-20 mix-blend-multiply" style={{ backgroundColor: course.color }}></div>
@@ -278,7 +281,7 @@ export function Landing({ pricing }: LandingProps) {
                     <span className="text-sm font-semibold text-[var(--em-text-soft)]">{course.mentor}</span>
                   </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
           

@@ -500,7 +500,7 @@ export function RegistrationCheckout({
           <ShieldCheck className="h-3.5 w-3.5" />
           Resumo
         </div>
-        <h2 className="text-2xl font-extrabold text-[var(--em-ink)]">{role === 'STUDENT' ? 'Assinatura do aluno' : 'Cadastro do professor'}</h2>
+        <h2 className="text-2xl font-extrabold text-[var(--em-ink)]">{role === 'STUDENT' ? 'Inscricao do aluno' : 'Cadastro do professor'}</h2>
 
         <div className="mt-5 space-y-4 rounded-[22px] border-[1.5px] border-[var(--em-ink)] bg-[var(--em-cream)] p-4">
           {planLabel ? (

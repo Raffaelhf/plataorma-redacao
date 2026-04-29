@@ -166,10 +166,27 @@ export function getStudentPlanFromSlug(slug?: string | null): StudentPlan | null
   return null;
 }
 
-export async function calculateStudentCheckoutAmount(plan: StudentPlan, readingClub: boolean, mentoring = false) {
+export function calculateMentoringCheckoutPrice(plan: StudentPlan | null | undefined, mentoringPriceInCents: number) {
+  return plan ? calculateDiscountedMentoringPrice(plan, mentoringPriceInCents) : mentoringPriceInCents;
+}
+
+export async function calculateStudentCheckoutAmount(plan: StudentPlan | null, readingClub: boolean, mentoring = false) {
   const [catalog, settings] = await Promise.all([getStudentPlanCatalog(), getPlatformPlanSettings()]);
-  const baseAmount = catalog[plan].amountInCents;
+  const baseAmount = plan ? catalog[plan].amountInCents : 0;
   const readingClubAmount = readingClub ? getReadingClubPriceFromSettings(settings) : 0;
-  const mentoringAmount = mentoring ? calculateDiscountedMentoringPrice(plan, getMentoringPriceFromSettings(settings)) : 0;
+  const mentoringAmount = mentoring ? calculateMentoringCheckoutPrice(plan, getMentoringPriceFromSettings(settings)) : 0;
   return baseAmount + readingClubAmount + mentoringAmount;
+}
+
+export function getCheckoutSelectionLabel({
+  planLabel,
+  readingClub,
+  mentoring,
+}: {
+  planLabel?: string | null;
+  readingClub: boolean;
+  mentoring: boolean;
+}) {
+  const parts = [planLabel, readingClub ? 'Clube do Livro' : null, mentoring ? 'Mentoria' : null].filter(Boolean);
+  return parts.length ? parts.join(' + ') : 'Seleção Escreva Mais';
 }

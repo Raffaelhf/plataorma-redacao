@@ -1,14 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createMercadoPagoCardPayment, MercadoPagoApiError } from '@/lib/mercadopago';
 import { getAppUrl } from '@/lib/app-url';
-import {
-  calculateDiscountedMentoringPrice,
-  formatCurrencyFromCents,
-  getMentoringPriceFromSettings,
-  getPlatformPlanSettings,
-  getReadingClubPriceInCents,
-  getStudentPlanCatalog,
-} from '@/lib/plans';
+import { getCheckoutSelectionLabel, getStudentPlanCatalog } from '@/lib/plans';
 import { prisma } from '@/lib/prisma';
 import { createApprovedUserFromRegistrationSession } from '@/lib/registration';
 
@@ -99,8 +92,8 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Sessão de checkout não encontrada ou expirada.' }, { status: 404 });
     }
 
-    if (session.role !== 'STUDENT' || !session.plan) {
-      return NextResponse.json({ error: 'Apenas cadastros de aluno com plano podem seguir para pagamento.' }, { status: 400 });
+    if (session.role !== 'STUDENT' || (!session.plan && !session.readingClub && !session.mentoring)) {
+      return NextResponse.json({ error: 'Escolha um plano, a mentoria avulsa ou o Clube do Livro avulso.' }, { status: 400 });
     }
 
     if (session.amountInCents < MIN_CARD_PAYMENT_AMOUNT_IN_CENTS) {
@@ -112,24 +105,20 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Não foi possível identificar a URL pública da aplicação.' }, { status: 500 });
     }
 
-    const [catalog, readingClubPriceInCents, settings] = await Promise.all([
-      getStudentPlanCatalog(),
-      getReadingClubPriceInCents(),
-      getPlatformPlanSettings(),
-    ]);
-    const plan = catalog[session.plan];
-    const mentoringPriceInCents = calculateDiscountedMentoringPrice(session.plan, getMentoringPriceFromSettings(settings));
-    const descriptionParts = [plan.label];
-    if (session.readingClub) descriptionParts.push(`Clube de Leitura (${formatCurrencyFromCents(readingClubPriceInCents)})`);
-    if (session.mentoring) descriptionParts.push(`Mentoria (${formatCurrencyFromCents(mentoringPriceInCents)})`);
-    const description = descriptionParts.join(' + ');
+    const catalog = await getStudentPlanCatalog();
+    const plan = session.plan ? catalog[session.plan] : null;
+    const description = getCheckoutSelectionLabel({
+      planLabel: plan?.label,
+      readingClub: session.readingClub,
+      mentoring: session.mentoring,
+    });
 
     const payment = await createMercadoPagoCardPayment({
       token: formData.token,
       issuerId: formData.issuer_id,
       paymentMethodId: formData.payment_method_id,
       installments: Number(formData.installments),
-      description: `Assinatura ${description} - Escreva Mais`,
+      description: `Inscricao ${description} - Escreva Mais`,
       amountInCents: session.amountInCents,
       payerEmail: session.email,
       payerIdentification: formData.payer?.identification,

@@ -65,7 +65,7 @@ export default async function CadastroPage() {
         <div className="relative z-10 w-full max-w-[560px]">
           <div className="mb-8 text-center">
             <h2 className="em-display mb-2 text-[36px] font-extrabold tracking-tight text-[var(--em-ink)]">Crie sua conta</h2>
-            <p className="text-[16px] font-medium text-[var(--em-text-soft)]">Escolha o plano e siga para o checkout seguro.</p>
+            <p className="text-[16px] font-medium text-[var(--em-text-soft)]">Escolha um plano ou servico avulso e siga para o checkout seguro.</p>
           </div>
 
           <div className="em-card-hard bg-white p-6 sm:p-8">

@@ -5,7 +5,7 @@ import { ProfessorPerfil } from '@/components/mockups/escreva-mais/ProfessorPerf
 import { getAuthSession } from '@/lib/auth';
 import { isValidGradeLevel } from '@/lib/grade-levels';
 import { prisma } from '@/lib/prisma';
-import { STUDENT_PLAN_CATALOG } from '@/lib/plans';
+import { getCheckoutSelectionLabel, STUDENT_PLAN_CATALOG } from '@/lib/plans';
 
 const PLAN_MONTHLY_LIMITS = {
   MENSAL: 2,
@@ -72,6 +72,11 @@ export default async function PerfilPage() {
   const plan = user.studentProfile?.plan ?? null;
   const monthlyLimit = plan ? PLAN_MONTHLY_LIMITS[plan] : 0;
   const gradeLevel = user.studentProfile?.gradeLevel && isValidGradeLevel(user.studentProfile.gradeLevel) ? user.studentProfile.gradeLevel : null;
+  const planLabel = getCheckoutSelectionLabel({
+    planLabel: plan ? STUDENT_PLAN_CATALOG[plan].label : null,
+    readingClub: Boolean(user.studentProfile?.readingClub),
+    mentoring: Boolean(user.studentProfile?.mentoring),
+  });
 
   return (
     <AlunoPerfil
@@ -79,7 +84,7 @@ export default async function PerfilPage() {
         name: user.name ?? session.user.name ?? 'Usuário Escreva Mais',
         email: user.email,
         initials: getInitials(user.name, user.email),
-        planLabel: plan ? STUDENT_PLAN_CATALOG[plan].label : 'Sem plano',
+        planLabel,
         monthlySubmissions,
         monthlyLimit,
         memberSinceLabel: getMemberSinceLabel(user.createdAt),

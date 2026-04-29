@@ -5,8 +5,9 @@ import { PlatformLogo } from '@/components/branding/platform-logo';
 import { RegistrationCheckout } from '@/components/auth/registration-checkout';
 import '@/components/mockups/escreva-mais/_group.css';
 import {
-  calculateDiscountedMentoringPrice,
+  calculateMentoringCheckoutPrice,
   formatCurrencyFromCents,
+  getCheckoutSelectionLabel,
   getMentoringPriceFromSettings,
   getPlatformPlanSettings,
   getReadingClubPriceInCents,
@@ -42,12 +43,14 @@ export default async function CheckoutPage({
     getPlatformPlanSettings(),
   ]);
   const plan = session.plan ? catalog[session.plan] : null;
-  const mentoringPriceInCents = session.plan
-    ? calculateDiscountedMentoringPrice(session.plan, getMentoringPriceFromSettings(settings))
+  const mentoringPriceInCents = session.mentoring
+    ? calculateMentoringCheckoutPrice(session.plan, getMentoringPriceFromSettings(settings))
     : 0;
-  const planLabel = plan
-    ? [plan.label, session.readingClub ? 'Clube de Leitura' : null, session.mentoring ? 'Mentoria' : null].filter(Boolean).join(' + ')
-    : null;
+  const planLabel = getCheckoutSelectionLabel({
+    planLabel: plan?.label,
+    readingClub: session.readingClub,
+    mentoring: session.mentoring,
+  });
 
   return (
     <main className="em-root min-h-screen bg-[var(--em-bg)] px-4 py-5 text-[var(--em-ink)] sm:px-6 lg:px-8">
@@ -76,10 +79,10 @@ export default async function CheckoutPage({
               Checkout seguro
             </div>
             <h1 className="em-display text-[34px] leading-none text-[var(--em-ink)] sm:text-[44px] lg:text-[56px]">
-              Finalize sua assinatura.
+              Finalize sua inscrição.
             </h1>
             <p className="mt-4 max-w-2xl text-sm font-semibold leading-7 text-[var(--em-ink-soft)] sm:text-base">
-              O cadastro do aluno permanece pendente até a confirmação do pagamento. Seus dados de cartão não são armazenados pela Escreva Mais.
+              O cadastro permanece pendente até a confirmação do pagamento. Seus dados de cartão não são armazenados pela Escreva Mais.
             </p>
           </div>
         </section>
@@ -127,7 +130,7 @@ export default async function CheckoutPage({
           <p className="text-xs font-extrabold uppercase tracking-[0.16em]">Conta liberada</p>
           <h2 className="mt-2 text-2xl font-extrabold">Pagamento confirmado</h2>
           <p className="mt-3 text-sm font-semibold leading-7">
-            Sua assinatura foi ativada com sucesso. O acesso já pode ser feito com o e-mail e a senha informados no cadastro.
+            Sua inscrição foi ativada com sucesso. O acesso já pode ser feito com o e-mail e a senha informados no cadastro.
           </p>
           <Link href="/login?callbackUrl=/dashboard/aluno&checkout=approved" className="em-btn-primary mt-5">
             Entrar na área do aluno
@@ -160,7 +163,7 @@ export default async function CheckoutPage({
             ) : null}
             {session.readingClub ? (
               <div className="rounded-2xl border border-[var(--em-border-strong)] bg-[var(--em-mint)] p-4">
-                <p className="text-xs font-extrabold uppercase tracking-wide text-[var(--em-text-soft)]">Clube de Leitura</p>
+                <p className="text-xs font-extrabold uppercase tracking-wide text-[var(--em-text-soft)]">Clube do Livro</p>
                 <p className="mt-1 text-lg font-extrabold text-[var(--em-ink)]">{formatCurrencyFromCents(readingClubPriceInCents)}</p>
               </div>
             ) : null}

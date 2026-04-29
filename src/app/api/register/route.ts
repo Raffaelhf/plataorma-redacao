@@ -18,16 +18,8 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'E-mail e senha são obrigatórios.' }, { status: 400 });
     }
 
-    if (normalizedReadingClub && !normalizedPlan) {
-      return NextResponse.json({ error: 'Selecione um plano para adicionar o Clube de Leitura.' }, { status: 400 });
-    }
-
-    if (normalizedMentoring && !normalizedPlan) {
-      return NextResponse.json({ error: 'Selecione um plano para adicionar a Mentoria.' }, { status: 400 });
-    }
-
-    if (!normalizedPlan) {
-      return NextResponse.json({ error: 'Selecione um plano para seguir para o pagamento.' }, { status: 400 });
+    if (!normalizedPlan && !normalizedReadingClub && !normalizedMentoring) {
+      return NextResponse.json({ error: 'Escolha um plano, a mentoria avulsa ou o Clube do Livro avulso.' }, { status: 400 });
     }
 
     const existing = await prisma.user.findUnique({ where: { email: normalizedEmail } });
@@ -36,12 +28,6 @@ export async function POST(req: Request) {
     }
 
     const passwordHash = await bcrypt.hash(password, 10);
-
-    if (!normalizedPlan) {
-      return NextResponse.json({ error: 'Plano do aluno não identificado para o checkout.' }, { status: 400 });
-    }
-
-    const studentPlan = normalizedPlan;
 
     await prisma.registrationSession.updateMany({
       where: {
@@ -62,10 +48,10 @@ export async function POST(req: Request) {
         email: normalizedEmail,
         passwordHash,
         role: normalizedRole,
-        plan: studentPlan,
+        plan: normalizedPlan,
         readingClub: normalizedReadingClub,
         mentoring: normalizedMentoring,
-        amountInCents: await calculateStudentCheckoutAmount(studentPlan, normalizedReadingClub, normalizedMentoring),
+        amountInCents: await calculateStudentCheckoutAmount(normalizedPlan, normalizedReadingClub, normalizedMentoring),
         status: 'CHECKOUT_PENDING',
         expiresAt: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
       },

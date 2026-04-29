@@ -75,14 +75,6 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Informe nome e e-mail.' }, { status: 400 });
   }
 
-  if (role === 'STUDENT' && readingClub && !plan) {
-    return NextResponse.json({ error: 'Selecione um plano para adicionar o Clube do Livro.' }, { status: 400 });
-  }
-
-  if (role === 'STUDENT' && mentoring && !plan) {
-    return NextResponse.json({ error: 'Selecione um plano para adicionar a Monitoria.' }, { status: 400 });
-  }
-
   if (role === 'STUDENT' && gradeLevel && !isValidGradeLevel(gradeLevel)) {
     return NextResponse.json({ error: 'Selecione uma serie valida para o aluno.' }, { status: 400 });
   }
