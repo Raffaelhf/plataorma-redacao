@@ -23,12 +23,24 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import "./_group.css";
 
-export function ProfessorPerfil() {
+type ProfessorProfileView = {
+  name: string;
+  email: string;
+  initials: string;
+  roleSinceLabel: string;
+  expertise: string | null;
+  bio: string;
+  activityCount: number;
+  correctionCount: number;
+  studentCount: number;
+};
+
+export function ProfessorPerfil({ profile }: { profile: ProfessorProfileView }) {
   return (
     <AppLayout
       role="professor"
-      userName="Pedro Lima"
-      userEmail="pedro.lima@escrevamais.com"
+      userName={profile.name}
+      userEmail={profile.email}
       pageKicker="Conta · Professor"
       pageTitle="Seu perfil profissional."
       primaryAction={{ label: "Salvar alterações" }}
@@ -42,24 +54,24 @@ export function ProfessorPerfil() {
           <div className="em-card-hard p-8 bg-white flex flex-col items-center text-center">
             <div className="relative mb-6">
               <div className="w-32 h-32 rounded-full border-4 border-[var(--em-ink)] bg-[var(--em-green)] flex items-center justify-center text-[40px] font-extrabold text-[var(--em-ink)] shadow-[4px_4px_0_0_#0E0F12]">
-                PL
+                {profile.initials}
               </div>
               <button className="absolute bottom-0 right-0 w-10 h-10 rounded-full bg-[var(--em-yellow)] border-[1.5px] border-[var(--em-ink)] flex items-center justify-center shadow-[2px_2px_0_0_#0E0F12] hover:scale-110 transition-transform">
                 <Plus className="w-5 h-5 text-[var(--em-ink)]" />
               </button>
             </div>
             
-            <h2 className="text-[24px] font-extrabold text-[var(--em-ink)] mb-1">Pedro Lima</h2>
-            <p className="text-[14px] font-medium text-[var(--em-text-soft)] mb-4">pedro.lima@escrevamais.com</p>
+            <h2 className="text-[24px] font-extrabold text-[var(--em-ink)] mb-1">{profile.name}</h2>
+            <p className="text-[14px] font-medium text-[var(--em-text-soft)] mb-4">{profile.email}</p>
             
             <div className="em-chip bg-[var(--em-mint)] border-[var(--em-ink)] text-[var(--em-ink)] mb-6">
-              <Award className="w-4 h-4" /> Redação ENEM
+              <Award className="w-4 h-4" /> {profile.expertise ?? "Professor Escreva Mais"}
             </div>
             
             <div className="w-full h-px bg-[var(--em-border-strong)] mb-6" />
             
             <div className="text-[13px] font-bold text-[var(--em-text-mute)] uppercase tracking-wider">
-              Professor desde Mar 2024
+              {profile.roleSinceLabel}
             </div>
           </div>
 
@@ -70,7 +82,7 @@ export function ProfessorPerfil() {
                 <FileText className="w-6 h-6 text-[var(--em-ink)]" />
               </div>
               <div>
-                <div className="text-[20px] font-extrabold text-[var(--em-ink)] leading-none mb-1">28</div>
+                <div className="text-[20px] font-extrabold text-[var(--em-ink)] leading-none mb-1">{profile.activityCount}</div>
                 <div className="text-[12px] font-bold text-[var(--em-ink-soft)]">Atividades criadas</div>
               </div>
             </div>
@@ -80,7 +92,7 @@ export function ProfessorPerfil() {
                 <Users className="w-6 h-6 text-[var(--em-ink)]" />
               </div>
               <div>
-                <div className="text-[20px] font-extrabold text-[var(--em-ink)] leading-none mb-1">147</div>
+                <div className="text-[20px] font-extrabold text-[var(--em-ink)] leading-none mb-1">{profile.studentCount}</div>
                 <div className="text-[12px] font-bold text-[var(--em-ink-soft)]">Alunos atendidos</div>
               </div>
             </div>
@@ -90,7 +102,7 @@ export function ProfessorPerfil() {
                 <Check className="w-6 h-6 text-[var(--em-ink)]" />
               </div>
               <div>
-                <div className="text-[20px] font-extrabold text-[var(--em-ink)] leading-none mb-1">84</div>
+                <div className="text-[20px] font-extrabold text-[var(--em-ink)] leading-none mb-1">{profile.correctionCount}</div>
                 <div className="text-[12px] font-bold text-[var(--em-ink-soft)]">Correções no mês</div>
               </div>
             </div>
@@ -111,35 +123,35 @@ export function ProfessorPerfil() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <Label className="text-[14px] font-bold text-[var(--em-ink)]">Nome completo</Label>
-                  <Input defaultValue="Pedro Lima" className="h-11 rounded-xl border-[1.5px] border-[var(--em-border-strong)] bg-[var(--em-bg)] font-medium text-[15px]" />
+                  <Input defaultValue={profile.name} className="h-11 rounded-xl border-[1.5px] border-[var(--em-border-strong)] bg-[var(--em-bg)] font-medium text-[15px]" />
                 </div>
                 <div className="space-y-2">
                   <Label className="text-[14px] font-bold text-[var(--em-ink)] text-opacity-70">E-mail (somente leitura)</Label>
-                  <Input defaultValue="pedro.lima@escrevamais.com" readOnly className="h-11 rounded-xl border-[1.5px] border-[var(--em-border-strong)] bg-[var(--em-muted)] text-[var(--em-text-mute)] font-medium text-[15px] cursor-not-allowed" />
+                  <Input defaultValue={profile.email} readOnly className="h-11 rounded-xl border-[1.5px] border-[var(--em-border-strong)] bg-[var(--em-muted)] text-[var(--em-text-mute)] font-medium text-[15px] cursor-not-allowed" />
                 </div>
                 <div className="space-y-2">
                   <Label className="text-[14px] font-bold text-[var(--em-ink)]">Telefone</Label>
                   <div className="relative">
                     <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--em-text-mute)]" />
-                    <Input defaultValue="(11) 98765-4321" className="h-11 pl-10 rounded-xl border-[1.5px] border-[var(--em-border-strong)] bg-[var(--em-bg)] font-medium text-[15px]" />
+                    <Input placeholder="Nao informado" className="h-11 pl-10 rounded-xl border-[1.5px] border-[var(--em-border-strong)] bg-[var(--em-bg)] font-medium text-[15px]" />
                   </div>
                 </div>
                 <div className="space-y-2">
                   <Label className="text-[14px] font-bold text-[var(--em-ink)]">Data de nascimento</Label>
                   <div className="relative">
                     <Calendar className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--em-text-mute)]" />
-                    <Input type="date" defaultValue="1992-05-14" className="h-11 pl-10 rounded-xl border-[1.5px] border-[var(--em-border-strong)] bg-[var(--em-bg)] font-medium text-[15px]" />
+                    <Input type="date" className="h-11 pl-10 rounded-xl border-[1.5px] border-[var(--em-border-strong)] bg-[var(--em-bg)] font-medium text-[15px]" />
                   </div>
                 </div>
                 <div className="space-y-2">
                   <Label className="text-[14px] font-bold text-[var(--em-ink)]">CPF</Label>
-                  <Input defaultValue="123.***.***-89" readOnly className="h-11 rounded-xl border-[1.5px] border-[var(--em-border-strong)] bg-[var(--em-muted)] text-[var(--em-text-mute)] font-medium text-[15px] cursor-not-allowed" />
+                  <Input placeholder="Nao informado" readOnly className="h-11 rounded-xl border-[1.5px] border-[var(--em-border-strong)] bg-[var(--em-muted)] text-[var(--em-text-mute)] font-medium text-[15px] cursor-not-allowed" />
                 </div>
                 <div className="space-y-2">
                   <Label className="text-[14px] font-bold text-[var(--em-ink)]">Cidade / UF</Label>
                   <div className="relative">
                     <MapPin className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--em-text-mute)]" />
-                    <Input defaultValue="São Paulo / SP" className="h-11 pl-10 rounded-xl border-[1.5px] border-[var(--em-border-strong)] bg-[var(--em-bg)] font-medium text-[15px]" />
+                    <Input placeholder="Nao informado" className="h-11 pl-10 rounded-xl border-[1.5px] border-[var(--em-border-strong)] bg-[var(--em-bg)] font-medium text-[15px]" />
                   </div>
                 </div>
               </div>
@@ -178,7 +190,7 @@ export function ProfessorPerfil() {
                 <Label className="text-[14px] font-bold text-[var(--em-ink)]">Formação acadêmica</Label>
                 <div className="relative">
                   <Building2 className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--em-text-mute)]" />
-                  <Input defaultValue="Letras - Português/Inglês (USP)" className="h-11 pl-10 rounded-xl border-[1.5px] border-[var(--em-border-strong)] bg-[var(--em-bg)] font-medium text-[15px]" />
+                  <Input defaultValue={profile.expertise ?? ""} placeholder="Nao informado" className="h-11 pl-10 rounded-xl border-[1.5px] border-[var(--em-border-strong)] bg-[var(--em-bg)] font-medium text-[15px]" />
                 </div>
               </div>
 
@@ -186,7 +198,8 @@ export function ProfessorPerfil() {
                 <Label className="text-[14px] font-bold text-[var(--em-ink)]">Bio profissional (Apresente-se aos alunos)</Label>
                 <textarea 
                   className="w-full min-h-[120px] p-4 rounded-xl border-[1.5px] border-[var(--em-border-strong)] focus:outline-none focus:border-[var(--em-ink)] bg-[var(--em-bg)] text-[15px] font-medium resize-y transition-colors leading-relaxed"
-                  defaultValue="Professor de redação com 8 anos de experiência. Foco total em estrutura e repertório sociocultural para o ENEM. Acredito que escrever bem é uma habilidade que se treina, não um dom."
+                  defaultValue={profile.bio}
+                  placeholder="Nao informado"
                 />
               </div>
             </form>
