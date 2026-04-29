@@ -62,7 +62,9 @@ export function Landing({ pricing }: LandingProps) {
           </nav>
           
           <div className="flex shrink-0 items-center gap-2 sm:gap-4">
-            <a href="/login" className="hidden text-sm font-semibold transition-colors hover:text-[var(--em-green)] sm:block">Entrar</a>
+            <a href="/login" className="inline-flex shrink-0 items-center justify-center rounded-xl border-2 border-white/18 bg-white/8 px-3 py-2 text-xs font-extrabold text-white transition-colors hover:border-[var(--em-green)] hover:text-[var(--em-green)] sm:border-0 sm:bg-transparent sm:px-0 sm:py-0 sm:text-sm sm:font-semibold">
+              Entrar
+            </a>
             <a href="/cadastro" className="em-btn-primary shrink-0 !px-3 !py-2 text-xs sm:!px-5 sm:!py-3 sm:text-sm">
               Começar<span className="hidden sm:inline"> agora</span>
             </a>
