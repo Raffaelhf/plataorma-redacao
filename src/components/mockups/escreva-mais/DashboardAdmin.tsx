@@ -1,369 +1,498 @@
+"use client";
+
 import Link from "next/link";
-import { 
-  Users, 
-  GraduationCap, 
-  ClipboardCheck, 
-  TrendingUp, 
-  ArrowUpRight, 
-  ArrowDownRight, 
+import { useMemo, useState } from "react";
+import {
+  Users,
+  GraduationCap,
+  ClipboardCheck,
+  TrendingUp,
+  ArrowUpRight,
+  ArrowDownRight,
   MessageCircle,
   Copy,
+  Check,
   ExternalLink,
   ShieldCheck,
   Activity,
   Clock,
   CheckCircle2,
-  AlertCircle
+  AlertCircle,
+  FileText,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { AppLayout } from "./_shared/AppLayout";
 import "./_group.css";
 
-export function DashboardAdmin() {
+export type DashboardAdminSummary = {
+  generatedAtLabel: string;
+  kpis: {
+    activeStudents: MetricValue;
+    activeTeachers: MetricValue;
+    pendingCorrections: MetricValue;
+    monthlyRevenueInCents: MetricValue;
+  };
+  revenue: {
+    currentMonthInCents: number;
+    trendLabel: string;
+    trendUp: boolean | null;
+    months: Array<{ label: string; amountInCents: number }>;
+  };
+  planDistribution: {
+    total: number;
+    rows: Array<{ label: string; count: number; percent: number; color: string }>;
+  };
+  recentUsers: Array<{
+    id: string;
+    name: string;
+    email: string;
+    initials: string;
+    type: string;
+    typeColor: string;
+    plan: string;
+    status: string;
+    statusColor: string;
+  }>;
+  whatsapp: {
+    label: string;
+    href: string | null;
+  };
+  finance: {
+    pixKey: string | null;
+    bankName: string | null;
+    bankAgency: string | null;
+    bankAccount: string | null;
+    bankRecipientName: string | null;
+    bankDocument: string | null;
+  };
+  health: {
+    publishedActivities: number;
+    submissionsLast7Days: number;
+    averageCorrectionTimeLabel: string;
+  };
+  recentActivity: Array<{
+    title: string;
+    time: string;
+    kind: "success" | "warning" | "submission" | "revenue";
+  }>;
+  pricing: {
+    mensalInCents: number;
+    trimestralInCents: number;
+    semestralInCents: number;
+    anualInCents: number;
+  };
+};
+
+type MetricValue = {
+  value: number;
+  trendLabel: string;
+  trendUp: boolean | null;
+};
+
+function formatCurrencyFromCents(value: number) {
+  return new Intl.NumberFormat("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+    maximumFractionDigits: 0,
+  }).format(value / 100);
+}
+
+function formatNumber(value: number) {
+  return new Intl.NumberFormat("pt-BR").format(value);
+}
+
+function formatCompactNumber(value: number) {
+  return new Intl.NumberFormat("pt-BR", {
+    notation: "compact",
+    maximumFractionDigits: 1,
+  }).format(value);
+}
+
+function displayOrFallback(value: string | null, fallback = "Nao configurado") {
+  return value?.trim() || fallback;
+}
+
+function maskDocument(value: string | null) {
+  if (!value) return "Nao configurado";
+  const digits = value.replace(/\D/g, "");
+  if (digits.length <= 4) return value;
+  return `${digits.slice(0, 2)}.***.***/${digits.slice(-6, -2)}-**`;
+}
+
+function buildRevenueChart(months: DashboardAdminSummary["revenue"]["months"]) {
+  const width = 800;
+  const height = 240;
+  const max = Math.max(...months.map((month) => month.amountInCents), 0);
+  const points = months.map((month, index) => {
+    const x = months.length === 1 ? 0 : (index / (months.length - 1)) * width;
+    const y = max > 0 ? 220 - (month.amountInCents / max) * 170 : 205;
+    return { ...month, x, y };
+  });
+  const linePath = points.map((point, index) => `${index === 0 ? "M" : "L"}${point.x},${point.y}`).join(" ");
+  const areaPath = `${linePath} L${width},${height} L0,${height} Z`;
+
+  return { points, linePath, areaPath };
+}
+
+export function DashboardAdmin({ summary }: { summary: DashboardAdminSummary }) {
+  const [copyState, setCopyState] = useState<"idle" | "copied">("idle");
+  const chart = useMemo(() => buildRevenueChart(summary.revenue.months), [summary.revenue.months]);
+  const donutBackground = useMemo(() => {
+    if (!summary.planDistribution.total) return "conic-gradient(var(--em-bg-alt) 0 100%)";
+
+    let cursor = 0;
+    const slices = summary.planDistribution.rows
+      .filter((row) => row.count > 0)
+      .map((row) => {
+        const size = (row.count / summary.planDistribution.total) * 100;
+        const start = cursor;
+        cursor += size;
+        return `${row.color} ${start}% ${cursor}%`;
+      });
+
+    return `conic-gradient(${slices.join(", ")})`;
+  }, [summary.planDistribution]);
+
+  async function copyWhatsApp() {
+    if (!summary.whatsapp.label || summary.whatsapp.label === "Nao configurado") return;
+    await navigator.clipboard.writeText(summary.whatsapp.label);
+    setCopyState("copied");
+    window.setTimeout(() => setCopyState("idle"), 1800);
+  }
+
   return (
     <AppLayout
       role="admin"
       userName="Ana Carolina Vieira"
       userEmail="ana@escrevamais.com"
       pageKicker="Painel administrativo"
-      pageTitle="Visão geral da plataforma."
-      primaryAction={{ label: "Adicionar usuário", href: "/admin/usuarios" }}
+      pageTitle="Visao geral da plataforma."
+      primaryAction={{ label: "Adicionar usuario", href: "/admin/usuarios" }}
     >
       <div className="space-y-8">
-        
-        {/* KPI Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
-          <KpiCard 
-            title="Alunos ativos" 
-            value="1.248" 
-            trend="+6.4%" 
-            trendUp={true} 
-            icon={GraduationCap} 
-            bgColor="var(--em-mint)" 
+        <div className="flex flex-col gap-2 rounded-2xl border border-[var(--em-border-strong)] bg-white/80 px-4 py-3 text-[12px] font-bold text-[var(--em-text-soft)] sm:flex-row sm:items-center sm:justify-between">
+          <span>Informacoes atuais do banco de dados da plataforma.</span>
+          <span className="text-[var(--em-ink)]">Atualizado em {summary.generatedAtLabel}</span>
+        </div>
+
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
+          <KpiCard
+            title="Alunos ativos"
+            value={formatNumber(summary.kpis.activeStudents.value)}
+            trend={summary.kpis.activeStudents.trendLabel}
+            trendUp={summary.kpis.activeStudents.trendUp}
+            icon={GraduationCap}
+            bgColor="var(--em-mint)"
           />
-          <KpiCard 
-            title="Professores ativos" 
-            value="32" 
-            trend="+2.1%" 
-            trendUp={true} 
-            icon={Users} 
-            bgColor="var(--em-peach)" 
+          <KpiCard
+            title="Professores ativos"
+            value={formatNumber(summary.kpis.activeTeachers.value)}
+            trend={summary.kpis.activeTeachers.trendLabel}
+            trendUp={summary.kpis.activeTeachers.trendUp}
+            icon={Users}
+            bgColor="var(--em-peach)"
           />
-          <KpiCard 
-            title="Correções pendentes" 
-            value="27" 
-            trend="-12%" 
-            trendUp={true} 
-            icon={ClipboardCheck} 
-            bgColor="var(--em-lavender)" 
+          <KpiCard
+            title="Correcoes pendentes"
+            value={formatNumber(summary.kpis.pendingCorrections.value)}
+            trend={summary.kpis.pendingCorrections.trendLabel}
+            trendUp={summary.kpis.pendingCorrections.trendUp}
+            icon={ClipboardCheck}
+            bgColor="var(--em-lavender)"
           />
-          <KpiCard 
-            title="Receita mensal" 
-            value="R$ 84.260" 
-            trend="+12%" 
-            trendUp={true} 
-            icon={TrendingUp} 
-            bgColor="var(--em-yellow-soft)" 
+          <KpiCard
+            title="Receita do mes"
+            value={formatCurrencyFromCents(summary.kpis.monthlyRevenueInCents.value)}
+            trend={summary.kpis.monthlyRevenueInCents.trendLabel}
+            trendUp={summary.kpis.monthlyRevenueInCents.trendUp}
+            icon={TrendingUp}
+            bgColor="var(--em-yellow-soft)"
           />
         </div>
 
-        <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
-          
-          {/* Main Column */}
-          <div className="xl:col-span-2 space-y-8">
-            
-            {/* Revenue Chart */}
-            <div className="em-card-hard p-8 bg-white relative overflow-hidden">
-              <div className="flex justify-between items-start mb-8">
+        <div className="grid grid-cols-1 gap-8 xl:grid-cols-3">
+          <div className="space-y-8 xl:col-span-2">
+            <div className="em-card-hard relative overflow-hidden bg-white p-8">
+              <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                 <div>
-                  <h3 className="text-[14px] font-bold tracking-tight text-[var(--em-text-soft)] uppercase mb-1">Receita Mensal</h3>
-                  <div className="flex items-baseline gap-4">
-                    <div className="text-[32px] font-extrabold text-[var(--em-ink)] tracking-tight">R$ 84.260</div>
-                    <div className="flex items-center gap-1 text-[13px] font-bold text-[var(--em-green-deep)]">
-                      <ArrowUpRight className="w-4 h-4" /> 12% vs mês anterior
+                  <h3 className="mb-1 text-[14px] font-bold uppercase tracking-tight text-[var(--em-text-soft)]">Receita do mes</h3>
+                  <div className="flex flex-wrap items-baseline gap-4">
+                    <div className="text-[32px] font-extrabold tracking-tight text-[var(--em-ink)]">
+                      {formatCurrencyFromCents(summary.revenue.currentMonthInCents)}
                     </div>
+                    <TrendBadge label={`${summary.revenue.trendLabel} vs mes anterior`} trendUp={summary.revenue.trendUp} />
                   </div>
                 </div>
-                <select className="px-3 py-1.5 bg-[var(--em-bg)] border border-[var(--em-border)] rounded-lg text-[13px] font-semibold text-[var(--em-ink)] outline-none focus:border-[var(--em-ink)]">
-                  <option>Últimos 6 meses</option>
-                  <option>Este ano</option>
-                </select>
+                <div className="rounded-lg border border-[var(--em-border)] bg-[var(--em-bg)] px-3 py-1.5 text-[13px] font-semibold text-[var(--em-ink)]">
+                  Ultimos 6 meses
+                </div>
               </div>
 
-              {/* Area Chart SVG */}
-              <div className="h-[240px] w-full mt-4 relative">
-                <svg viewBox="0 0 800 240" preserveAspectRatio="none" className="w-full h-full overflow-visible">
-                  <defs>
-                    <linearGradient id="fade" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="var(--em-green)" stopOpacity="1" />
-                      <stop offset="100%" stopColor="var(--em-green)" stopOpacity="0.2" />
-                    </linearGradient>
-                  </defs>
-                  
-                  {/* Grid lines */}
+              <div className="relative mt-4 h-[240px] w-full">
+                <svg viewBox="0 0 800 240" preserveAspectRatio="none" className="h-full w-full overflow-visible">
                   <line x1="0" y1="60" x2="800" y2="60" stroke="var(--em-border)" strokeWidth="1" strokeDasharray="4 4" />
                   <line x1="0" y1="120" x2="800" y2="120" stroke="var(--em-border)" strokeWidth="1" strokeDasharray="4 4" />
                   <line x1="0" y1="180" x2="800" y2="180" stroke="var(--em-border)" strokeWidth="1" strokeDasharray="4 4" />
                   <line x1="0" y1="240" x2="800" y2="240" stroke="var(--em-ink)" strokeWidth="1.5" />
-                  
-                  <path 
-                    d="M0,200 L114,180 L228,190 L342,130 L457,150 L571,80 L685,90 L800,40 L800,240 L0,240 Z" 
-                    fill="var(--em-green)"
-                  />
-                  <path 
-                    d="M0,200 L114,180 L228,190 L342,130 L457,150 L571,80 L685,90 L800,40" 
-                    fill="none" 
-                    stroke="var(--em-ink)" 
-                    strokeWidth="3" 
-                  />
-                  
-                  {/* Data points */}
-                  <circle cx="114" cy="180" r="5" fill="var(--em-yellow)" stroke="var(--em-ink)" strokeWidth="2" />
-                  <circle cx="228" cy="190" r="5" fill="var(--em-yellow)" stroke="var(--em-ink)" strokeWidth="2" />
-                  <circle cx="342" cy="130" r="5" fill="var(--em-yellow)" stroke="var(--em-ink)" strokeWidth="2" />
-                  <circle cx="457" cy="150" r="5" fill="var(--em-yellow)" stroke="var(--em-ink)" strokeWidth="2" />
-                  <circle cx="571" cy="80" r="5" fill="var(--em-yellow)" stroke="var(--em-ink)" strokeWidth="2" />
-                  <circle cx="685" cy="90" r="5" fill="var(--em-yellow)" stroke="var(--em-ink)" strokeWidth="2" />
-                  <circle cx="800" cy="40" r="5" fill="var(--em-yellow)" stroke="var(--em-ink)" strokeWidth="2" />
+                  <path d={chart.areaPath} fill="var(--em-green)" opacity={summary.revenue.currentMonthInCents > 0 ? 1 : 0.18} />
+                  <path d={chart.linePath} fill="none" stroke="var(--em-ink)" strokeWidth="3" />
+                  {chart.points.map((point) => (
+                    <circle key={point.label} cx={point.x} cy={point.y} r="5" fill="var(--em-yellow)" stroke="var(--em-ink)" strokeWidth="2" />
+                  ))}
                 </svg>
-                <div className="absolute -bottom-6 left-0 right-0 flex justify-between text-[11px] font-bold text-[var(--em-text-mute)] px-2">
-                  <span>Fev</span>
-                  <span>Mar</span>
-                  <span>Abr</span>
-                  <span>Mai</span>
-                  <span>Jun</span>
-                  <span>Jul</span>
-                  <span>Ago</span>
+                <div className="absolute -bottom-6 left-0 right-0 flex justify-between px-2 text-[11px] font-bold text-[var(--em-text-mute)]">
+                  {summary.revenue.months.map((month) => (
+                    <span key={month.label}>{month.label}</span>
+                  ))}
                 </div>
               </div>
             </div>
 
-            {/* Cadastros Recentes */}
-            <div className="em-card-hard p-0 bg-white overflow-hidden">
-              <div className="p-6 border-b border-[var(--em-ink)] flex justify-between items-center bg-[var(--em-cream)]">
-                <h3 className="text-[16px] font-extrabold text-[var(--em-ink)]">Cadastros Recentes</h3>
-                <Link href="/admin/usuarios" className="text-[13px] font-bold text-[var(--em-ink)] hover:text-[var(--em-green-deep)] transition-colors">
+            <div className="em-card-hard overflow-hidden bg-white p-0">
+              <div className="flex items-center justify-between border-b border-[var(--em-ink)] bg-[var(--em-cream)] p-6">
+                <h3 className="text-[16px] font-extrabold text-[var(--em-ink)]">Cadastros recentes</h3>
+                <Link href="/admin/usuarios" className="text-[13px] font-bold text-[var(--em-ink)] transition-colors hover:text-[var(--em-green-deep)]">
                   Ver todos
                 </Link>
               </div>
               <div className="overflow-x-auto">
-                <table className="w-full text-left border-collapse">
+                <table className="w-full border-collapse text-left">
                   <thead>
-                    <tr className="bg-white border-b border-[var(--em-ink)]">
-                      <th className="px-6 py-4 text-[11px] font-extrabold uppercase tracking-wider text-[var(--em-ink)]">Usuário</th>
+                    <tr className="border-b border-[var(--em-ink)] bg-white">
+                      <th className="px-6 py-4 text-[11px] font-extrabold uppercase tracking-wider text-[var(--em-ink)]">Usuario</th>
                       <th className="px-6 py-4 text-[11px] font-extrabold uppercase tracking-wider text-[var(--em-ink)]">Tipo</th>
                       <th className="px-6 py-4 text-[11px] font-extrabold uppercase tracking-wider text-[var(--em-ink)]">Plano</th>
                       <th className="px-6 py-4 text-[11px] font-extrabold uppercase tracking-wider text-[var(--em-ink)]">Status</th>
-                      <th className="px-6 py-4 text-[11px] font-extrabold uppercase tracking-wider text-[var(--em-ink)] text-right">Ação</th>
+                      <th className="px-6 py-4 text-right text-[11px] font-extrabold uppercase tracking-wider text-[var(--em-ink)]">Acao</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {[
-                      { name: "Júlia Mendes", email: "julia.m@email.com", type: "Aluno", typeColor: "var(--em-mint)", plan: "Anual", status: "Ativo", statusColor: "var(--em-green)", avatar: "JM" },
-                      { name: "Prof. Rafael Costa", email: "rafael@escrevamais.com", type: "Professor", typeColor: "var(--em-lavender)", plan: "Premium", status: "Ativo", statusColor: "var(--em-green)", avatar: "RC" },
-                      { name: "Lucas Batista", email: "lucas.b@email.com", type: "Aluno", typeColor: "var(--em-mint)", plan: "Mensal", status: "Pendente", statusColor: "var(--em-yellow)", avatar: "LB" },
-                      { name: "Beatriz Oliveira", email: "bia.oli@email.com", type: "Aluno", typeColor: "var(--em-mint)", plan: "Semestral", status: "Ativo", statusColor: "var(--em-green)", avatar: "BO" },
-                      { name: "Pedro Henrique", email: "pedro.h@email.com", type: "Aluno", typeColor: "var(--em-mint)", plan: "Mensal", status: "Ativo", statusColor: "var(--em-green)", avatar: "PH" },
-                      { name: "Ana Clara Silva", email: "ana.c@email.com", type: "Aluno", typeColor: "var(--em-mint)", plan: "Anual", status: "Ativo", statusColor: "var(--em-green)", avatar: "AC" },
-                    ].map((user, i) => (
-                      <tr key={i} className="border-b border-[var(--em-ink)] last:border-b-0 hover:bg-[var(--em-bg)] transition-colors">
-                        <td className="px-6 py-4">
-                          <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 rounded-full border border-[var(--em-ink)] bg-[var(--em-cream)] text-[var(--em-ink)] flex items-center justify-center text-[11px] font-bold">
-                              {user.avatar}
+                    {summary.recentUsers.length ? (
+                      summary.recentUsers.map((user) => (
+                        <tr key={user.id} className="border-b border-[var(--em-ink)] transition-colors last:border-b-0 hover:bg-[var(--em-bg)]">
+                          <td className="px-6 py-4">
+                            <div className="flex items-center gap-3">
+                              <div className="flex h-8 w-8 items-center justify-center rounded-full border border-[var(--em-ink)] bg-[var(--em-cream)] text-[11px] font-bold text-[var(--em-ink)]">
+                                {user.initials}
+                              </div>
+                              <div>
+                                <div className="text-[14px] font-bold leading-tight text-[var(--em-ink)]">{user.name}</div>
+                                <div className="text-[12px] text-[var(--em-text-soft)]">{user.email}</div>
+                              </div>
                             </div>
-                            <div>
-                              <div className="text-[14px] font-bold text-[var(--em-ink)] leading-tight">{user.name}</div>
-                              <div className="text-[12px] text-[var(--em-text-soft)]">{user.email}</div>
+                          </td>
+                          <td className="px-6 py-4">
+                            <span
+                              className="rounded-full border border-[var(--em-ink)] px-2.5 py-1 text-[11px] font-extrabold shadow-[2px_2px_0_0_#0E0F12]"
+                              style={{ backgroundColor: user.typeColor }}
+                            >
+                              {user.type}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4">
+                            <div className="text-[13px] font-bold text-[var(--em-ink)]">{user.plan}</div>
+                          </td>
+                          <td className="px-6 py-4">
+                            <div className="flex items-center gap-2">
+                              <span className="h-2.5 w-2.5 rounded-full border border-[var(--em-ink)]" style={{ backgroundColor: user.statusColor }} />
+                              <span className="text-[13px] font-bold text-[var(--em-ink)]">{user.status}</span>
                             </div>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4">
-                          <span className="px-2.5 py-1 rounded-full text-[11px] font-extrabold border border-[var(--em-ink)] shadow-[2px_2px_0_0_#0E0F12]" style={{ backgroundColor: user.typeColor }}>
-                            {user.type}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4">
-                          <div className="text-[13px] font-bold text-[var(--em-ink)]">{user.plan}</div>
-                        </td>
-                        <td className="px-6 py-4">
-                          <div className="flex items-center gap-2">
-                            <span className="w-2.5 h-2.5 rounded-full border border-[var(--em-ink)]" style={{ backgroundColor: user.statusColor }}></span>
-                            <span className="text-[13px] font-bold text-[var(--em-ink)]">{user.status}</span>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 text-right">
-                          <Link href="/admin/usuarios" className="inline-flex px-3 py-1.5 text-[11px] font-bold bg-white border border-[var(--em-ink)] rounded-lg hover:bg-[var(--em-bg)] shadow-[2px_2px_0_0_#0E0F12] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0_0_#0E0F12] transition-all">
-                            Ver perfil
-                          </Link>
+                          </td>
+                          <td className="px-6 py-4 text-right">
+                            <Link href="/admin/usuarios" className="inline-flex rounded-lg border border-[var(--em-ink)] bg-white px-3 py-1.5 text-[11px] font-bold shadow-[2px_2px_0_0_#0E0F12] transition-all hover:translate-x-[1px] hover:translate-y-[1px] hover:bg-[var(--em-bg)] hover:shadow-[1px_1px_0_0_#0E0F12]">
+                              Ver perfil
+                            </Link>
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan={5} className="px-6 py-8 text-center text-[13px] font-bold text-[var(--em-text-soft)]">
+                          Nenhum cadastro encontrado ainda.
                         </td>
                       </tr>
-                    ))}
+                    )}
                   </tbody>
                 </table>
               </div>
             </div>
-            
           </div>
 
-          {/* Sidebar Column */}
           <div className="space-y-8">
-            
-            {/* Breakdown Chart */}
-            <div className="em-card-hard p-6 bg-white">
-              <h3 className="text-[16px] font-extrabold text-[var(--em-ink)] mb-6">Distribuição por plano</h3>
+            <div className="em-card-hard bg-white p-6">
+              <h3 className="mb-6 text-[16px] font-extrabold text-[var(--em-ink)]">Distribuicao por plano</h3>
               <div className="flex flex-col items-center justify-center">
-                <div className="relative w-[180px] h-[180px] mb-8">
-                  {/* Simplified Donut SVG */}
-                  <svg viewBox="0 0 100 100" className="w-full h-full transform -rotate-90">
-                    <circle cx="50" cy="50" r="40" fill="transparent" stroke="var(--em-mint)" strokeWidth="20" strokeDasharray="251.2" strokeDashoffset="0" />
-                    <circle cx="50" cy="50" r="40" fill="transparent" stroke="var(--em-peach)" strokeWidth="20" strokeDasharray="251.2" strokeDashoffset="75.36" />
-                    <circle cx="50" cy="50" r="40" fill="transparent" stroke="var(--em-lavender)" strokeWidth="20" strokeDasharray="251.2" strokeDashoffset="145.7" />
-                    <circle cx="50" cy="50" r="40" fill="transparent" stroke="var(--em-yellow)" strokeWidth="20" strokeDasharray="251.2" strokeDashoffset="200.96" />
-                    <circle cx="50" cy="50" r="40" fill="transparent" stroke="var(--em-ink)" strokeWidth="2" />
-                    <circle cx="50" cy="50" r="60" fill="transparent" stroke="var(--em-ink)" strokeWidth="2" />
-                  </svg>
-                  <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-                    <span className="text-[24px] font-extrabold text-[var(--em-ink)] leading-none">1.2k</span>
-                    <span className="text-[11px] font-bold text-[var(--em-text-mute)] mt-1">Assinantes</span>
+                <div className="relative mb-8 h-[180px] w-[180px] rounded-full border-[2px] border-[var(--em-ink)] p-5 shadow-[4px_4px_0_0_#0E0F12]" style={{ background: donutBackground }}>
+                  <div className="grid h-full w-full place-items-center rounded-full border-[1.5px] border-[var(--em-ink)] bg-white text-center">
+                    <div>
+                      <span className="block text-[24px] font-extrabold leading-none text-[var(--em-ink)]">{formatCompactNumber(summary.planDistribution.total)}</span>
+                      <span className="mt-1 block text-[11px] font-bold text-[var(--em-text-mute)]">Assinantes</span>
+                    </div>
                   </div>
                 </div>
-                
+
                 <div className="w-full space-y-3">
-                  <PlanRow label="Semestral" value="30%" color="var(--em-mint)" />
-                  <PlanRow label="Trimestral" value="28%" color="var(--em-peach)" />
-                  <PlanRow label="Mensal" value="22%" color="var(--em-lavender)" />
-                  <PlanRow label="Anual" value="20%" color="var(--em-yellow)" />
+                  {summary.planDistribution.rows.map((row) => (
+                    <PlanRow key={row.label} label={row.label} value={`${row.percent}% (${row.count})`} color={row.color} />
+                  ))}
                 </div>
               </div>
             </div>
 
-            {/* WhatsApp Card */}
-            <div className="rounded-[22px] border-[1.5px] border-[var(--em-ink)] p-6 shadow-[6px_6px_0_0_#0E0F12] relative overflow-hidden" style={{ backgroundColor: "var(--em-green)" }}>
-              {/* Decorative elements */}
-              <div className="absolute -right-4 -top-4 w-24 h-24 border-[1.5px] border-[var(--em-ink)] rounded-full opacity-20" />
-              <div className="absolute -right-8 -top-8 w-32 h-32 border-[1.5px] border-[var(--em-ink)] rounded-full opacity-20" />
-              
+            <div className="relative overflow-hidden rounded-[22px] border-[1.5px] border-[var(--em-ink)] p-6 shadow-[6px_6px_0_0_#0E0F12]" style={{ backgroundColor: "var(--em-green)" }}>
+              <div className="absolute -right-4 -top-4 h-24 w-24 rounded-full border-[1.5px] border-[var(--em-ink)] opacity-20" />
+              <div className="absolute -right-8 -top-8 h-32 w-32 rounded-full border-[1.5px] border-[var(--em-ink)] opacity-20" />
+
               <div className="relative z-10">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-full bg-[var(--em-ink)] flex items-center justify-center text-white">
-                    <MessageCircle className="w-5 h-5" />
+                <div className="mb-4 flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--em-ink)] text-white">
+                    <MessageCircle className="h-5 w-5" />
                   </div>
                   <div>
-                    <h3 className="text-[16px] font-extrabold text-[var(--em-ink)] leading-tight">WhatsApp Oficial</h3>
+                    <h3 className="text-[16px] font-extrabold leading-tight text-[var(--em-ink)]">WhatsApp oficial</h3>
                     <p className="text-[12px] font-semibold text-[var(--em-ink-soft)] opacity-80">Atendimento a alunos</p>
                   </div>
                 </div>
-                
-                <div className="bg-white/90 border-[1.5px] border-[var(--em-ink)] rounded-xl p-3 flex justify-between items-center mb-5">
-                  <span className="font-bold text-[15px] text-[var(--em-ink)]">+55 (11) 98765-4321</span>
-                  <button className="p-1.5 hover:bg-[var(--em-bg-alt)] border border-transparent hover:border-[var(--em-ink)] rounded-md transition-colors bg-white">
-                    <Copy className="w-4 h-4 text-[var(--em-ink)]" />
+
+                <div className="mb-5 flex items-center justify-between rounded-xl border-[1.5px] border-[var(--em-ink)] bg-white/90 p-3">
+                  <span className="text-[15px] font-bold text-[var(--em-ink)]">{summary.whatsapp.label}</span>
+                  <button
+                    type="button"
+                    onClick={copyWhatsApp}
+                    className="rounded-md border border-transparent bg-white p-1.5 transition-colors hover:border-[var(--em-ink)] hover:bg-[var(--em-bg-alt)]"
+                    aria-label="Copiar WhatsApp"
+                  >
+                    {copyState === "copied" ? <Check className="h-4 w-4 text-[var(--em-green-deep)]" /> : <Copy className="h-4 w-4 text-[var(--em-ink)]" />}
                   </button>
                 </div>
-                
-                <a href="https://wa.me/5511987654321" target="_blank" rel="noreferrer" className="w-full bg-[var(--em-ink)] text-white font-bold py-3 rounded-xl border-[1.5px] border-[var(--em-ink)] mb-5 hover:bg-[var(--em-ink-soft)] transition-colors flex justify-center items-center gap-2">
-                  Abrir conversa <ExternalLink className="w-4 h-4" />
-                </a>
-                
+
+                {summary.whatsapp.href ? (
+                  <a href={summary.whatsapp.href} target="_blank" rel="noreferrer" className="mb-5 flex w-full items-center justify-center gap-2 rounded-xl border-[1.5px] border-[var(--em-ink)] bg-[var(--em-ink)] py-3 font-bold text-white transition-colors hover:bg-[var(--em-ink-soft)]">
+                    Abrir conversa <ExternalLink className="h-4 w-4" />
+                  </a>
+                ) : (
+                  <Link href="/admin/configuracoes" className="mb-5 flex w-full items-center justify-center rounded-xl border-[1.5px] border-[var(--em-ink)] bg-[var(--em-ink)] py-3 font-bold text-white transition-colors hover:bg-[var(--em-ink-soft)]">
+                    Configurar WhatsApp
+                  </Link>
+                )}
+
                 <div className="flex flex-wrap gap-2">
-                  <span className="text-[11px] font-bold px-2.5 py-1 bg-white/50 border border-[var(--em-ink)] rounded-full text-[var(--em-ink)] shadow-[2px_2px_0_0_#0E0F12]">Configurar planos</span>
-                  <span className="text-[11px] font-bold px-2.5 py-1 bg-white/50 border border-[var(--em-ink)] rounded-full text-[var(--em-ink)] shadow-[2px_2px_0_0_#0E0F12]">Política cancelamento</span>
-                  <span className="text-[11px] font-bold px-2.5 py-1 bg-white/50 border border-[var(--em-ink)] rounded-full text-[var(--em-ink)] shadow-[2px_2px_0_0_#0E0F12]">Cupons</span>
+                  <InfoPill label={`Mensal ${formatCurrencyFromCents(summary.pricing.mensalInCents)}`} />
+                  <InfoPill label={`Trimestral ${formatCurrencyFromCents(summary.pricing.trimestralInCents)}`} />
+                  <InfoPill label={`Anual ${formatCurrencyFromCents(summary.pricing.anualInCents)}`} />
                 </div>
               </div>
             </div>
 
-            {/* PIX / Financeiro */}
             <div className="em-card-hard p-6" style={{ backgroundColor: "var(--em-cream)" }}>
-              <div className="flex items-center gap-2 mb-5">
-                <ShieldCheck className="w-5 h-5 text-[var(--em-ink)]" />
-                <h3 className="text-[16px] font-extrabold text-[var(--em-ink)]">Dados financeiros (PIX)</h3>
+              <div className="mb-5 flex items-center gap-2">
+                <ShieldCheck className="h-5 w-5 text-[var(--em-ink)]" />
+                <h3 className="text-[16px] font-extrabold text-[var(--em-ink)]">Dados financeiros</h3>
               </div>
-              
-              <div className="space-y-4 mb-6 bg-white p-4 rounded-xl border border-[var(--em-ink)]">
+
+              <div className="mb-6 space-y-4 rounded-xl border border-[var(--em-ink)] bg-white p-4">
                 <div>
-                  <div className="text-[11px] font-extrabold uppercase tracking-wider text-[var(--em-text-mute)] mb-1">Chave PIX (CNPJ)</div>
-                  <div className="font-mono text-[14px] font-bold text-[var(--em-ink)]">42.***.***/0001-**</div>
+                  <div className="mb-1 text-[11px] font-extrabold uppercase tracking-wider text-[var(--em-text-mute)]">Titular</div>
+                  <div className="text-[14px] font-bold text-[var(--em-ink)]">{displayOrFallback(summary.finance.bankRecipientName)}</div>
                 </div>
-                <div className="grid grid-cols-2 gap-4 pt-3 border-t border-[var(--em-ink)]">
+                <div>
+                  <div className="mb-1 text-[11px] font-extrabold uppercase tracking-wider text-[var(--em-text-mute)]">Chave PIX / Documento</div>
+                  <div className="font-mono text-[14px] font-bold text-[var(--em-ink)]">{displayOrFallback(summary.finance.pixKey, maskDocument(summary.finance.bankDocument))}</div>
+                </div>
+                <div className="grid grid-cols-2 gap-4 border-t border-[var(--em-ink)] pt-3">
                   <div>
-                    <div className="text-[11px] font-extrabold uppercase tracking-wider text-[var(--em-text-mute)] mb-1">Banco</div>
-                    <div className="text-[14px] font-bold text-[var(--em-ink)]">Itaú (341)</div>
+                    <div className="mb-1 text-[11px] font-extrabold uppercase tracking-wider text-[var(--em-text-mute)]">Banco</div>
+                    <div className="text-[14px] font-bold text-[var(--em-ink)]">{displayOrFallback(summary.finance.bankName)}</div>
                   </div>
                   <div>
-                    <div className="text-[11px] font-extrabold uppercase tracking-wider text-[var(--em-text-mute)] mb-1">Ag / Conta</div>
-                    <div className="text-[14px] font-bold text-[var(--em-ink)]">1234 / 56789-0</div>
+                    <div className="mb-1 text-[11px] font-extrabold uppercase tracking-wider text-[var(--em-text-mute)]">Ag / Conta</div>
+                    <div className="text-[14px] font-bold text-[var(--em-ink)]">
+                      {summary.finance.bankAgency || summary.finance.bankAccount
+                        ? `${summary.finance.bankAgency ?? "-"} / ${summary.finance.bankAccount ?? "-"}`
+                        : "Nao configurado"}
+                    </div>
                   </div>
                 </div>
               </div>
-              
+
               <Link href="/admin/configuracoes" className="em-btn-primary w-full justify-center">
                 Atualizar dados
               </Link>
             </div>
 
-            {/* Saúde da Plataforma */}
-            <div className="em-card-hard p-6 bg-white">
-              <div className="flex items-center gap-2 mb-5">
-                <Activity className="w-5 h-5 text-[var(--em-ink)]" />
-                <h3 className="text-[16px] font-extrabold text-[var(--em-ink)]">Saúde da plataforma</h3>
+            <div className="em-card-hard bg-white p-6">
+              <div className="mb-5 flex items-center gap-2">
+                <Activity className="h-5 w-5 text-[var(--em-ink)]" />
+                <h3 className="text-[16px] font-extrabold text-[var(--em-ink)]">Saude da plataforma</h3>
               </div>
-              
+
               <div className="space-y-3">
-                <div className="flex items-center justify-between p-3 rounded-xl border border-[var(--em-ink)] bg-[var(--em-bg)]">
-                  <span className="text-[13px] font-bold text-[var(--em-ink)]">Uptime Geral</span>
-                  <span className="text-[12px] font-extrabold px-2.5 py-1 rounded-full bg-[var(--em-green)] border border-[var(--em-ink)] shadow-[2px_2px_0_0_#0E0F12]">99.98%</span>
-                </div>
-                <div className="flex items-center justify-between p-3 rounded-xl border border-[var(--em-ink)] bg-[var(--em-bg)]">
-                  <span className="text-[13px] font-bold text-[var(--em-ink)]">Tempo Médio Corr.</span>
-                  <span className="text-[12px] font-extrabold px-2.5 py-1 rounded-full bg-[var(--em-yellow)] border border-[var(--em-ink)] shadow-[2px_2px_0_0_#0E0F12]">38h</span>
-                </div>
-                <div className="flex items-center justify-between p-3 rounded-xl border border-[var(--em-ink)] bg-[var(--em-bg)]">
-                  <span className="text-[13px] font-bold text-[var(--em-ink)]">NPS</span>
-                  <span className="text-[12px] font-extrabold px-2.5 py-1 rounded-full bg-[var(--em-green)] border border-[var(--em-ink)] shadow-[2px_2px_0_0_#0E0F12]">71</span>
-                </div>
+                <HealthRow label="Atividades publicadas" value={formatNumber(summary.health.publishedActivities)} color="var(--em-green)" />
+                <HealthRow label="Envios em 7 dias" value={formatNumber(summary.health.submissionsLast7Days)} color="var(--em-yellow)" />
+                <HealthRow label="Tempo medio correcao" value={summary.health.averageCorrectionTimeLabel} color="var(--em-lavender)" />
               </div>
             </div>
 
-            {/* Atividade Recente */}
-            <div className="em-card-hard p-6 bg-white">
-              <div className="flex items-center justify-between mb-5">
+            <div className="em-card-hard bg-white p-6">
+              <div className="mb-5 flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <Clock className="w-5 h-5 text-[var(--em-ink)]" />
+                  <Clock className="h-5 w-5 text-[var(--em-ink)]" />
                   <h3 className="text-[16px] font-extrabold text-[var(--em-ink)]">Atividade recente</h3>
                 </div>
               </div>
-              
+
               <div className="space-y-4">
-                {[
-                  { title: "Novo professor cadastrado", time: "Há 10 min", icon: CheckCircle2, color: "text-[var(--em-green-deep)]" },
-                  { title: "Plano Anual assinado: Lucas B.", time: "Há 45 min", icon: TrendingUp, color: "text-[var(--em-yellow-deep)]" },
-                  { title: "Lote de 50 redações enviadas", time: "Há 2 horas", icon: ClipboardCheck, color: "text-[var(--em-ink)]" },
-                  { title: "Falha no envio de e-mail", time: "Há 3 horas", icon: AlertCircle, color: "text-[var(--em-coral)]" },
-                  { title: "Atualização de sistema concluída", time: "Ontem, 23:00", icon: ShieldCheck, color: "text-[var(--em-lavender-deep)]" },
-                ].map((act, i) => {
-                  const Icon = act.icon;
-                  return (
-                    <div key={i} className="flex gap-3">
-                      <div className="mt-0.5">
-                        <Icon className={`w-4 h-4 ${act.color}`} />
+                {summary.recentActivity.length ? (
+                  summary.recentActivity.map((item, index) => {
+                    const Icon = activityIconByKind[item.kind];
+                    return (
+                      <div key={`${item.title}-${index}`} className="flex gap-3">
+                        <div className="mt-0.5">
+                          <Icon className={`h-4 w-4 ${activityColorByKind[item.kind]}`} />
+                        </div>
+                        <div>
+                          <div className="text-[13px] font-bold leading-tight text-[var(--em-ink)]">{item.title}</div>
+                          <div className="mt-0.5 text-[11px] font-semibold text-[var(--em-text-mute)]">{item.time}</div>
+                        </div>
                       </div>
-                      <div>
-                        <div className="text-[13px] font-bold text-[var(--em-ink)] leading-tight">{act.title}</div>
-                        <div className="text-[11px] font-semibold text-[var(--em-text-mute)] mt-0.5">{act.time}</div>
-                      </div>
-                    </div>
-                  )
-                })}
+                    );
+                  })
+                ) : (
+                  <div className="rounded-xl border border-[var(--em-border-strong)] bg-[var(--em-bg)] px-3 py-4 text-[13px] font-bold text-[var(--em-text-soft)]">
+                    Nenhuma atividade recente registrada.
+                  </div>
+                )}
               </div>
             </div>
-
           </div>
         </div>
-
       </div>
     </AppLayout>
+  );
+}
+
+const activityIconByKind: Record<DashboardAdminSummary["recentActivity"][number]["kind"], LucideIcon> = {
+  success: CheckCircle2,
+  warning: AlertCircle,
+  submission: FileText,
+  revenue: TrendingUp,
+};
+
+const activityColorByKind: Record<DashboardAdminSummary["recentActivity"][number]["kind"], string> = {
+  success: "text-[var(--em-green-deep)]",
+  warning: "text-[var(--em-coral)]",
+  submission: "text-[var(--em-ink)]",
+  revenue: "text-[var(--em-yellow-deep)]",
+};
+
+function TrendBadge({ label, trendUp }: { label: string; trendUp: boolean | null }) {
+  const Icon = trendUp === null ? Activity : trendUp ? ArrowUpRight : ArrowDownRight;
+  const color = trendUp === null ? "text-[var(--em-text-soft)]" : trendUp ? "text-[var(--em-green-deep)]" : "text-[var(--em-coral)]";
+
+  return (
+    <div className={`flex items-center gap-1 text-[13px] font-bold ${color}`}>
+      <Icon className="h-4 w-4" /> {label}
+    </div>
   );
 }
 
@@ -378,27 +507,29 @@ function KpiCard({
   title: string;
   value: string;
   trend: string;
-  trendUp: boolean;
+  trendUp: boolean | null;
   icon: LucideIcon;
   bgColor: string;
 }) {
+  const TrendIcon = trendUp === null ? Activity : trendUp ? ArrowUpRight : ArrowDownRight;
+
   return (
-    <div 
-      className="rounded-[22px] border-[1.5px] border-[var(--em-ink)] p-5 shadow-[4px_4px_0_0_#0E0F12] hover:-translate-y-1 hover:shadow-[6px_6px_0_0_#0E0F12] transition-all relative overflow-hidden"
+    <div
+      className="relative overflow-hidden rounded-[22px] border-[1.5px] border-[var(--em-ink)] p-5 shadow-[4px_4px_0_0_#0E0F12] transition-all hover:-translate-y-1 hover:shadow-[6px_6px_0_0_#0E0F12]"
       style={{ backgroundColor: bgColor }}
     >
-      <div className="flex justify-between items-start mb-4">
-        <div className="w-10 h-10 rounded-xl bg-white border-[1.5px] border-[var(--em-ink)] flex items-center justify-center shadow-[2px_2px_0_0_#0E0F12]">
-          <Icon className="w-5 h-5 text-[var(--em-ink)]" strokeWidth={2.5} />
+      <div className="mb-4 flex items-start justify-between">
+        <div className="flex h-10 w-10 items-center justify-center rounded-xl border-[1.5px] border-[var(--em-ink)] bg-white shadow-[2px_2px_0_0_#0E0F12]">
+          <Icon className="h-5 w-5 text-[var(--em-ink)]" strokeWidth={2.5} />
         </div>
-        <div className={`flex items-center gap-1 text-[12px] font-extrabold px-2.5 py-1 rounded-full border border-[var(--em-ink)] bg-white/70 shadow-[2px_2px_0_0_rgba(14,15,18,0.2)]`}>
-          {trendUp ? <ArrowUpRight className="w-3 h-3" /> : <ArrowDownRight className="w-3 h-3" />}
+        <div className="flex items-center gap-1 rounded-full border border-[var(--em-ink)] bg-white/70 px-2.5 py-1 text-[12px] font-extrabold shadow-[2px_2px_0_0_rgba(14,15,18,0.2)]">
+          <TrendIcon className="h-3 w-3" />
           {trend}
         </div>
       </div>
       <div>
-        <h3 className="text-[13px] font-bold text-[var(--em-ink)] opacity-90 mb-1">{title}</h3>
-        <div className="text-[28px] font-extrabold text-[var(--em-ink)] tracking-tight leading-none">{value}</div>
+        <h3 className="mb-1 text-[13px] font-bold text-[var(--em-ink)] opacity-90">{title}</h3>
+        <div className="text-[28px] font-extrabold leading-none tracking-tight text-[var(--em-ink)]">{value}</div>
       </div>
     </div>
   );
@@ -406,12 +537,31 @@ function KpiCard({
 
 function PlanRow({ label, value, color }: { label: string; value: string; color: string }) {
   return (
-    <div className="flex items-center justify-between w-full p-2.5 rounded-xl hover:bg-[var(--em-bg-alt)] border border-transparent hover:border-[var(--em-border-strong)] transition-colors">
+    <div className="flex w-full items-center justify-between rounded-xl border border-transparent p-2.5 transition-colors hover:border-[var(--em-border-strong)] hover:bg-[var(--em-bg-alt)]">
       <div className="flex items-center gap-2">
-        <div className="w-4 h-4 rounded-md border border-[var(--em-ink)]" style={{ backgroundColor: color }}></div>
+        <div className="h-4 w-4 rounded-md border border-[var(--em-ink)]" style={{ backgroundColor: color }} />
         <span className="text-[13px] font-bold text-[var(--em-ink)]">{label}</span>
       </div>
       <span className="text-[13px] font-extrabold text-[var(--em-ink)]">{value}</span>
+    </div>
+  );
+}
+
+function InfoPill({ label }: { label: string }) {
+  return (
+    <span className="rounded-full border border-[var(--em-ink)] bg-white/50 px-2.5 py-1 text-[11px] font-bold text-[var(--em-ink)] shadow-[2px_2px_0_0_#0E0F12]">
+      {label}
+    </span>
+  );
+}
+
+function HealthRow({ label, value, color }: { label: string; value: string; color: string }) {
+  return (
+    <div className="flex items-center justify-between rounded-xl border border-[var(--em-ink)] bg-[var(--em-bg)] p-3">
+      <span className="text-[13px] font-bold text-[var(--em-ink)]">{label}</span>
+      <span className="rounded-full border border-[var(--em-ink)] px-2.5 py-1 text-[12px] font-extrabold shadow-[2px_2px_0_0_#0E0F12]" style={{ backgroundColor: color }}>
+        {value}
+      </span>
     </div>
   );
 }
