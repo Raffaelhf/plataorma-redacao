@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Check, Star, Target, Award, Instagram, Youtube, Linkedin, GraduationCap, TrendingUp, Apple, Play } from "lucide-react";
+import { ArrowRight, Check, Star, Target, Award, Instagram, Youtube, Linkedin, GraduationCap, TrendingUp, Apple, Play, Menu, LogIn, UserPlus } from "lucide-react";
 import { PlatformLogo } from "@/components/branding/platform-logo";
 import { formatCurrencyFromCents, type getPublicPlanPricing } from "@/lib/plans";
 import "./_group.css";
@@ -61,14 +61,40 @@ export function Landing({ pricing }: LandingProps) {
             <a href="#planos" className="hover:text-[var(--em-green)] transition-colors">Planos</a>
           </nav>
           
-          <div className="flex shrink-0 items-center gap-2 sm:gap-4">
-            <a href="/login" className="inline-flex shrink-0 items-center justify-center rounded-xl border-2 border-white/18 bg-white/8 px-3 py-2 text-xs font-extrabold text-white transition-colors hover:border-[var(--em-green)] hover:text-[var(--em-green)] sm:border-0 sm:bg-transparent sm:px-0 sm:py-0 sm:text-sm sm:font-semibold">
-              Entrar
-            </a>
-            <a href="/cadastro" className="em-btn-primary shrink-0 !px-3 !py-2 text-xs sm:!px-5 sm:!py-3 sm:text-sm">
-              Começar<span className="hidden sm:inline"> agora</span>
+          <div className="hidden shrink-0 items-center gap-4 sm:flex">
+            <a href="/login" className="text-sm font-semibold transition-colors hover:text-[var(--em-green)]">Entrar</a>
+            <a href="/cadastro" className="em-btn-primary shrink-0 !px-5 !py-3 text-sm">
+              Começar agora
             </a>
           </div>
+
+          <details className="group relative shrink-0 sm:hidden">
+            <summary className="grid h-11 w-11 cursor-pointer list-none place-items-center rounded-2xl border-2 border-white/18 bg-white/8 text-white shadow-[3px_3px_0_0_#2BD37B] transition-colors hover:border-[var(--em-green)] [&::-webkit-details-marker]:hidden">
+              <Menu className="h-5 w-5" strokeWidth={2.8} />
+              <span className="sr-only">Abrir menu</span>
+            </summary>
+
+            <div className="absolute right-0 top-[calc(100%+0.75rem)] w-64 rounded-[22px] border-2 border-[var(--em-ink)] bg-[#fffaf1] p-3 text-[var(--em-ink)] shadow-[8px_8px_0_0_#0E0F12]">
+              <div className="mb-3 rounded-2xl border border-[var(--em-border-strong)] bg-white px-4 py-3">
+                <div className="text-[11px] font-black uppercase tracking-[0.16em] text-[var(--em-green-deep)]">Escreva Mais</div>
+                <div className="mt-1 text-sm font-extrabold leading-tight">Acesse sua plataforma</div>
+              </div>
+
+              <a href="/login" className="mb-2 flex items-center gap-3 rounded-2xl border-2 border-[var(--em-ink)] bg-white px-4 py-3 text-sm font-black shadow-[3px_3px_0_0_#0E0F12] transition-transform hover:-translate-y-0.5">
+                <span className="grid h-9 w-9 place-items-center rounded-xl bg-[var(--em-mint)] text-[var(--em-green-deep)]">
+                  <LogIn className="h-4 w-4" strokeWidth={2.8} />
+                </span>
+                Entrar
+              </a>
+
+              <a href="/cadastro" className="flex items-center gap-3 rounded-2xl border-2 border-[var(--em-ink)] bg-[var(--em-yellow)] px-4 py-3 text-sm font-black shadow-[3px_3px_0_0_#0E0F12] transition-transform hover:-translate-y-0.5">
+                <span className="grid h-9 w-9 place-items-center rounded-xl bg-white text-[var(--em-ink)]">
+                  <UserPlus className="h-4 w-4" strokeWidth={2.8} />
+                </span>
+                Começar agora
+              </a>
+            </div>
+          </details>
         </div>
       </header>
 
