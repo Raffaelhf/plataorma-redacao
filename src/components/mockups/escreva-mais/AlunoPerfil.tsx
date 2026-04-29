@@ -1,3 +1,5 @@
+"use client";
+
 import { UserRound, Lock, Bell, Smartphone, Shield, LogOut, CheckCircle2 } from "lucide-react";
 import { AppLayout } from "./_shared/AppLayout";
 import { Input } from "@/components/ui/input";
