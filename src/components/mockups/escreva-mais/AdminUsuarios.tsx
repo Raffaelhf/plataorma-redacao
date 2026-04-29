@@ -92,6 +92,14 @@ function normalize(value: string | null | undefined) {
     .toLowerCase();
 }
 
+function getUserPlanOrArea(user: ManagedUser) {
+  if (user.role === "STUDENT") return user.studentProfile?.plan ? planLabels[user.studentProfile.plan] : "-";
+  if (user.role === "ADMIN") return "Escreva Mais";
+
+  const expertise = user.teacherProfile?.expertise?.trim();
+  return !expertise || normalize(expertise) === "redacao enem" ? "Escreva Mais" : expertise;
+}
+
 function createDraft(user: ManagedUser): Draft {
   return {
     name: user.name ?? "",
@@ -258,7 +266,7 @@ export function AdminUsuarios({ initialUsers }: { initialUsers: ManagedUser[] })
 
     const payload = await response.json().catch(() => ({}));
     if (!response.ok) {
-      setError(payload.error || "Nao foi possivel criar o usuario.");
+      setError(payload.error || "Não foi possível criar o usuário.");
       setLoadingAction(null);
       return;
     }
@@ -281,12 +289,12 @@ export function AdminUsuarios({ initialUsers }: { initialUsers: ManagedUser[] })
     if (createdUser.resetLink) {
       try {
         await navigator.clipboard.writeText(createdUser.resetLink);
-        setMessage("Usuario criado. Link de senha copiado para a area de transferencia.");
+        setMessage("Usuário criado. Link de senha copiado para a área de transferência.");
       } catch {
-        setMessage(`Usuario criado. Link de senha: ${createdUser.resetLink}`);
+        setMessage(`Usuário criado. Link de senha: ${createdUser.resetLink}`);
       }
     } else {
-      setMessage("Usuario criado com sucesso.");
+      setMessage("Usuário criado com sucesso.");
     }
 
     router.refresh();
@@ -328,7 +336,7 @@ export function AdminUsuarios({ initialUsers }: { initialUsers: ManagedUser[] })
 
     const payload = await response.json().catch(() => ({}));
     if (!response.ok) {
-      setError(payload.error || "Nao foi possivel salvar o usuario.");
+      setError(payload.error || "Não foi possível salvar o usuário.");
       setLoadingAction(null);
       return;
     }
@@ -337,7 +345,7 @@ export function AdminUsuarios({ initialUsers }: { initialUsers: ManagedUser[] })
     setEditingUser(null);
     setDraft(null);
     setLoadingAction(null);
-    setMessage("Usuario atualizado com sucesso.");
+    setMessage("Usuário atualizado com sucesso.");
     router.refresh();
   };
 
@@ -353,7 +361,7 @@ export function AdminUsuarios({ initialUsers }: { initialUsers: ManagedUser[] })
     const response = await fetch(`/api/admin/users/${user.id}/password`, { method: "PUT" });
     const payload = await response.json().catch(() => ({}));
     if (!response.ok) {
-      setError(payload.error || "Nao foi possivel redefinir a senha.");
+      setError(payload.error || "Não foi possível redefinir a senha.");
       setLoadingAction(null);
       return;
     }
@@ -361,12 +369,12 @@ export function AdminUsuarios({ initialUsers }: { initialUsers: ManagedUser[] })
     if (payload.resetLink) {
       try {
         await navigator.clipboard.writeText(payload.resetLink);
-        setMessage("Link de redefinicao copiado para a area de transferencia.");
+        setMessage("Link de redefinição copiado para a área de transferência.");
       } catch {
-        setMessage(`Link de redefinicao: ${payload.resetLink}`);
+        setMessage(`Link de redefinição: ${payload.resetLink}`);
       }
     } else {
-      setMessage("E-mail de redefinicao enviado.");
+      setMessage("E-mail de redefinição enviado.");
     }
     setLoadingAction(null);
   };
@@ -383,14 +391,14 @@ export function AdminUsuarios({ initialUsers }: { initialUsers: ManagedUser[] })
     const response = await fetch(`/api/admin/users/${user.id}`, { method: "DELETE" });
     const payload = await response.json().catch(() => ({}));
     if (!response.ok) {
-      setError(payload.error || "Nao foi possivel excluir o usuario.");
+      setError(payload.error || "Não foi possível excluir o usuário.");
       setLoadingAction(null);
       return;
     }
 
     setUsers((current) => current.filter((item) => item.id !== user.id));
     setLoadingAction(null);
-    setMessage("Usuario excluido com sucesso.");
+    setMessage("Usuário excluído com sucesso.");
     router.refresh();
   };
 
@@ -399,9 +407,9 @@ export function AdminUsuarios({ initialUsers }: { initialUsers: ManagedUser[] })
       role="admin"
       userName="Ana Carolina Vieira"
       userEmail="ana@escrevamais.com"
-      pageKicker={`Usuarios - ${users.length} cadastros`}
-      pageTitle="Gestao de usuarios."
-      primaryAction={{ label: "Adicionar usuario", onClick: openCreator }}
+      pageKicker={`Usuários - ${users.length} cadastros`}
+      pageTitle="Gestão de usuários."
+      primaryAction={{ label: "Adicionar usuário", onClick: openCreator }}
     >
       <div className="space-y-8 pb-12">
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-4">
@@ -427,7 +435,7 @@ export function AdminUsuarios({ initialUsers }: { initialUsers: ManagedUser[] })
               />
             </div>
             <button className="em-btn-primary shrink-0 py-3" onClick={openCreator}>
-              <Plus className="h-4 w-4" /> Novo usuario
+              <Plus className="h-4 w-4" /> Novo usuário
             </button>
           </div>
           <div className="flex gap-2 overflow-x-auto pb-2">
@@ -464,12 +472,12 @@ export function AdminUsuarios({ initialUsers }: { initialUsers: ManagedUser[] })
             <table className="w-full border-collapse text-left">
               <thead>
                 <tr className="border-b border-[var(--em-border-strong)] bg-[var(--em-bg)]">
-                  <th className="p-4 text-[11px] font-extrabold uppercase tracking-wider text-[var(--em-text-soft)]">Usuario</th>
+                  <th className="p-4 text-[11px] font-extrabold uppercase tracking-wider text-[var(--em-text-soft)]">Usuário</th>
                   <th className="p-4 text-[11px] font-extrabold uppercase tracking-wider text-[var(--em-text-soft)]">Papel</th>
                   <th className="p-4 text-[11px] font-extrabold uppercase tracking-wider text-[var(--em-text-soft)]">Status</th>
-                  <th className="p-4 text-[11px] font-extrabold uppercase tracking-wider text-[var(--em-text-soft)]">Plano / area</th>
+                  <th className="p-4 text-[11px] font-extrabold uppercase tracking-wider text-[var(--em-text-soft)]">Plano / área</th>
                   <th className="p-4 text-[11px] font-extrabold uppercase tracking-wider text-[var(--em-text-soft)]">Criado em</th>
-                  <th className="p-4 text-right text-[11px] font-extrabold uppercase tracking-wider text-[var(--em-text-soft)]">Acao</th>
+                  <th className="p-4 text-right text-[11px] font-extrabold uppercase tracking-wider text-[var(--em-text-soft)]">Ação</th>
                 </tr>
               </thead>
               <tbody>
@@ -495,7 +503,7 @@ export function AdminUsuarios({ initialUsers }: { initialUsers: ManagedUser[] })
                       </span>
                     </td>
                     <td className="p-4 text-[13px] font-bold text-[var(--em-ink)]">
-                      {user.role === "STUDENT" ? (user.studentProfile?.plan ? planLabels[user.studentProfile.plan] : "-") : user.teacherProfile?.expertise || "-"}
+                      {getUserPlanOrArea(user)}
                     </td>
                     <td className="p-4 text-[13px] font-semibold text-[var(--em-text-soft)]">
                       {new Intl.DateTimeFormat("pt-BR", { dateStyle: "medium" }).format(new Date(user.createdAt))}
@@ -504,7 +512,7 @@ export function AdminUsuarios({ initialUsers }: { initialUsers: ManagedUser[] })
                       <button
                         className="rounded p-1.5 text-[var(--em-text-mute)] transition-colors hover:bg-[var(--em-bg-alt)] hover:text-[var(--em-ink)]"
                         onClick={() => setOpenMenuId((current) => (current === user.id ? null : user.id))}
-                        aria-label={`Acoes de ${user.name || user.email}`}
+                        aria-label={`Ações de ${user.name || user.email}`}
                       >
                         {loadingAction?.endsWith(user.id) ? <Loader2 className="h-4 w-4 animate-spin" /> : <MoreVertical className="h-4 w-4" />}
                       </button>
@@ -513,7 +521,7 @@ export function AdminUsuarios({ initialUsers }: { initialUsers: ManagedUser[] })
                         <div className="absolute right-4 top-11 z-30 w-64 rounded-2xl border-[1.5px] border-[var(--em-ink)] bg-white p-2 text-left shadow-[4px_4px_0_0_#0E0F12]">
                           <MenuButton icon={<Pencil className="h-4 w-4" />} label="Modificar dados" onClick={() => openEditor(user)} disabled={user.role === "ADMIN"} />
                           <MenuButton icon={<KeyRound className="h-4 w-4" />} label="Reset de senha" onClick={() => handlePasswordReset(user)} disabled={user.role === "ADMIN"} />
-                          <MenuButton icon={<Trash2 className="h-4 w-4" />} label="Excluir usuario" danger onClick={() => handleDelete(user)} disabled={user.role === "ADMIN"} />
+                          <MenuButton icon={<Trash2 className="h-4 w-4" />} label="Excluir usuário" danger onClick={() => handleDelete(user)} disabled={user.role === "ADMIN"} />
                         </div>
                       ) : null}
                     </td>
@@ -522,7 +530,7 @@ export function AdminUsuarios({ initialUsers }: { initialUsers: ManagedUser[] })
                 {!pageUsers.length ? (
                   <tr>
                     <td colSpan={6} className="p-8 text-center text-sm font-bold text-[var(--em-text-soft)]">
-                      Nenhum usuario encontrado com os filtros atuais.
+                      Nenhum usuário encontrado com os filtros atuais.
                     </td>
                   </tr>
                 ) : null}
@@ -562,7 +570,7 @@ export function AdminUsuarios({ initialUsers }: { initialUsers: ManagedUser[] })
             <div className="mb-5 flex items-start justify-between gap-4">
               <div>
                 <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-[var(--em-text-soft)]">Novo cadastro</p>
-                <h3 className="mt-1 text-2xl font-extrabold text-[var(--em-ink)]">Adicionar usuario</h3>
+                <h3 className="mt-1 text-2xl font-extrabold text-[var(--em-ink)]">Adicionar usuário</h3>
               </div>
               <button className="rounded-xl border border-[var(--em-ink)] bg-white p-2" onClick={() => setIsCreating(false)} aria-label="Fechar">
                 <X className="h-4 w-4" />
@@ -634,7 +642,7 @@ export function AdminUsuarios({ initialUsers }: { initialUsers: ManagedUser[] })
               ) : (
                 <>
                   <Field label="Especialidade">
-                    <input className={inputClass} value={createDraftState.expertise} onChange={(event) => updateCreateDraft("expertise", event.target.value)} placeholder="Redacao ENEM, gramatica, repertorio..." />
+                    <input className={inputClass} value={createDraftState.expertise} onChange={(event) => updateCreateDraft("expertise", event.target.value)} placeholder="Escreva Mais, gramática, repertório..." />
                   </Field>
                   <Field label="Bio do professor" className="md:col-span-2">
                     <textarea className={`${inputClass} min-h-24`} value={createDraftState.teacherBio} onChange={(event) => updateCreateDraft("teacherBio", event.target.value)} />
@@ -649,7 +657,7 @@ export function AdminUsuarios({ initialUsers }: { initialUsers: ManagedUser[] })
               </button>
               <button className="em-btn-primary justify-center" onClick={handleCreate} disabled={loadingAction === "create"}>
                 {loadingAction === "create" ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
-                Criar usuario
+                Criar usuário
               </button>
             </div>
           </div>

@@ -3,6 +3,13 @@ import bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
 
+function normalizeText(value: string | null | undefined) {
+  return (value ?? '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase();
+}
+
 async function ensureStudentProfile(userId: string) {
   const existing = await prisma.studentProfile.findUnique({ where: { userId } });
   if (existing) {
@@ -14,7 +21,7 @@ async function ensureStudentProfile(userId: string) {
         enrollmentNumber: existing.enrollmentNumber ?? '2026-0001',
         plan: existing.plan ?? 'TRIMESTRAL',
         readingClub: existing.readingClub,
-        bio: existing.bio ?? 'Conta de demonstracao para validar a area do aluno.',
+        bio: existing.bio ?? 'Conta de demonstração para validar a área do aluno.',
       },
     });
   }
@@ -27,20 +34,28 @@ async function ensureStudentProfile(userId: string) {
       enrollmentNumber: '2026-0001',
       plan: 'TRIMESTRAL',
       readingClub: true,
-      bio: 'Conta de demonstracao para validar a area do aluno.',
+      bio: 'Conta de demonstração para validar a área do aluno.',
     },
   });
 }
 
 async function ensureTeacherProfile(userId: string) {
   const existing = await prisma.teacherProfile.findUnique({ where: { userId } });
-  if (existing) return existing;
+  if (existing) {
+    return prisma.teacherProfile.update({
+      where: { userId },
+      data: {
+        expertise: !existing.expertise || normalizeText(existing.expertise) === 'redacao enem' ? 'Escreva Mais' : existing.expertise,
+        bio: existing.bio ?? 'Conta de demonstração para validar a área do professor.',
+      },
+    });
+  }
 
   return prisma.teacherProfile.create({
     data: {
       userId,
-      expertise: 'Redacao ENEM',
-      bio: 'Conta de demonstracao para validar a area do professor.',
+      expertise: 'Escreva Mais',
+      bio: 'Conta de demonstração para validar a área do professor.',
     },
   });
 }
@@ -112,23 +127,23 @@ async function main() {
   await prisma.platformSettings.upsert({
     where: { id: 'platform' },
     update: {
-      bankRecipientName: 'Redacao 360',
+      bankRecipientName: 'Escreva Mais',
       bankDocument: '00.000.000/0001-00',
       bankName: 'Banco Exemplo',
       bankAgency: '0001',
       bankAccount: '12345-6',
-      pixKey: 'financeiro@redacao360.com',
+      pixKey: 'financeiro@escrevamais.com',
       whatsappNumber: '5511999999999',
       paymentNotes: 'Use esses dados para repasses e contatos operacionais da plataforma.',
     },
     create: {
       id: 'platform',
-      bankRecipientName: 'Redacao 360',
+      bankRecipientName: 'Escreva Mais',
       bankDocument: '00.000.000/0001-00',
       bankName: 'Banco Exemplo',
       bankAgency: '0001',
       bankAccount: '12345-6',
-      pixKey: 'financeiro@redacao360.com',
+      pixKey: 'financeiro@escrevamais.com',
       whatsappNumber: '5511999999999',
       paymentNotes: 'Use esses dados para repasses e contatos operacionais da plataforma.',
     },
@@ -291,7 +306,7 @@ async function main() {
     });
   }
 
-  console.log('Seed executado com sucesso com usuarios de teste: adminaluno / 123, adminprof / 1234 e Raffaeladmin / Raffael1@');
+  console.log('Seed executado com sucesso com usuários de teste: adminaluno / 123, adminprof / 1234 e Raffaeladmin / Raffael1@');
 }
 
 main()
