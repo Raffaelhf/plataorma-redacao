@@ -32,8 +32,8 @@ docker compose up --build app
 ```
 
 Acesse em `http://localhost:3002` ou na porta definida em `APP_PORT`.
-O container do app roda `prisma generate`, aplica o schema no banco e executa o
-seed automaticamente ao iniciar.
+O container do app roda `prisma generate`, aplica o schema no banco, aplica as
+politicas de RLS e executa o seed automaticamente ao iniciar.
 
 Para parar os containers:
 
@@ -57,8 +57,32 @@ O projeto usa PostgreSQL rodando em Docker para desenvolvimento local.
 npm run db:up
 npm run db:generate
 npm run db:push
+npm run db:rls
 npm run db:seed
 ```
+
+## Row Level Security
+
+O arquivo `prisma/rls.sql` ativa Row Level Security nas tabelas do PostgreSQL e
+cria politicas baseadas no contexto da sessao:
+
+- `app.user_id`
+- `app.role`
+- `app.student_id`
+- `app.teacher_id`
+
+Para aplicar as politicas no banco configurado em `DATABASE_URL`, rode:
+
+```bash
+npm run db:rls
+```
+
+Em producao, mantenha migrations/seed com um usuario dono do schema e rode a
+aplicacao com um usuario de banco separado, sem `BYPASSRLS` e sem ser dono das
+tabelas. Se a aplicacao conectar como dono das tabelas, o PostgreSQL permite
+bypass de RLS por padrao; nesse caso o RLS fica preparado, mas o enforcement
+total deve ser feito depois de configurar esse usuario runtime e o contexto por
+request.
 
 ## Usuarios de teste
 

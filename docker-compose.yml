@@ -8,6 +8,7 @@ services:
       sh -c "rm -rf .next/dev .next/cache &&
       npx prisma generate &&
       npx prisma db push --skip-generate &&
+      npm run db:rls &&
       npx prisma db seed &&
       npm run dev -- --hostname 0.0.0.0 --webpack"
     environment:
