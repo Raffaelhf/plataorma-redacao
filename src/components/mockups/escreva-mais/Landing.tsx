@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Check, Star, Target, Award, Instagram, Youtube, Linkedin, GraduationCap, TrendingUp, Apple, Play, Menu, LogIn, UserPlus, Gift, Smartphone, Trophy } from "lucide-react";
+import { ArrowRight, Check, Star, Target, Award, Instagram, Youtube, Linkedin, GraduationCap, TrendingUp, Menu, LogIn, UserPlus, Gift, Smartphone, Trophy, BrainCircuit, CalendarCheck, FileText, LineChart, MessageSquareText, WandSparkles, BookOpen } from "lucide-react";
 import { PlatformLogo } from "@/components/branding/platform-logo";
 import { formatCurrencyFromCents, type getPublicPlanPricing } from "@/lib/plans";
 import "./_group.css";
@@ -249,11 +249,15 @@ export function Landing({ pricing }: LandingProps) {
       </section>
 
       {/* 5. DESAFIO COM PREMIAÇÃO */}
-      <section className="border-y border-[var(--em-border)] bg-white px-4 py-14 sm:px-6 md:py-20">
-        <div className="mx-auto grid max-w-6xl items-center gap-8 lg:grid-cols-[0.95fr_1.05fr]">
-          <div className="space-y-6">
+      <section className="relative overflow-hidden border-y border-[var(--em-border)] bg-white px-4 py-14 sm:px-6 md:py-20">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_12%_18%,rgba(43,211,123,0.16),transparent_28%),radial-gradient(circle_at_92%_12%,rgba(255,201,61,0.2),transparent_30%)]" />
+        <div className="relative mx-auto grid max-w-6xl items-center gap-8 lg:grid-cols-[0.92fr_1.08fr]">
+          <div className="space-y-7">
             <div className="em-chip w-fit border-[var(--em-yellow)] bg-[var(--em-yellow-soft)] text-[var(--em-ink)]">
               <Trophy className="h-4 w-4" /> Desafio Escreva Mais
+            </div>
+            <div className="em-chip w-fit border-[var(--em-green)] bg-[var(--em-green-soft)] text-[var(--em-green-deep)]">
+              <BrainCircuit className="h-4 w-4" /> Evolução acompanhada
             </div>
             <div className="space-y-4">
               <h2 className="em-display text-3xl leading-tight text-[var(--em-ink)] sm:text-4xl md:text-5xl">
@@ -263,7 +267,7 @@ export function Landing({ pricing }: LandingProps) {
                 No fim do curso, os alunos com melhor desempenho, pontualidade nos compromissos e atividades entregues dentro dos prazos poderão concorrer a prêmios especiais, conforme regulamento.
               </p>
             </div>
-            <div className="grid gap-3 sm:grid-cols-2">
+            <div className="grid gap-3 sm:grid-cols-3">
               <div className="rounded-2xl border-2 border-[var(--em-ink)] bg-[var(--em-mint)] p-4 shadow-[4px_4px_0_0_#0E0F12]">
                 <div className="mb-3 flex h-11 w-11 items-center justify-center rounded-xl border-2 border-[var(--em-ink)] bg-white">
                   <Smartphone className="h-5 w-5 text-[var(--em-green-deep)]" />
@@ -278,30 +282,102 @@ export function Landing({ pricing }: LandingProps) {
                 <h3 className="font-['Plus_Jakarta_Sans'] text-lg font-extrabold text-[var(--em-ink)]">Mérito e compromisso</h3>
                 <p className="mt-2 text-sm font-semibold leading-6 text-[var(--em-ink)]/70">Valorizamos quem participa, cumpre prazos e mantém uma rotina real de evolução.</p>
               </div>
+              <div className="rounded-2xl border-2 border-[var(--em-ink)] bg-[var(--em-yellow-soft)] p-4 shadow-[4px_4px_0_0_#0E0F12]">
+                <div className="mb-3 flex h-11 w-11 items-center justify-center rounded-xl border-2 border-[var(--em-ink)] bg-white">
+                  <CalendarCheck className="h-5 w-5 text-[var(--em-ink)]" />
+                </div>
+                <h3 className="font-['Plus_Jakarta_Sans'] text-lg font-extrabold text-[var(--em-ink)]">Ritmo no prazo</h3>
+                <p className="mt-2 text-sm font-semibold leading-6 text-[var(--em-ink)]/70">A constância vira parte visível do progresso do aluno.</p>
+              </div>
             </div>
           </div>
 
-          <div className="em-card-hard overflow-hidden bg-[var(--em-ink)] p-6 text-white sm:p-8">
-            <div className="mb-6 flex items-center justify-between gap-4">
-              <div>
-                <div className="text-xs font-black uppercase tracking-[0.18em] text-[var(--em-green)]">Além da gramática</div>
-                <h3 className="mt-2 font-['Plus_Jakarta_Sans'] text-2xl font-extrabold leading-tight sm:text-3xl">Redação para todas as idades e fases escolares</h3>
-              </div>
-              <div className="hidden h-16 w-16 shrink-0 place-items-center rounded-2xl border-2 border-white/20 bg-[var(--em-yellow)] text-[var(--em-ink)] sm:grid">
-                <GraduationCap className="h-8 w-8" />
-              </div>
-            </div>
-            <div className="grid gap-3 sm:grid-cols-3">
-              {["Base de escrita", "Argumentação", "Vestibulares"].map((item) => (
-                <div key={item} className="rounded-2xl border border-white/12 bg-white/8 p-4">
-                  <Check className="mb-3 h-5 w-5 text-[var(--em-green)]" strokeWidth={3} />
-                  <div className="text-sm font-extrabold">{item}</div>
+          <div className="em-card-hard relative overflow-hidden bg-[var(--em-ink)] p-4 text-white sm:p-6 lg:p-7">
+            <div className="pointer-events-none absolute inset-0 em-noise opacity-20" />
+            <div className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full border-[28px] border-[var(--em-green)]/20" />
+            <div className="relative grid gap-4 lg:grid-cols-[0.9fr_1.1fr]">
+              <div className="relative min-h-[360px] overflow-hidden rounded-[28px] border-2 border-white/18 bg-[var(--em-green)] p-5 text-[var(--em-ink)] shadow-[6px_6px_0_0_rgba(255,255,255,0.16)]">
+                <div className="absolute -right-12 bottom-10 h-40 w-40 rounded-full border-[24px] border-[var(--em-green-deep)]/35" />
+                <div className="absolute right-4 top-4 grid h-14 w-14 place-items-center rounded-2xl border-2 border-[var(--em-ink)] bg-[var(--em-yellow)] shadow-[4px_4px_0_0_#0E0F12]">
+                  <Trophy className="h-7 w-7" />
                 </div>
-              ))}
+                <div className="relative z-10 flex h-full flex-col justify-between">
+                  <div>
+                    <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[var(--em-ink)]/20 bg-white/60 px-3 py-1 text-xs font-black uppercase tracking-[0.14em]">
+                      <WandSparkles className="h-4 w-4" /> Ranking final
+                    </div>
+                    <div className="max-w-[12rem] font-['Plus_Jakarta_Sans'] text-3xl font-black leading-none">1º e 2º lugar</div>
+                    <p className="mt-3 max-w-[13rem] text-sm font-bold leading-6 text-[var(--em-ink)]/72">Reconhecimento para quem mantém constância até o fim.</p>
+                  </div>
+
+                  <div className="relative mx-auto mt-6 w-[172px] rounded-[28px] border-4 border-[var(--em-ink)] bg-white p-3 shadow-[8px_8px_0_0_#0E0F12]">
+                    <div className="mx-auto mb-3 h-1.5 w-12 rounded-full bg-[var(--em-ink)]" />
+                    <div className="rounded-[20px] border-2 border-[var(--em-ink)] bg-[var(--em-cream)] p-3">
+                      <div className="mb-3 flex items-center justify-between">
+                        <div className="text-[10px] font-black uppercase tracking-[0.12em]">Score IA</div>
+                        <LineChart className="h-4 w-4 text-[var(--em-green-deep)]" />
+                      </div>
+                      <div className="mb-3 h-20 rounded-2xl border-2 border-[var(--em-ink)] bg-[var(--em-yellow)] p-3">
+                        <div className="h-2 w-16 rounded-full bg-[var(--em-ink)]/70" />
+                        <div className="mt-5 flex items-end gap-2">
+                          <div className="h-5 w-4 rounded-t bg-[var(--em-ink)]" />
+                          <div className="h-8 w-4 rounded-t bg-[var(--em-green-deep)]" />
+                          <div className="h-11 w-4 rounded-t bg-[var(--em-coral)]" />
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <div className="h-2.5 w-full rounded-full bg-[var(--em-muted)]" />
+                        <div className="h-2.5 w-2/3 rounded-full bg-[var(--em-muted)]" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid gap-4">
+                <div className="rounded-[24px] border border-white/14 bg-white/8 p-5">
+                  <div className="mb-4 flex items-center justify-between gap-3">
+                    <div>
+                      <div className="text-xs font-black uppercase tracking-[0.18em] text-[var(--em-green)]">Além da gramática</div>
+                      <h3 className="mt-2 font-['Plus_Jakarta_Sans'] text-2xl font-extrabold leading-tight">Redação para todas as fases escolares</h3>
+                    </div>
+                    <div className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl border-2 border-white/20 bg-[var(--em-yellow)] text-[var(--em-ink)]">
+                      <GraduationCap className="h-7 w-7" />
+                    </div>
+                  </div>
+                  <div className="grid gap-2 sm:grid-cols-2">
+                    {[
+                      { icon: BookOpen, label: "Repertório" },
+                      { icon: FileText, label: "Estrutura" },
+                      { icon: MessageSquareText, label: "Argumentação" },
+                      { icon: BrainCircuit, label: "Clareza" },
+                    ].map(({ icon: Icon, label }) => (
+                      <div key={label} className="flex items-center gap-2 rounded-2xl border border-white/12 bg-white/10 px-3 py-2 text-sm font-extrabold">
+                        <Icon className="h-4 w-4 text-[var(--em-green)]" />
+                        {label}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="rounded-[24px] border border-white/14 bg-white p-5 text-[var(--em-ink)]">
+                  <div className="mb-4 flex items-center justify-between">
+                    <div className="text-sm font-black uppercase tracking-[0.12em] text-[var(--em-green-deep)]">Critérios do desafio</div>
+                    <Check className="h-5 w-5 text-[var(--em-green-deep)]" strokeWidth={3} />
+                  </div>
+                  <div className="space-y-3">
+                    {["Desempenho nas redações", "Pontualidade nos pagamentos", "Atividades entregues no prazo"].map((item, index) => (
+                      <div key={item} className="flex items-center gap-3">
+                        <div className="grid h-8 w-8 shrink-0 place-items-center rounded-xl border-2 border-[var(--em-ink)] bg-[var(--em-mint)] text-xs font-black">
+                          {index + 1}
+                        </div>
+                        <div className="text-sm font-extrabold">{item}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
             </div>
-            <p className="mt-6 text-sm font-medium leading-6 text-white/68">
-              A proposta acompanha o aluno desde a organização das ideias até a construção de repertório, estilo e segurança para escrever melhor.
-            </p>
           </div>
         </div>
       </section>
@@ -498,31 +574,60 @@ export function Landing({ pricing }: LandingProps) {
           <div className="absolute inset-0 em-noise opacity-20"></div>
           
           <div className="relative z-10 flex-1 space-y-8 text-center md:text-left">
+            <div className="em-chip mx-auto w-fit border-white/20 bg-white/10 text-white md:mx-0">
+              <BrainCircuit className="h-4 w-4 text-[var(--em-green)]" /> Plataforma inteligente
+            </div>
             <h2 className="em-display text-3xl text-white sm:text-4xl md:text-5xl">
-              Baixe o app e estude de <span className="text-[var(--em-yellow)]">onde estiver</span>
+              Acompanhe cada redação com <span className="text-[var(--em-yellow)]">clareza visual</span>
             </h2>
-            <p className="text-white/70 text-lg">Envie redações por foto, assista videoaulas offline e receba notificações das suas correções.</p>
+            <p className="text-white/70 text-lg">Envios, feedbacks, critérios e evolução ficam organizados em um ambiente web feito para estudar com método, constância e acompanhamento.</p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-              <a href="/cadastro" className="em-btn-primary justify-center border-2 !bg-white px-6 py-3 !text-[var(--em-ink)]">
-                <Apple className="w-6 h-6" /> App Store
+              <a href="/cadastro" className="em-btn-primary justify-center px-6 py-3">
+                Começar agora <ArrowRight className="w-5 h-5" />
               </a>
-              <a href="/cadastro" className="em-btn-primary justify-center border-2 !bg-white px-6 py-3 !text-[var(--em-ink)]">
-                <Play className="w-6 h-6" /> Google Play
+              <a href="/login" className="em-btn-ghost-inverse justify-center px-6 py-3">
+                Entrar na plataforma
               </a>
             </div>
           </div>
           
-          <div className="relative z-10 flex h-[300px] w-[220px] rotate-3 flex-col rounded-[32px] border-4 border-[var(--em-ink)] bg-[var(--em-mint)] p-4 shadow-[8px_8px_0_0_#0E0F12] sm:h-[320px] sm:w-[240px]">
-             {/* Mockup simplificado de celular */}
-             <div className="w-16 h-1 bg-[var(--em-ink)] rounded-full mx-auto mb-4"></div>
-             <div className="bg-white flex-1 rounded-2xl border-2 border-[var(--em-ink)] p-4 overflow-hidden">
-                <div className="w-8 h-8 rounded-full bg-[var(--em-green)] border-2 border-[var(--em-ink)] mb-4"></div>
-                <div className="w-3/4 h-3 bg-[var(--em-bg-alt)] rounded-full mb-2"></div>
-                <div className="w-1/2 h-3 bg-[var(--em-bg-alt)] rounded-full mb-8"></div>
-                
-                <div className="w-full h-24 bg-[var(--em-yellow)] rounded-xl border-2 border-[var(--em-ink)] mb-4"></div>
-                <div className="w-full h-16 bg-[var(--em-peach)] rounded-xl border-2 border-[var(--em-ink)]"></div>
+          <div className="relative z-10 w-full max-w-[430px] rotate-1 rounded-[32px] border-4 border-[var(--em-ink)] bg-[var(--em-mint)] p-4 shadow-[8px_8px_0_0_#0E0F12]">
+             <div className="rounded-[24px] border-2 border-[var(--em-ink)] bg-white p-4">
+                <div className="mb-4 flex items-center justify-between">
+                  <div>
+                    <div className="text-[11px] font-black uppercase tracking-[0.16em] text-[var(--em-green-deep)]">Painel do aluno</div>
+                    <div className="mt-1 text-lg font-black text-[var(--em-ink)]">Evolução da semana</div>
+                  </div>
+                  <div className="grid h-11 w-11 place-items-center rounded-2xl border-2 border-[var(--em-ink)] bg-[var(--em-yellow)]">
+                    <LineChart className="h-5 w-5" />
+                  </div>
+                </div>
+                <div className="grid gap-3 sm:grid-cols-[0.8fr_1.2fr]">
+                  <div className="rounded-2xl border-2 border-[var(--em-ink)] bg-[var(--em-cream)] p-4">
+                    <div className="text-xs font-black uppercase tracking-[0.12em] text-[var(--em-text-soft)]">Nota</div>
+                    <div className="mt-2 text-4xl font-black text-[var(--em-ink)]">880</div>
+                    <div className="mt-3 rounded-full bg-[var(--em-green)] px-3 py-1 text-xs font-black text-[var(--em-ink)]">+120 pontos</div>
+                  </div>
+                  <div className="rounded-2xl border-2 border-[var(--em-ink)] bg-[var(--em-yellow-soft)] p-4">
+                    <div className="mb-3 text-xs font-black uppercase tracking-[0.12em] text-[var(--em-ink)]">Feedback inteligente</div>
+                    {["Tese mais clara", "Repertório conectado", "Conclusão revisada"].map((item) => (
+                      <div key={item} className="mb-2 flex items-center gap-2 text-sm font-extrabold text-[var(--em-ink)]">
+                        <Check className="h-4 w-4 text-[var(--em-green-deep)]" strokeWidth={3} />
+                        {item}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div className="mt-3 rounded-2xl border-2 border-[var(--em-ink)] bg-[var(--em-peach)] p-4">
+                  <div className="mb-3 flex items-center justify-between text-sm font-black">
+                    <span>Próxima atividade</span>
+                    <span>Prazo: sexta</span>
+                  </div>
+                  <div className="h-3 overflow-hidden rounded-full border border-[var(--em-ink)] bg-white">
+                    <div className="h-full w-[72%] bg-[var(--em-green)]" />
+                  </div>
+                </div>
              </div>
           </div>
         </div>
