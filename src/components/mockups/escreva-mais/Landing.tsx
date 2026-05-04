@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Check, Star, Target, Award, Instagram, Youtube, Linkedin, GraduationCap, TrendingUp, Apple, Play, Menu, LogIn, UserPlus } from "lucide-react";
+import { ArrowRight, Check, Star, Target, Award, Instagram, Youtube, Linkedin, GraduationCap, TrendingUp, Apple, Play, Menu, LogIn, UserPlus, Gift, Smartphone, Trophy } from "lucide-react";
 import { PlatformLogo } from "@/components/branding/platform-logo";
 import { formatCurrencyFromCents, type getPublicPlanPricing } from "@/lib/plans";
 import "./_group.css";
@@ -248,7 +248,65 @@ export function Landing({ pricing }: LandingProps) {
         </div>
       </section>
 
-      {/* 5. SEÇÃO CURSOS POPULARES */}
+      {/* 5. DESAFIO COM PREMIAÇÃO */}
+      <section className="border-y border-[var(--em-border)] bg-white px-4 py-14 sm:px-6 md:py-20">
+        <div className="mx-auto grid max-w-6xl items-center gap-8 lg:grid-cols-[0.95fr_1.05fr]">
+          <div className="space-y-6">
+            <div className="em-chip w-fit border-[var(--em-yellow)] bg-[var(--em-yellow-soft)] text-[var(--em-ink)]">
+              <Trophy className="h-4 w-4" /> Desafio Escreva Mais
+            </div>
+            <div className="space-y-4">
+              <h2 className="em-display text-3xl leading-tight text-[var(--em-ink)] sm:text-4xl md:text-5xl">
+                Estudo com constância também pode virar <span className="rounded-lg bg-[var(--em-green)] px-2 text-[var(--em-ink)]">premiação</span>
+              </h2>
+              <p className="max-w-xl text-base font-medium leading-7 text-[var(--em-text-soft)] sm:text-lg">
+                No fim do curso, os alunos com melhor desempenho, pontualidade nos compromissos e atividades entregues dentro dos prazos poderão concorrer a prêmios especiais, conforme regulamento.
+              </p>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <div className="rounded-2xl border-2 border-[var(--em-ink)] bg-[var(--em-mint)] p-4 shadow-[4px_4px_0_0_#0E0F12]">
+                <div className="mb-3 flex h-11 w-11 items-center justify-center rounded-xl border-2 border-[var(--em-ink)] bg-white">
+                  <Smartphone className="h-5 w-5 text-[var(--em-green-deep)]" />
+                </div>
+                <h3 className="font-['Plus_Jakarta_Sans'] text-lg font-extrabold text-[var(--em-ink)]">Prêmio para destaque</h3>
+                <p className="mt-2 text-sm font-semibold leading-6 text-[var(--em-ink)]/70">Primeiro e segundo lugar podem ser contemplados com celular ao final do curso.</p>
+              </div>
+              <div className="rounded-2xl border-2 border-[var(--em-ink)] bg-[var(--em-peach)] p-4 shadow-[4px_4px_0_0_#0E0F12]">
+                <div className="mb-3 flex h-11 w-11 items-center justify-center rounded-xl border-2 border-[var(--em-ink)] bg-white">
+                  <Gift className="h-5 w-5 text-[var(--em-peach-deep)]" />
+                </div>
+                <h3 className="font-['Plus_Jakarta_Sans'] text-lg font-extrabold text-[var(--em-ink)]">Mérito e compromisso</h3>
+                <p className="mt-2 text-sm font-semibold leading-6 text-[var(--em-ink)]/70">Valorizamos quem participa, cumpre prazos e mantém uma rotina real de evolução.</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="em-card-hard overflow-hidden bg-[var(--em-ink)] p-6 text-white sm:p-8">
+            <div className="mb-6 flex items-center justify-between gap-4">
+              <div>
+                <div className="text-xs font-black uppercase tracking-[0.18em] text-[var(--em-green)]">Além da gramática</div>
+                <h3 className="mt-2 font-['Plus_Jakarta_Sans'] text-2xl font-extrabold leading-tight sm:text-3xl">Redação para todas as idades e fases escolares</h3>
+              </div>
+              <div className="hidden h-16 w-16 shrink-0 place-items-center rounded-2xl border-2 border-white/20 bg-[var(--em-yellow)] text-[var(--em-ink)] sm:grid">
+                <GraduationCap className="h-8 w-8" />
+              </div>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-3">
+              {["Base de escrita", "Argumentação", "Vestibulares"].map((item) => (
+                <div key={item} className="rounded-2xl border border-white/12 bg-white/8 p-4">
+                  <Check className="mb-3 h-5 w-5 text-[var(--em-green)]" strokeWidth={3} />
+                  <div className="text-sm font-extrabold">{item}</div>
+                </div>
+              ))}
+            </div>
+            <p className="mt-6 text-sm font-medium leading-6 text-white/68">
+              A proposta acompanha o aluno desde a organização das ideias até a construção de repertório, estilo e segurança para escrever melhor.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* 6. SEÇÃO CURSOS POPULARES */}
       <section id="conteudo" className="border-y border-[var(--em-border)] bg-[var(--em-cream)] px-4 py-16 sm:px-6 md:py-24">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
