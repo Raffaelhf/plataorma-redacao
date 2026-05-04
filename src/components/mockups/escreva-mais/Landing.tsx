@@ -20,13 +20,14 @@ function formatCompactCount(value: number) {
 }
 
 const avatarColors = ["var(--em-lavender)", "var(--em-peach)", "var(--em-mint)"];
+const mainTeacherName = "Prof. Luiz Fernando";
 
 export function Landing({ pricing, socialProof }: LandingProps) {
   const publicCourses = [
     {
       title: "Clube do Livro",
       description: "Leitura orientada para ampliar repertório sociocultural e fortalecer seus argumentos.",
-      mentor: "Equipe Escreva Mais",
+      mentor: mainTeacherName,
       price: formatCurrencyFromCents(pricing.readingClubPriceInCents),
       href: "/cadastro?readingClub=1",
       color: "var(--em-mint)",
@@ -35,7 +36,7 @@ export function Landing({ pricing, socialProof }: LandingProps) {
     {
       title: "Curso de Gramática",
       description: "Aulas práticas de pontuação, concordância, crase e coesão para escrever com mais clareza.",
-      mentor: "Profª. Beatriz Lima",
+      mentor: mainTeacherName,
       price: formatCurrencyFromCents(pricing.plans.mensal),
       href: "/cadastro?plan=mensal",
       color: "var(--em-peach)",
@@ -44,7 +45,7 @@ export function Landing({ pricing, socialProof }: LandingProps) {
     {
       title: "Monitoria Individualizada",
       description: "Acompanhamento personalizado para corrigir dificuldades e orientar seu plano de estudo.",
-      mentor: "Prof. Rafael Costa",
+      mentor: mainTeacherName,
       price: formatCurrencyFromCents(pricing.plans.mentoria),
       href: "/cadastro?mentoring=1",
       color: "var(--em-coral)",
@@ -71,7 +72,7 @@ export function Landing({ pricing, socialProof }: LandingProps) {
           <nav className="hidden md:flex items-center gap-8 text-[15px] font-medium text-white/80">
             <a href="#inicio" className="hover:text-[var(--em-green)] transition-colors">Início</a>
             <a href="#conteudo" className="hover:text-[var(--em-green)] transition-colors">Conteúdo</a>
-            <a href="#mentores" className="hover:text-[var(--em-green)] transition-colors">Mentores</a>
+            <a href="#professor" className="hover:text-[var(--em-green)] transition-colors">Professor</a>
             <a href="#planos" className="hover:text-[var(--em-green)] transition-colors">Planos</a>
           </nav>
           
@@ -488,17 +489,17 @@ export function Landing({ pricing, socialProof }: LandingProps) {
       </section>
 
       {/* 6. SEÇÃO MENTORES SPLIT */}
-      <section id="mentores" className="mx-auto w-full max-w-[920px] overflow-hidden px-4 py-14 sm:px-6 md:py-20">
+      <section id="professor" className="mx-auto w-full max-w-[920px] overflow-hidden px-4 py-14 sm:px-6 md:py-20">
         <div className="grid items-center gap-10 lg:grid-cols-[0.95fr_1fr] lg:gap-8">
           <div className="order-2 min-w-0 space-y-8 lg:order-1">
             <div className="em-chip bg-[var(--em-yellow-soft)] border-[var(--em-yellow)] text-[var(--em-ink)]">
               <Award className="w-4 h-4" /> Qualidade Garantida
             </div>
             <h2 className="em-display max-w-full text-[2rem] leading-[1.02] text-[var(--em-ink)] sm:text-[2.35rem] md:text-[2.75rem]">
-              Tenha experiência com mentores <span className="bg-[var(--em-yellow)] px-2 rounded-lg">qualificados</span>
+              Tenha experiência com um professor <span className="bg-[var(--em-yellow)] px-2 rounded-lg">qualificado</span>
             </h2>
             <p className="max-w-md text-base font-medium leading-7 text-[var(--em-text-soft)]">
-              Nossa equipe é formada por corretores oficiais das principais bancas do país. Aprenda exatamente o que os avaliadores querem ler.
+              Aprenda com o Prof. Luiz Fernando, com acompanhamento próximo, correção detalhada e orientação para escrever com método.
             </p>
             <ul className="space-y-4">
               {['Correção humanizada e detalhada', 'Feedback em áudio e texto', 'Mentoria em vídeo ao vivo'].map((item, i) => (
@@ -511,7 +512,7 @@ export function Landing({ pricing, socialProof }: LandingProps) {
               ))}
             </ul>
             <div className="pt-4">
-              <a href="/cadastro" className="em-btn-primary">Conhecer equipe</a>
+              <a href="/cadastro" className="em-btn-primary">Conhecer o professor</a>
             </div>
           </div>
           
@@ -519,19 +520,17 @@ export function Landing({ pricing, socialProof }: LandingProps) {
             <div className="em-card-hard absolute inset-x-0 top-0 h-[270px] overflow-hidden rounded-[28px] bg-[var(--em-peach)] !border-2 !p-0 sm:h-[330px] sm:rotate-2 sm:rounded-[32px] lg:inset-0 lg:h-auto">
               <img 
                 src="/__mockup/images/escreva-mais/mentors-team.png" 
-                alt="Equipe de mentores" 
+                alt="Professor Luiz Fernando" 
                 className="h-full w-full object-cover opacity-90 mix-blend-luminosity sm:-rotate-2 sm:scale-110"
               />
             </div>
             
             {/* Card Flutuante */}
             <div className="em-card-hard absolute bottom-0 left-3 right-3 z-20 rounded-[24px] bg-white p-5 sm:left-6 sm:right-auto sm:w-[260px] sm:p-5 lg:-bottom-5 lg:-left-2">
-              <h4 className="font-extrabold text-[var(--em-ink)] mb-4 font-['Plus_Jakarta_Sans']">Nossos top mentores</h4>
+              <h4 className="font-extrabold text-[var(--em-ink)] mb-4 font-['Plus_Jakarta_Sans']">Professor do curso</h4>
               <div className="space-y-4">
                 {[
-                  { name: "Profª. Júlia Silva", area: "Redação ENEM", bg: "bg-[var(--em-mint)]" },
-                  { name: "Prof. Lucas Mendes", area: "Fuvest / Unicamp", bg: "bg-[var(--em-lavender)]" },
-                  { name: "Profª. Beatriz Lima", area: "Gramática e Estilo", bg: "bg-[var(--em-peach)]" }
+                  { name: mainTeacherName, area: "Redação, gramática e acompanhamento", bg: "bg-[var(--em-mint)]" }
                 ].map((mentor, i) => (
                   <div key={i} className="flex items-center gap-3">
                     <div className={`w-10 h-10 rounded-xl ${mentor.bg} border-2 border-[var(--em-ink)] grid place-items-center text-[var(--em-ink)] font-bold text-xs`}>
@@ -563,7 +562,7 @@ export function Landing({ pricing, socialProof }: LandingProps) {
             {[
               { text: "A correção detalhada me mostrou exatamente onde eu perdia pontos. Foi fundamental para a minha aprovação.", author: "Pedro Henrique", goal: "Medicina USP", score: "De 720 → 960" },
               { text: "Os modelos de redação me deram a segurança que eu precisava. Cheguei na prova sabendo exatamente a estrutura.", author: "Ana Clara", goal: "Direito UFMG", score: "De 680 → 980" },
-              { text: "Os plantões tira-dúvidas salvaram minha vida. Mentores atenciosos que realmente se importam com seu resultado.", author: "João Gabriel", goal: "Engenharia Poli", score: "De 800 → 940" }
+              { text: "Os plantões tira-dúvidas salvaram minha vida. O acompanhamento próximo fez diferença na minha evolução.", author: "João Gabriel", goal: "Engenharia Poli", score: "De 800 → 940" }
             ].map((dep, i) => (
               <div key={i} className="bg-[var(--em-yellow)] p-8 em-card-hard !border-white/20 transform hover:-translate-y-2 transition-transform duration-300">
                 <div className="flex gap-1 text-[var(--em-ink)] mb-6">
@@ -720,7 +719,7 @@ export function Landing({ pricing, socialProof }: LandingProps) {
               <h4 className="font-bold text-white mb-6 font-['Plus_Jakarta_Sans']">Sobre</h4>
               <ul className="space-y-4 text-sm text-white/60">
                 <li><a href="#inicio" className="hover:text-[var(--em-green)]">Nossa História</a></li>
-                <li><a href="#mentores" className="hover:text-[var(--em-green)]">Mentores</a></li>
+                <li><a href="#professor" className="hover:text-[var(--em-green)]">Professor</a></li>
                 <li><a href="/cadastro" className="hover:text-[var(--em-green)]">Carreiras</a></li>
                 <li><a href="#conteudo" className="hover:text-[var(--em-green)]">Blog</a></li>
               </ul>
