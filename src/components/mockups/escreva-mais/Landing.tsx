@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, Check, Star, Target, Award, Instagram, Youtube, Linkedin, GraduationCap, TrendingUp, Menu, LogIn, UserPlus, Gift, Smartphone, Trophy, BrainCircuit, CalendarCheck, FileText, LineChart, MessageSquareText, WandSparkles, BookOpen } from "lucide-react";
 import { PlatformLogo } from "@/components/branding/platform-logo";
+import type { LandingSocialProof } from "@/lib/landing-social-proof";
 import { formatCurrencyFromCents, type getPublicPlanPricing } from "@/lib/plans";
 import "./_group.css";
 
@@ -8,9 +9,19 @@ type LandingPricing = Awaited<ReturnType<typeof getPublicPlanPricing>>;
 
 type LandingProps = {
   pricing: LandingPricing;
+  socialProof: LandingSocialProof;
 };
 
-export function Landing({ pricing }: LandingProps) {
+function formatCompactCount(value: number) {
+  return new Intl.NumberFormat("pt-BR", {
+    notation: value >= 10000 ? "compact" : "standard",
+    maximumFractionDigits: 1,
+  }).format(value);
+}
+
+const avatarColors = ["var(--em-lavender)", "var(--em-peach)", "var(--em-mint)"];
+
+export function Landing({ pricing, socialProof }: LandingProps) {
   const publicCourses = [
     {
       title: "Clube do Livro",
@@ -129,13 +140,29 @@ export function Landing({ pricing }: LandingProps) {
               <a href="/cadastro" className="em-btn-primary w-full justify-center px-6 py-4 text-base sm:w-auto sm:px-8 sm:text-lg">
                 Começar agora <ArrowRight className="w-5 h-5" />
               </a>
-              <div className="flex items-center justify-center gap-4 px-1 text-sm font-medium text-white/60 sm:justify-start sm:px-4">
-                <div className="flex -space-x-3">
-                  <div className="w-10 h-10 rounded-full border-2 border-[var(--em-ink)] bg-[var(--em-lavender)]"></div>
-                  <div className="w-10 h-10 rounded-full border-2 border-[var(--em-ink)] bg-[var(--em-peach)]"></div>
-                  <div className="w-10 h-10 rounded-full border-2 border-[var(--em-ink)] bg-[var(--em-mint)]"></div>
+              <div className="flex items-center justify-center gap-4 px-1 text-sm font-medium text-white/70 sm:justify-start sm:px-4">
+                <div className="flex -space-x-3" aria-label="Alunos recentes">
+                  {(socialProof.recentStudents.length ? socialProof.recentStudents : [
+                    { id: "placeholder-1", initials: "EM", name: "Escreva Mais" },
+                    { id: "placeholder-2", initials: "AI", name: "Aluno inscrito" },
+                    { id: "placeholder-3", initials: "RD", name: "Redação" },
+                  ]).slice(0, 3).map((student, index) => (
+                    <div
+                      key={student.id}
+                      title={student.name}
+                      className="grid h-10 w-10 place-items-center rounded-full border-2 border-[var(--em-ink)] text-[11px] font-black text-[var(--em-ink)]"
+                      style={{ background: avatarColors[index % avatarColors.length] }}
+                    >
+                      {student.initials}
+                    </div>
+                  ))}
                 </div>
-                <span>+15.000<br/>alunos aprovados</span>
+                <span>
+                  <strong className="block text-base font-black text-white">
+                    {socialProof.count > 0 ? `+${formatCompactCount(socialProof.count)}` : "Dados reais"}
+                  </strong>
+                  <span>{socialProof.label}</span>
+                </span>
               </div>
             </div>
           </div>
