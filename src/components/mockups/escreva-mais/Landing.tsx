@@ -252,12 +252,14 @@ export function Landing({ pricing }: LandingProps) {
       <section className="relative overflow-hidden border-y border-[var(--em-border)] bg-white px-4 py-14 sm:px-6 md:py-20">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_12%_18%,rgba(43,211,123,0.16),transparent_28%),radial-gradient(circle_at_92%_12%,rgba(255,201,61,0.2),transparent_30%)]" />
         <div className="relative mx-auto grid max-w-6xl items-center gap-8 lg:grid-cols-[0.92fr_1.08fr]">
-          <div className="space-y-7">
-            <div className="em-chip w-fit border-[var(--em-yellow)] bg-[var(--em-yellow-soft)] text-[var(--em-ink)]">
-              <Trophy className="h-4 w-4" /> Desafio Escreva Mais
-            </div>
-            <div className="em-chip w-fit border-[var(--em-green)] bg-[var(--em-green-soft)] text-[var(--em-green-deep)]">
-              <BrainCircuit className="h-4 w-4" /> Evolução acompanhada
+          <div className="space-y-6">
+            <div className="flex flex-wrap gap-3">
+              <div className="em-chip w-fit border-[var(--em-yellow)] bg-[var(--em-yellow-soft)] text-[var(--em-ink)]">
+                <Trophy className="h-4 w-4" /> Desafio Escreva Mais
+              </div>
+              <div className="em-chip w-fit border-[var(--em-green)] bg-[var(--em-green-soft)] text-[var(--em-green-deep)]">
+                <BrainCircuit className="h-4 w-4" /> Evolução acompanhada
+              </div>
             </div>
             <div className="space-y-4">
               <h2 className="em-display text-3xl leading-tight text-[var(--em-ink)] sm:text-4xl md:text-5xl">
@@ -267,27 +269,58 @@ export function Landing({ pricing }: LandingProps) {
                 No fim do curso, os alunos com melhor desempenho, pontualidade nos compromissos e atividades entregues dentro dos prazos poderão concorrer a prêmios especiais, conforme regulamento.
               </p>
             </div>
-            <div className="grid gap-3 sm:grid-cols-3">
-              <div className="rounded-2xl border-2 border-[var(--em-ink)] bg-[var(--em-mint)] p-4 shadow-[4px_4px_0_0_#0E0F12]">
-                <div className="mb-3 flex h-11 w-11 items-center justify-center rounded-xl border-2 border-[var(--em-ink)] bg-white">
-                  <Smartphone className="h-5 w-5 text-[var(--em-green-deep)]" />
+            <div className="grid gap-4">
+              <div className="relative overflow-hidden rounded-[28px] border-2 border-[var(--em-ink)] bg-[var(--em-yellow)] p-5 shadow-[6px_6px_0_0_#0E0F12] sm:p-6">
+                <div className="pointer-events-none absolute -right-12 -top-12 h-36 w-36 rounded-full border-[22px] border-white/35" />
+                <div className="relative grid gap-5 sm:grid-cols-[1fr_auto] sm:items-center">
+                  <div>
+                    <div className="mb-4 inline-flex items-center gap-2 rounded-full border-2 border-[var(--em-ink)] bg-white px-3 py-1 text-xs font-black uppercase tracking-[0.12em] text-[var(--em-ink)]">
+                      <Gift className="h-4 w-4 text-[var(--em-peach-deep)]" /> Premiação em destaque
+                    </div>
+                    <h3 className="font-['Plus_Jakarta_Sans'] text-2xl font-black leading-tight text-[var(--em-ink)] sm:text-3xl">
+                      Celular para 1º e 2º lugar
+                    </h3>
+                    <p className="mt-3 max-w-md text-sm font-bold leading-6 text-[var(--em-ink)]/75 sm:text-base">
+                      Os alunos com melhor desempenho e constância até o fim do curso poderão concorrer ao prêmio, conforme regulamento.
+                    </p>
+                    <div className="mt-5 flex flex-wrap gap-2">
+                      {["Desempenho", "Pontualidade", "Atividades no prazo"].map((item) => (
+                        <span key={item} className="rounded-full border border-[var(--em-ink)]/20 bg-white/70 px-3 py-1 text-xs font-black text-[var(--em-ink)]">
+                          {item}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="mx-auto flex items-end gap-2 sm:mx-0">
+                    <div className="rounded-[26px] border-4 border-[var(--em-ink)] bg-white p-2 shadow-[5px_5px_0_0_#0E0F12]">
+                      <div className="mx-auto mb-2 h-1.5 w-10 rounded-full bg-[var(--em-ink)]" />
+                      <div className="grid h-28 w-20 place-items-center rounded-[18px] border-2 border-[var(--em-ink)] bg-[var(--em-mint)]">
+                        <Smartphone className="h-8 w-8 text-[var(--em-green-deep)]" />
+                      </div>
+                    </div>
+                    <div className="mb-2 grid h-14 w-14 place-items-center rounded-2xl border-2 border-[var(--em-ink)] bg-white shadow-[4px_4px_0_0_#0E0F12]">
+                      <Trophy className="h-7 w-7 text-[var(--em-peach-deep)]" />
+                    </div>
+                  </div>
                 </div>
-                <h3 className="font-['Plus_Jakarta_Sans'] text-lg font-extrabold text-[var(--em-ink)]">Prêmio para destaque</h3>
-                <p className="mt-2 text-sm font-semibold leading-6 text-[var(--em-ink)]/70">Primeiro e segundo lugar podem ser contemplados com celular ao final do curso.</p>
               </div>
-              <div className="rounded-2xl border-2 border-[var(--em-ink)] bg-[var(--em-peach)] p-4 shadow-[4px_4px_0_0_#0E0F12]">
-                <div className="mb-3 flex h-11 w-11 items-center justify-center rounded-xl border-2 border-[var(--em-ink)] bg-white">
-                  <Gift className="h-5 w-5 text-[var(--em-peach-deep)]" />
+
+              <div className="grid gap-3 sm:grid-cols-2">
+                <div className="rounded-2xl border-2 border-[var(--em-ink)] bg-[var(--em-mint)] p-4 shadow-[4px_4px_0_0_#0E0F12]">
+                  <div className="mb-3 flex h-11 w-11 items-center justify-center rounded-xl border-2 border-[var(--em-ink)] bg-white">
+                    <LineChart className="h-5 w-5 text-[var(--em-green-deep)]" />
+                  </div>
+                  <h3 className="font-['Plus_Jakarta_Sans'] text-lg font-extrabold leading-tight text-[var(--em-ink)]">Mérito real</h3>
+                  <p className="mt-2 text-sm font-semibold leading-6 text-[var(--em-ink)]/70">Participação, evolução e desempenho contam na jornada do aluno.</p>
                 </div>
-                <h3 className="font-['Plus_Jakarta_Sans'] text-lg font-extrabold text-[var(--em-ink)]">Mérito e compromisso</h3>
-                <p className="mt-2 text-sm font-semibold leading-6 text-[var(--em-ink)]/70">Valorizamos quem participa, cumpre prazos e mantém uma rotina real de evolução.</p>
-              </div>
-              <div className="rounded-2xl border-2 border-[var(--em-ink)] bg-[var(--em-yellow-soft)] p-4 shadow-[4px_4px_0_0_#0E0F12]">
-                <div className="mb-3 flex h-11 w-11 items-center justify-center rounded-xl border-2 border-[var(--em-ink)] bg-white">
-                  <CalendarCheck className="h-5 w-5 text-[var(--em-ink)]" />
+                <div className="rounded-2xl border-2 border-[var(--em-ink)] bg-[var(--em-peach)] p-4 shadow-[4px_4px_0_0_#0E0F12]">
+                  <div className="mb-3 flex h-11 w-11 items-center justify-center rounded-xl border-2 border-[var(--em-ink)] bg-white">
+                    <CalendarCheck className="h-5 w-5 text-[var(--em-peach-deep)]" />
+                  </div>
+                  <h3 className="font-['Plus_Jakarta_Sans'] text-lg font-extrabold leading-tight text-[var(--em-ink)]">Prazos em dia</h3>
+                  <p className="mt-2 text-sm font-semibold leading-6 text-[var(--em-ink)]/70">Pontualidade e atividades entregues no prazo fazem parte dos critérios.</p>
                 </div>
-                <h3 className="font-['Plus_Jakarta_Sans'] text-lg font-extrabold text-[var(--em-ink)]">Ritmo no prazo</h3>
-                <p className="mt-2 text-sm font-semibold leading-6 text-[var(--em-ink)]/70">A constância vira parte visível do progresso do aluno.</p>
               </div>
             </div>
           </div>
