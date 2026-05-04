@@ -33,12 +33,12 @@ export function Landing({ pricing, socialProof }: LandingProps) {
       img: "https://images.unsplash.com/photo-1521587760476-6c12a4b040da?q=80&w=600&auto=format&fit=crop",
     },
     {
-      title: "Redação ENEM: prática orientada",
-      description: "Propostas semanais, estrutura dissertativa e estratégias para evoluir com constância.",
-      mentor: "Profª. Júlia Silva",
+      title: "Curso de Gramática",
+      description: "Aulas práticas de pontuação, concordância, crase e coesão para escrever com mais clareza.",
+      mentor: "Profª. Beatriz Lima",
       price: formatCurrencyFromCents(pricing.plans.mensal),
       href: "/cadastro?plan=mensal",
-      color: "var(--em-yellow)",
+      color: "var(--em-peach)",
       img: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?q=80&w=600&auto=format&fit=crop",
     },
     {
