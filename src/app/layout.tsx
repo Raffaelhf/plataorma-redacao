@@ -1,17 +1,25 @@
 import type { Metadata } from 'next';
-import { Plus_Jakarta_Sans, Sora } from 'next/font/google';
+import { Inter, Outfit, Source_Serif_4 } from 'next/font/google';
 import './globals.css';
 import { CookieBanner } from '@/components/legal/cookie-banner';
 import { AuthProvider } from '@/components/providers/session-provider';
 
-const bodyFont = Plus_Jakarta_Sans({
+const bodyFont = Inter({
   variable: '--font-body',
   subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
 });
 
-const displayFont = Sora({
+const displayFont = Outfit({
   variable: '--font-display',
   subsets: ['latin'],
+  weight: ['500', '600', '700', '800'],
+});
+
+const serifFont = Source_Serif_4({
+  variable: '--font-serif',
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
 });
 
 export const metadata: Metadata = {
@@ -27,7 +35,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="pt-BR">
-      <body className={`${bodyFont.variable} ${displayFont.variable} antialiased`} suppressHydrationWarning>
+      <body className={`${bodyFont.variable} ${displayFont.variable} ${serifFont.variable} antialiased`} suppressHydrationWarning>
         <AuthProvider>
           <div className="theme-root min-h-screen">
             {children}
