@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Check, Star, Target, Award, Instagram, Youtube, Linkedin, GraduationCap, TrendingUp, Menu, LogIn, UserPlus, Gift, Smartphone, Trophy, BrainCircuit, CalendarCheck, FileText, LineChart, MessageSquareText, BookOpen } from "lucide-react";
+import { ArrowRight, Check, Star, Target, Award, Instagram, Youtube, Linkedin, GraduationCap, TrendingUp, Menu, LogIn, UserPlus, Gift, Trophy, BrainCircuit, CalendarCheck, FileText, LineChart, MessageSquareText, BookOpen } from "lucide-react";
 import { PlatformLogo } from "@/components/branding/platform-logo";
 import type { LandingSocialProof } from "@/lib/landing-social-proof";
 import { formatCurrencyFromCents, type getPublicPlanPricing } from "@/lib/plans";
@@ -277,160 +277,98 @@ export function Landing({ pricing, socialProof }: LandingProps) {
       </section>
 
       {/* 5. DESAFIO COM PREMIAÇÃO */}
-      <section className="border-y border-[var(--em-border)] bg-[#faf8f3] px-4 py-16 sm:px-6 md:py-24">
+      <section className="bg-[var(--em-ink)] px-4 py-20 sm:px-6 md:py-28">
         <div className="mx-auto max-w-6xl">
-          {/* Header da seção */}
-          <div className="mb-10 text-center md:mb-14">
-            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-[var(--em-yellow)] bg-[var(--em-yellow-soft)] px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-[var(--em-ink)]">
-              <Trophy className="h-4 w-4 text-[var(--em-peach-deep)]" /> Desafio Escreva Mais
-            </div>
-            <h2 className="em-display mx-auto max-w-3xl text-3xl leading-tight text-[var(--em-ink)] sm:text-4xl md:text-[2.75rem]">
-              Estudo com constância também pode virar{" "}
-              <span className="inline-block rounded-lg bg-[var(--em-green)] px-3 py-1 text-[var(--em-ink)]">premiação</span>
-            </h2>
-            <p className="mx-auto mt-5 max-w-2xl text-base font-medium leading-7 text-[var(--em-text-soft)] sm:text-lg">
-              Os melhores alunos em desempenho, pontualidade e entregas concorrem a prêmios especiais ao final do curso.
-            </p>
-          </div>
-
-          {/* Bento Grid */}
-          <div className="grid gap-4 md:grid-cols-12 md:gap-5">
-            {/* Card Principal - Premiação */}
-            <div className="em-card-hard col-span-12 overflow-hidden bg-white p-0 md:col-span-5">
-              <div className="flex h-full flex-col">
-                <div className="flex flex-1 flex-col justify-between p-6 sm:p-7">
-                  <div>
-                    <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[var(--em-peach)] bg-[var(--em-peach)]/40 px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.12em] text-[var(--em-peach-deep)]">
-                      <Gift className="h-3.5 w-3.5" /> Prêmio principal
-                    </div>
-                    <h3 className="em-display text-[1.75rem] leading-[1.1] text-[var(--em-ink)] sm:text-[2rem]">
-                      Celular para
-                      <br />1º e 2º lugar
-                    </h3>
-                    <p className="mt-4 text-sm font-medium leading-relaxed text-[var(--em-text-soft)]">
-                      Reconhecimento para quem mantém uma rotina consistente de escrita até o fim do curso.
-                    </p>
-                  </div>
-                  <div className="mt-6 rounded-xl border border-[var(--em-border-strong)] bg-[var(--em-cream)] p-4">
-                    <div className="text-[10px] font-bold uppercase tracking-[0.14em] text-[var(--em-text-mute)]">Conforme regulamento</div>
-                    <div className="mt-1.5 text-sm font-semibold leading-snug text-[var(--em-ink)]">Desempenho, pontualidade e atividades no prazo.</div>
-                  </div>
-                </div>
+          {/* Layout principal: texto + imagem */}
+          <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
+            {/* Coluna esquerda: conteúdo */}
+            <div>
+              <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-wider text-[var(--em-green)]">
+                <Trophy className="h-4 w-4" /> Desafio Escreva Mais
               </div>
-            </div>
+              
+              <h2 className="em-display text-4xl leading-[1.1] text-white sm:text-5xl md:text-[3.5rem]">
+                Constância que
+                <br />
+                <span className="text-[var(--em-green)]">vira prêmio.</span>
+              </h2>
+              
+              <p className="mt-6 max-w-lg text-base leading-relaxed text-white/60 sm:text-lg">
+                Os alunos com melhor desempenho ao longo do curso concorrem a prêmios especiais. O 1º e 2º lugar ganham um celular.
+              </p>
 
-            {/* Card Ilustração - Pódio */}
-            <div className="em-card-hard relative col-span-12 overflow-hidden bg-[var(--em-yellow)] !border-[var(--em-ink)] p-0 md:col-span-3">
-              <div className="absolute inset-0 bg-[linear-gradient(145deg,rgba(255,255,255,0.5)_0%,transparent_50%)]" />
-              <div className="relative flex h-full min-h-[280px] flex-col items-center justify-end p-5 pb-6 md:min-h-[340px]">
-                {/* Celular flutuante */}
-                <div className="absolute right-3 top-4 z-20 rounded-[20px] border-[3px] border-[var(--em-ink)] bg-white p-2 shadow-[4px_4px_0_0_#0E0F12] md:right-4 md:top-5">
-                  <div className="mx-auto mb-2 h-1 w-8 rounded-full bg-[var(--em-ink)]" />
-                  <div className="grid h-24 w-16 place-items-center rounded-xl border-[1.5px] border-[var(--em-ink)] bg-[var(--em-mint)] md:h-28 md:w-[68px]">
-                    <Smartphone className="h-8 w-8 text-[var(--em-green-deep)] md:h-9 md:w-9" />
-                  </div>
-                </div>
-                {/* Troféu */}
-                <div className="absolute left-3 top-4 z-10 grid h-11 w-11 place-items-center rounded-xl border-2 border-[var(--em-ink)] bg-white text-[var(--em-peach-deep)] shadow-[3px_3px_0_0_#0E0F12] md:left-4 md:top-5 md:h-12 md:w-12">
-                  <Trophy className="h-5 w-5 md:h-6 md:w-6" />
-                </div>
-                {/* Pódio */}
-                <div className="relative z-10 flex items-end gap-2">
-                  <div className="grid h-16 w-12 place-items-center rounded-t-xl border-2 border-[var(--em-ink)] bg-[var(--em-mint)] text-lg font-bold text-[var(--em-ink)] md:h-20 md:w-14 md:text-xl">2</div>
-                  <div className="grid h-[88px] w-14 place-items-center rounded-t-xl border-2 border-[var(--em-ink)] bg-white text-xl font-bold text-[var(--em-ink)] md:h-24 md:w-16 md:text-2xl">1</div>
-                </div>
-                {/* Base do pódio */}
-                <div className="absolute bottom-0 left-4 right-4 h-5 rounded-t-lg border-2 border-b-0 border-[var(--em-ink)] bg-white md:h-6" />
-              </div>
-            </div>
-
-            {/* Card - Critérios */}
-            <div className="em-card-hard col-span-12 bg-white p-5 sm:p-6 md:col-span-4">
-              <div className="mb-5 flex items-start justify-between gap-3">
-                <div>
-                  <div className="text-[10px] font-bold uppercase tracking-[0.16em] text-[var(--em-green-deep)]">Critérios</div>
-                  <h3 className="em-display mt-1.5 text-xl leading-tight text-[var(--em-ink)] sm:text-[1.35rem]">Como concorrer</h3>
-                </div>
-                <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[var(--em-green)] text-[var(--em-ink)]">
-                  <Check className="h-4 w-4" strokeWidth={3} />
-                </div>
-              </div>
-              <div className="space-y-2.5">
+              {/* Critérios em linha */}
+              <div className="mt-10 flex flex-wrap gap-3">
                 {[
-                  { icon: LineChart, title: "Desempenho", desc: "evolução nas redações" },
-                  { icon: CalendarCheck, title: "Pontualidade", desc: "compromissos em dia" },
-                  { icon: FileText, title: "Entregas", desc: "atividades no prazo" },
-                ].map(({ icon: Icon, title, desc }, index) => (
-                  <div key={title} className="flex items-center gap-3 rounded-xl border border-[var(--em-border)] bg-[var(--em-cream)]/60 p-3">
-                    <div className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-white text-[var(--em-green-deep)]">
-                      <Icon className="h-4 w-4" />
-                    </div>
-                    <div className="min-w-0">
-                      <div className="flex items-center gap-1.5 text-sm font-bold text-[var(--em-ink)]">
-                        <span className="text-xs text-[var(--em-green-deep)]">{index + 1}</span>
-                        {title}
-                      </div>
-                      <div className="text-xs font-medium text-[var(--em-text-soft)]">{desc}</div>
-                    </div>
+                  { icon: LineChart, label: "Desempenho" },
+                  { icon: CalendarCheck, label: "Pontualidade" },
+                  { icon: FileText, label: "Entregas" },
+                ].map(({ icon: Icon, label }) => (
+                  <div key={label} className="flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-2.5">
+                    <Icon className="h-4 w-4 text-[var(--em-green)]" />
+                    <span className="text-sm font-medium text-white">{label}</span>
                   </div>
                 ))}
               </div>
+
+              {/* Nota de regulamento */}
+              <p className="mt-8 text-sm text-white/40">
+                *Conforme regulamento do programa. Desempenho, pontualidade e atividades no prazo são considerados.
+              </p>
             </div>
 
-            {/* Card - Além da Gramática (largo) */}
-            <div className="em-card-hard col-span-12 overflow-hidden bg-gradient-to-br from-[var(--em-ink)] to-[#1a1b1f] p-0 text-white md:col-span-8">
-              <div className="grid h-full md:grid-cols-[1fr_auto]">
-                {/* Conteúdo texto */}
-                <div className="flex flex-col justify-between p-6 sm:p-7">
+            {/* Coluna direita: imagem do celular */}
+            <div className="relative flex items-center justify-center">
+              {/* Círculo decorativo de fundo */}
+              <div className="absolute h-[380px] w-[380px] rounded-full bg-gradient-to-br from-[var(--em-green)]/20 to-transparent blur-3xl sm:h-[450px] sm:w-[450px]" />
+              
+              {/* Imagem do celular */}
+              <img
+                src="/images/smartphone-premio.jpg"
+                alt="Celular - prêmio do desafio"
+                className="relative z-10 h-auto w-[280px] max-w-none object-contain drop-shadow-2xl sm:w-[340px] lg:w-[380px]"
+              />
+              
+              {/* Badge flutuante */}
+              <div className="absolute -left-2 top-1/4 z-20 rounded-2xl border border-white/10 bg-white/10 p-4 backdrop-blur-md sm:left-0">
+                <div className="flex items-center gap-3">
+                  <div className="grid h-10 w-10 place-items-center rounded-xl bg-[var(--em-yellow)] text-[var(--em-ink)]">
+                    <Gift className="h-5 w-5" />
+                  </div>
                   <div>
-                    <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-[var(--em-green)]">
-                      <GraduationCap className="h-3.5 w-3.5" /> Além da gramática
-                    </div>
-                    <h3 className="em-display max-w-sm text-2xl leading-tight sm:text-[1.7rem]">
-                      Redação para todas as fases escolares
-                    </h3>
-                    <p className="mt-3 max-w-md text-sm font-medium leading-relaxed text-white/60">
-                      Método completo para organizar ideias, desenvolver repertório e escrever com clareza em qualquer contexto.
-                    </p>
+                    <div className="text-sm font-bold text-white">1º e 2º lugar</div>
+                    <div className="text-xs text-white/60">Ganham celular</div>
                   </div>
-                  {/* Grid de habilidades */}
-                  <div className="mt-6 grid grid-cols-2 gap-2.5 sm:grid-cols-4 sm:gap-3">
-                    {[
-                      { icon: BookOpen, label: "Repertório" },
-                      { icon: FileText, label: "Estrutura" },
-                      { icon: MessageSquareText, label: "Argumentação" },
-                      { icon: BrainCircuit, label: "Clareza" },
-                    ].map(({ icon: Icon, label }) => (
-                      <div key={label} className="flex items-center gap-2.5 rounded-xl border border-white/10 bg-white/5 px-3 py-2.5">
-                        <div className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-[var(--em-yellow)] text-[var(--em-ink)]">
-                          <Icon className="h-4 w-4" />
-                        </div>
-                        <span className="text-xs font-semibold text-white/90">{label}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                {/* Imagem do celular */}
-                <div className="relative hidden h-full min-h-[280px] w-[200px] items-end justify-center overflow-hidden bg-gradient-to-t from-[var(--em-green)]/20 to-transparent md:flex lg:w-[240px]">
-                  <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,var(--em-green)_0%,transparent_70%)] opacity-20" />
-                  <img
-                    src="/images/celular-app-redacao.jpg"
-                    alt="App de redação no celular"
-                    className="relative z-10 h-auto w-[180px] max-w-none translate-y-6 object-contain drop-shadow-2xl lg:w-[210px]"
-                  />
                 </div>
               </div>
             </div>
+          </div>
 
-            {/* Card - Evolução */}
-            <div className="em-card-hard col-span-12 flex items-center gap-4 bg-[var(--em-mint)] p-5 sm:gap-5 sm:p-6 md:col-span-4">
-              <div className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl border-2 border-[var(--em-ink)] bg-white text-[var(--em-green-deep)] shadow-[3px_3px_0_0_#0E0F12]">
-                <TrendingUp className="h-7 w-7" />
-              </div>
+          {/* Seção inferior: habilidades desenvolvidas */}
+          <div className="mt-20 border-t border-white/10 pt-12">
+            <div className="mb-8 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
               <div>
-                <div className="text-[10px] font-bold uppercase tracking-[0.14em] text-[var(--em-green-deep)]">Acompanhamento</div>
-                <h3 className="em-display mt-1 text-lg leading-tight text-[var(--em-ink)] sm:text-xl">Evolução monitorada ao longo do curso</h3>
+                <div className="text-xs font-semibold uppercase tracking-wider text-[var(--em-green)]">Além da gramática</div>
+                <h3 className="em-display mt-2 text-2xl text-white sm:text-3xl">O que você desenvolve</h3>
               </div>
+              <GraduationCap className="h-8 w-8 text-white/20" />
+            </div>
+
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {[
+                { icon: BookOpen, title: "Repertório", desc: "Referências culturais e conhecimento de mundo" },
+                { icon: FileText, title: "Estrutura", desc: "Organização lógica de ideias e parágrafos" },
+                { icon: MessageSquareText, title: "Argumentação", desc: "Construção de argumentos sólidos e convincentes" },
+                { icon: BrainCircuit, title: "Clareza", desc: "Comunicação objetiva e sem ambiguidades" },
+              ].map(({ icon: Icon, title, desc }) => (
+                <div key={title} className="group rounded-2xl border border-white/10 bg-white/5 p-5 transition-colors hover:bg-white/10">
+                  <div className="mb-4 grid h-11 w-11 place-items-center rounded-xl bg-[var(--em-green)] text-[var(--em-ink)]">
+                    <Icon className="h-5 w-5" />
+                  </div>
+                  <h4 className="text-lg font-bold text-white">{title}</h4>
+                  <p className="mt-2 text-sm leading-relaxed text-white/50">{desc}</p>
+                </div>
+              ))}
             </div>
           </div>
         </div>
