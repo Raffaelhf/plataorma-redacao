@@ -346,29 +346,91 @@ export function Landing({ pricing, socialProof }: LandingProps) {
 
           {/* Seção inferior: habilidades desenvolvidas */}
           <div className="mt-20 border-t border-white/10 pt-12">
-            <div className="mb-8 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
+            <div className="mb-10 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
               <div>
                 <div className="text-xs font-semibold uppercase tracking-wider text-[var(--em-green)]">Além da gramática</div>
                 <h3 className="em-display mt-2 text-2xl text-white sm:text-3xl">O que você desenvolve</h3>
               </div>
-              <GraduationCap className="h-8 w-8 text-white/20" />
+              <p className="max-w-xs font-['Source_Serif_4'] text-sm text-white/40">Habilidades essenciais para qualquer prova dissertativa</p>
             </div>
 
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              {[
-                { icon: BookOpen, title: "Repertório", desc: "Referências culturais e conhecimento de mundo" },
-                { icon: FileText, title: "Estrutura", desc: "Organização lógica de ideias e parágrafos" },
-                { icon: MessageSquareText, title: "Argumentação", desc: "Construção de argumentos sólidos e convincentes" },
-                { icon: BrainCircuit, title: "Clareza", desc: "Comunicação objetiva e sem ambiguidades" },
-              ].map(({ icon: Icon, title, desc }) => (
-                <div key={title} className="group rounded-2xl border border-white/10 bg-white/5 p-5 transition-colors hover:bg-white/10">
-                  <div className="mb-4 grid h-11 w-11 place-items-center rounded-xl bg-[var(--em-green)] text-[var(--em-ink)]">
-                    <Icon className="h-5 w-5" />
+            {/* Grid assimétrico de habilidades */}
+            <div className="grid gap-4 md:grid-cols-12">
+              {/* Card 1 - Repertório (largo) */}
+              <div className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-[var(--em-green)] to-[#3db87a] p-6 md:col-span-5">
+                <div className="absolute -right-8 -top-8 h-32 w-32 rounded-full bg-white/10" />
+                <div className="absolute -bottom-4 -right-4 h-24 w-24 rounded-full bg-black/10" />
+                <div className="relative">
+                  <span className="inline-block rounded-full bg-black/20 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white/90">Fundamento</span>
+                  <h4 className="mt-4 text-2xl font-bold text-[var(--em-ink)]">Repertório</h4>
+                  <p className="mt-2 max-w-[200px] font-['Source_Serif_4'] text-sm leading-relaxed text-[var(--em-ink)]/70">Construa um arsenal de referências culturais, históricas e filosóficas para enriquecer seus textos.</p>
+                  <div className="mt-6 flex items-center gap-3">
+                    <div className="flex -space-x-1">
+                      <div className="h-6 w-6 rounded-full border-2 border-[var(--em-green)] bg-[var(--em-ink)]" />
+                      <div className="h-6 w-6 rounded-full border-2 border-[var(--em-green)] bg-[var(--em-yellow)]" />
+                      <div className="h-6 w-6 rounded-full border-2 border-[var(--em-green)] bg-[var(--em-peach)]" />
+                    </div>
+                    <span className="text-xs font-medium text-[var(--em-ink)]/60">+50 temas</span>
                   </div>
-                  <h4 className="text-lg font-bold text-white">{title}</h4>
-                  <p className="mt-2 font-['Source_Serif_4'] text-sm leading-relaxed text-white/50">{desc}</p>
                 </div>
-              ))}
+              </div>
+
+              {/* Card 2 - Estrutura (vertical) */}
+              <div className="group relative overflow-hidden rounded-3xl border-2 border-[var(--em-yellow)] bg-[var(--em-yellow)] p-6 md:col-span-3">
+                <div className="flex h-full flex-col">
+                  <div className="mb-auto">
+                    <FileText className="h-8 w-8 text-[var(--em-ink)]" />
+                  </div>
+                  <div className="mt-8">
+                    <h4 className="text-xl font-bold text-[var(--em-ink)]">Estrutura</h4>
+                    <p className="mt-2 font-['Source_Serif_4'] text-sm leading-relaxed text-[var(--em-ink)]/60">Intro, desenvolvimento e conclusão com coesão perfeita.</p>
+                  </div>
+                  {/* Mini diagrama visual */}
+                  <div className="mt-5 flex items-center gap-2">
+                    <div className="h-2 w-8 rounded-full bg-[var(--em-ink)]" />
+                    <div className="h-2 w-12 rounded-full bg-[var(--em-ink)]/60" />
+                    <div className="h-2 w-6 rounded-full bg-[var(--em-ink)]/30" />
+                  </div>
+                </div>
+              </div>
+
+              {/* Card 3 - Argumentação */}
+              <div className="group relative overflow-hidden rounded-3xl bg-white p-6 md:col-span-4">
+                <div className="absolute right-4 top-4">
+                  <div className="grid h-10 w-10 place-items-center rounded-xl bg-[var(--em-ink)] text-white">
+                    <MessageSquareText className="h-5 w-5" />
+                  </div>
+                </div>
+                <div className="pr-12">
+                  <span className="text-xs font-bold uppercase tracking-wider text-[var(--em-green-deep)]">Persuasão</span>
+                  <h4 className="mt-2 text-xl font-bold text-[var(--em-ink)]">Argumentação</h4>
+                </div>
+                <p className="mt-3 font-['Source_Serif_4'] text-sm leading-relaxed text-[var(--em-text-soft)]">Aprenda a defender seu ponto de vista com evidências sólidas e raciocínio lógico.</p>
+                {/* Quote visual */}
+                <div className="mt-5 border-l-2 border-[var(--em-green)] pl-3">
+                  <p className="font-['Source_Serif_4'] text-xs italic text-[var(--em-ink)]/50">&ldquo;Um bom argumento muda perspectivas&rdquo;</p>
+                </div>
+              </div>
+
+              {/* Card 4 - Clareza (horizontal) */}
+              <div className="group relative flex items-center gap-6 overflow-hidden rounded-3xl bg-[var(--em-ink)] p-6 md:col-span-5">
+                <div className="shrink-0">
+                  <div className="relative">
+                    <div className="h-16 w-16 rounded-2xl bg-gradient-to-br from-[var(--em-green)] to-[var(--em-mint)]" />
+                    <BrainCircuit className="absolute left-1/2 top-1/2 h-8 w-8 -translate-x-1/2 -translate-y-1/2 text-[var(--em-ink)]" />
+                  </div>
+                </div>
+                <div>
+                  <h4 className="text-xl font-bold text-white">Clareza</h4>
+                  <p className="mt-1 font-['Source_Serif_4'] text-sm leading-relaxed text-white/60">Comunique ideias complexas de forma simples e direta. Sem rodeios.</p>
+                </div>
+              </div>
+
+              {/* Card 5 - Número destaque */}
+              <div className="group flex flex-col items-center justify-center rounded-3xl border border-white/10 bg-white/5 p-6 text-center md:col-span-3">
+                <span className="em-display text-5xl text-[var(--em-green)]">4</span>
+                <span className="mt-1 text-sm font-medium text-white/60">pilares do texto nota 1000</span>
+              </div>
             </div>
           </div>
         </div>
