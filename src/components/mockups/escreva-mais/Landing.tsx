@@ -133,7 +133,7 @@ export function Landing({ pricing, socialProof }: LandingProps) {
               </span>
             </h1>
             
-            <p className="max-w-lg text-base leading-relaxed text-white/70 sm:text-lg md:text-xl">
+            <p className="max-w-lg font-['Source_Serif_4'] text-base italic leading-relaxed text-white/70 sm:text-lg md:text-xl">
               A plataforma definitiva para você dominar a redação do ENEM, Fuvest e Unicamp com correção inteligente e mentoria de especialistas.
             </p>
             
@@ -217,7 +217,7 @@ export function Landing({ pricing, socialProof }: LandingProps) {
 
       {/* 3. FRASE DE FOCO */}
       <section className="overflow-hidden border-y border-[var(--em-border)] bg-white py-6 sm:py-8">
-        <div className="animate-marquee flex w-max items-center gap-10 px-6 font-['Space_Grotesk'] text-sm font-extrabold uppercase tracking-[0.12em] text-[var(--em-text-mute)] opacity-70 sm:gap-16 sm:text-lg sm:tracking-[0.18em]">
+        <div className="animate-marquee flex w-max items-center gap-10 px-6 font-['Outfit'] text-sm font-extrabold uppercase tracking-[0.12em] text-[var(--em-text-mute)] opacity-70 sm:gap-16 sm:text-lg sm:tracking-[0.18em]">
           <span className="shrink-0">Formação em redação com metodologia, repertório e foco no ENEM.</span>
           <span className="shrink-0">Formação em redação com metodologia, repertório e foco no ENEM.</span>
           <span className="shrink-0">Formação em redação com metodologia, repertório e foco no ENEM.</span>
@@ -240,7 +240,7 @@ export function Landing({ pricing, socialProof }: LandingProps) {
               </svg>
             </span> com a Escreva Mais
           </h2>
-          <p className="text-base font-medium text-[var(--em-text-soft)] sm:text-lg">Método focado em resultados reais para os vestibulares mais concorridos do país.</p>
+          <p className="font-['Source_Serif_4'] text-base font-medium text-[var(--em-text-soft)] sm:text-lg">Método focado em resultados reais para os vestibulares mais concorridos do país.</p>
         </div>
         
         <div className="mx-auto grid max-w-[840px] gap-5 md:grid-cols-3">
@@ -249,8 +249,8 @@ export function Landing({ pricing, socialProof }: LandingProps) {
               <Target className="h-6 w-6" />
             </div>
             <div>
-              <h3 className="mb-3 font-['Space_Grotesk'] text-xl font-bold leading-tight text-[var(--em-ink)]">Aprenda as técnicas mais atuais</h3>
-              <p className="text-sm font-medium leading-6 text-[var(--em-ink-soft)]/80">Modelos de redação validados pelas bancas do ENEM e Fuvest, atualizados anualmente.</p>
+              <h3 className="mb-3 font-['Outfit'] text-xl font-bold leading-tight text-[var(--em-ink)]">Aprenda as técnicas mais atuais</h3>
+              <p className="font-['Source_Serif_4'] text-sm font-medium leading-6 text-[var(--em-ink-soft)]/80">Modelos de redação validados pelas bancas do ENEM e Fuvest, atualizados anualmente.</p>
             </div>
           </div>
           
@@ -259,8 +259,8 @@ export function Landing({ pricing, socialProof }: LandingProps) {
               <Award className="h-6 w-6" />
             </div>
             <div>
-              <h3 className="mb-3 font-['Space_Grotesk'] text-xl font-bold leading-tight text-[var(--em-ink)]">Esteja pronto para a prova</h3>
-              <p className="text-sm font-medium leading-6 text-[var(--em-ink-soft)]/80">Simulados semanais com temas inéditos e correção detalhada nos 5 critérios.</p>
+              <h3 className="mb-3 font-['Outfit'] text-xl font-bold leading-tight text-[var(--em-ink)]">Esteja pronto para a prova</h3>
+              <p className="font-['Source_Serif_4'] text-sm font-medium leading-6 text-[var(--em-ink-soft)]/80">Simulados semanais com temas inéditos e correção detalhada nos 5 critérios.</p>
             </div>
           </div>
           
@@ -269,8 +269,8 @@ export function Landing({ pricing, socialProof }: LandingProps) {
               <GraduationCap className="h-6 w-6" />
             </div>
             <div>
-              <h3 className="mb-3 font-['Space_Grotesk'] text-xl font-bold leading-tight text-[var(--em-ink)]">Conquiste sua vaga</h3>
-              <p className="text-sm font-medium leading-6 text-[var(--em-ink-soft)]/80">Análise de desempenho e histórico de evolução para você chegar no 1000 com segurança.</p>
+              <h3 className="mb-3 font-['Outfit'] text-xl font-bold leading-tight text-[var(--em-ink)]">Conquiste sua vaga</h3>
+              <p className="font-['Source_Serif_4'] text-sm font-medium leading-6 text-[var(--em-ink-soft)]/80">Análise de desempenho e histórico de evolução para você chegar no 1000 com segurança.</p>
             </div>
           </div>
         </div>
@@ -293,7 +293,7 @@ export function Landing({ pricing, socialProof }: LandingProps) {
                 <span className="text-[var(--em-green)]">vira prêmio.</span>
               </h2>
               
-              <p className="mt-6 max-w-lg text-base leading-relaxed text-white/60 sm:text-lg">
+              <p className="mt-6 max-w-lg font-['Source_Serif_4'] text-base leading-relaxed text-white/60 sm:text-lg">
                 Os alunos com melhor desempenho ao longo do curso concorrem a prêmios especiais. O 1º e 2º lugar ganham um celular.
               </p>
 
@@ -366,7 +366,7 @@ export function Landing({ pricing, socialProof }: LandingProps) {
                     <Icon className="h-5 w-5" />
                   </div>
                   <h4 className="text-lg font-bold text-white">{title}</h4>
-                  <p className="mt-2 text-sm leading-relaxed text-white/50">{desc}</p>
+                  <p className="mt-2 font-['Source_Serif_4'] text-sm leading-relaxed text-white/50">{desc}</p>
                 </div>
               ))}
             </div>
@@ -398,8 +398,8 @@ export function Landing({ pricing, socialProof }: LandingProps) {
                   </div>
                 </div>
                 <div className="px-2 flex-1 flex flex-col">
-                  <h3 className="mb-3 font-['Space_Grotesk'] text-xl font-bold leading-tight text-[var(--em-ink)] transition-colors group-hover:text-[var(--em-green-deep)]">{course.title}</h3>
-                  <p className="mb-5 text-sm font-medium leading-6 text-[var(--em-text-soft)]">{course.description}</p>
+                  <h3 className="mb-3 font-['Outfit'] text-xl font-bold leading-tight text-[var(--em-ink)] transition-colors group-hover:text-[var(--em-green-deep)]">{course.title}</h3>
+                  <p className="mb-5 font-['Source_Serif_4'] text-sm font-medium leading-6 text-[var(--em-text-soft)]">{course.description}</p>
                   <div className="mt-auto flex items-center gap-3 pt-4 border-t border-[var(--em-border)]">
                     <div className="w-8 h-8 rounded-full bg-[var(--em-ink)] text-white grid place-items-center font-bold text-xs">
                       {course.mentor.split(' ').map(n=>n[0]).join('').substring(0,2)}
@@ -429,7 +429,7 @@ export function Landing({ pricing, socialProof }: LandingProps) {
             <h2 className="em-display max-w-full text-[2rem] leading-[1.02] text-[var(--em-ink)] sm:text-[2.35rem] md:text-[2.75rem]">
               Tenha experiência com um professor <span className="bg-[var(--em-yellow)] px-2 rounded-lg">qualificado</span>
             </h2>
-            <p className="max-w-md text-base font-medium leading-7 text-[var(--em-text-soft)]">
+            <p className="max-w-md font-['Source_Serif_4'] text-base font-medium leading-7 text-[var(--em-text-soft)]">
               Aprenda com o Prof. Luiz Fernando, com acompanhamento próximo, correção detalhada e orientação para escrever com método.
             </p>
             <ul className="space-y-4">
@@ -458,7 +458,7 @@ export function Landing({ pricing, socialProof }: LandingProps) {
             
             {/* Card Flutuante */}
             <div className="em-card-hard absolute bottom-0 left-3 right-3 z-20 rounded-[24px] bg-white p-5 sm:left-6 sm:right-auto sm:w-[260px] sm:p-5 lg:-bottom-5 lg:-left-2">
-              <h4 className="font-extrabold text-[var(--em-ink)] mb-4 font-['Space_Grotesk']">Professor do curso</h4>
+              <h4 className="font-extrabold text-[var(--em-ink)] mb-4 font-['Outfit']">Professor do curso</h4>
               <div className="space-y-4">
                 {[
                   { name: mainTeacherName, area: "Redação, gramática e acompanhamento", bg: "bg-[var(--em-mint)]" }
@@ -486,7 +486,7 @@ export function Landing({ pricing, socialProof }: LandingProps) {
             <h2 className="em-display mb-4 text-3xl text-[var(--em-yellow)] sm:text-4xl md:text-5xl">
               Sucesso & Confiança
             </h2>
-            <p className="text-white/70 text-lg">O que dizem os alunos aprovados nas federais</p>
+            <p className="font-['Source_Serif_4'] text-white/70 text-lg italic">O que dizem os alunos aprovados nas federais</p>
           </div>
           
           <div className="grid gap-6 md:grid-cols-3">
@@ -499,7 +499,7 @@ export function Landing({ pricing, socialProof }: LandingProps) {
                 <div className="flex gap-1 text-[var(--em-ink)] mb-6">
                   {[...Array(5)].map((_,j) => <Star key={j} className="w-5 h-5 fill-current" />)}
                 </div>
-                <p className="text-lg font-bold text-[var(--em-ink)] mb-8 leading-snug">&ldquo;{dep.text}&rdquo;</p>
+                <p className="font-['Source_Serif_4'] text-lg font-medium italic text-[var(--em-ink)] mb-8 leading-snug">&ldquo;{dep.text}&rdquo;</p>
                 <div className="flex items-center justify-between border-t border-[var(--em-ink)]/20 pt-6">
                   <div>
                     <div className="font-bold text-[var(--em-ink)]">{dep.author}</div>
@@ -521,7 +521,7 @@ export function Landing({ pricing, socialProof }: LandingProps) {
           <h2 className="em-display mb-4 text-3xl text-[var(--em-ink)] sm:text-4xl md:text-5xl">
             Escolha seu <span className="bg-[var(--em-green)] px-2 rounded-lg">plano</span>
           </h2>
-          <p className="text-lg text-[var(--em-text-soft)] font-medium">Invista no seu futuro. Cancele quando quiser.</p>
+          <p className="font-['Source_Serif_4'] text-lg text-[var(--em-text-soft)] font-medium">Invista no seu futuro. Cancele quando quiser.</p>
         </div>
         
         <div className="grid items-start gap-6 md:grid-cols-2 lg:grid-cols-4">
@@ -532,11 +532,11 @@ export function Landing({ pricing, socialProof }: LandingProps) {
                   {plan.badge}
                 </div>
               )}
-              <h3 className="text-xl font-bold font-['Space_Grotesk'] text-[var(--em-ink)]">{plan.title}</h3>
+              <h3 className="text-xl font-bold font-['Outfit'] text-[var(--em-ink)]">{plan.title}</h3>
               <p className="text-sm font-semibold text-[var(--em-ink)]/60 mb-6">{plan.desc}</p>
               
               <div className="mb-8">
-                <span className="text-4xl font-extrabold text-[var(--em-ink)] font-['Space_Grotesk']">{plan.price}</span>
+                <span className="text-4xl font-extrabold text-[var(--em-ink)] font-['Outfit']">{plan.price}</span>
                 <span className="text-[var(--em-ink)]/60 font-semibold">{plan.period}</span>
               </div>
               
@@ -570,7 +570,7 @@ export function Landing({ pricing, socialProof }: LandingProps) {
             <h2 className="em-display text-3xl text-white sm:text-4xl md:text-5xl">
               Acompanhe cada redação com <span className="text-[var(--em-yellow)]">clareza visual</span>
             </h2>
-            <p className="text-white/70 text-lg">Envios, feedbacks, critérios e evolução ficam organizados em um ambiente web feito para estudar com método, constância e acompanhamento.</p>
+            <p className="font-['Source_Serif_4'] text-white/70 text-lg">Envios, feedbacks, critérios e evolução ficam organizados em um ambiente web feito para estudar com método, constância e acompanhamento.</p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
               <a href="/cadastro" className="em-btn-primary justify-center px-6 py-3">
@@ -631,7 +631,7 @@ export function Landing({ pricing, socialProof }: LandingProps) {
               <div className="flex items-center gap-2 mb-6">
                 <PlatformLogo className="w-[190px]" sizes="190px" />
               </div>
-              <p className="text-white/60 mb-8 max-w-sm">A plataforma definitiva para você dominar a redação do ENEM e vestibulares de todo o Brasil.</p>
+              <p className="font-['Source_Serif_4'] text-white/60 mb-8 max-w-sm">A plataforma definitiva para você dominar a redação do ENEM e vestibulares de todo o Brasil.</p>
               
               <div className="flex items-center gap-4">
                 <a href="https://www.instagram.com/" target="_blank" rel="noreferrer" aria-label="Instagram" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-[var(--em-green)] hover:text-[var(--em-ink)] transition-colors border border-white/20">
@@ -647,7 +647,7 @@ export function Landing({ pricing, socialProof }: LandingProps) {
             </div>
             
             <div>
-              <h4 className="font-bold text-white mb-6 font-['Space_Grotesk']">Sobre</h4>
+              <h4 className="font-bold text-white mb-6 font-['Outfit']">Sobre</h4>
               <ul className="space-y-4 text-sm text-white/60">
                 <li><a href="#inicio" className="hover:text-[var(--em-green)]">Nossa História</a></li>
                 <li><a href="#professor" className="hover:text-[var(--em-green)]">Professor</a></li>
@@ -657,7 +657,7 @@ export function Landing({ pricing, socialProof }: LandingProps) {
             </div>
             
             <div>
-              <h4 className="font-bold text-white mb-6 font-['Space_Grotesk']">Recursos</h4>
+              <h4 className="font-bold text-white mb-6 font-['Outfit']">Recursos</h4>
               <ul className="space-y-4 text-sm text-white/60">
                 <li><a href="#" className="hover:text-[var(--em-green)]">Temas de Redação</a></li>
                 <li><a href="#" className="hover:text-[var(--em-green)]">Simulador ENEM</a></li>
@@ -667,7 +667,7 @@ export function Landing({ pricing, socialProof }: LandingProps) {
             </div>
             
             <div>
-              <h4 className="font-bold text-white mb-6 font-['Space_Grotesk']">Ajuda</h4>
+              <h4 className="font-bold text-white mb-6 font-['Outfit']">Ajuda</h4>
               <ul className="space-y-4 text-sm text-white/60">
                 <li><a href="/login" className="hover:text-[var(--em-green)]">Central de Ajuda</a></li>
                 <li><a href="#planos" className="hover:text-[var(--em-green)]">Planos e Preços</a></li>
