@@ -255,8 +255,60 @@ export function DashboardAdmin({ summary }: { summary: DashboardAdminSummary }) 
                   Ver todos
                 </Link>
               </div>
-              <div className="overflow-x-auto">
-                <table className="w-full border-collapse text-left">
+              <div className="grid gap-3 p-4 md:hidden">
+                {summary.recentUsers.length ? (
+                  summary.recentUsers.map((user) => (
+                    <div key={user.id} className="rounded-2xl border-2 border-[var(--em-ink)] bg-white p-4 shadow-[3px_3px_0_0_#0E0F12]">
+                      <div className="flex items-start gap-3">
+                        <div className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-[var(--em-ink)] bg-[var(--em-cream)] text-[11px] font-black text-[var(--em-ink)]">
+                          {user.initials}
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <div className="break-words text-[14px] font-extrabold leading-tight text-[var(--em-ink)]">{user.name}</div>
+                          <div className="mt-1 break-all text-[12px] font-semibold leading-5 text-[var(--em-text-soft)]">{user.email}</div>
+                        </div>
+                      </div>
+
+                      <div className="mt-4 grid gap-3">
+                        <div className="grid grid-cols-2 gap-3">
+                          <div className="rounded-xl border border-[var(--em-border-strong)] bg-[var(--em-cream)] p-3">
+                            <div className="text-[10px] font-black uppercase tracking-[0.12em] text-[var(--em-text-soft)]">Tipo</div>
+                            <span
+                              className="mt-2 inline-flex rounded-full border border-[var(--em-ink)] px-2.5 py-1 text-[11px] font-extrabold shadow-[2px_2px_0_0_#0E0F12]"
+                              style={{ backgroundColor: user.typeColor }}
+                            >
+                              {user.type}
+                            </span>
+                          </div>
+                          <div className="rounded-xl border border-[var(--em-border-strong)] bg-[var(--em-cream)] p-3">
+                            <div className="text-[10px] font-black uppercase tracking-[0.12em] text-[var(--em-text-soft)]">Status</div>
+                            <div className="mt-2 flex items-center gap-2">
+                              <span className="h-2.5 w-2.5 shrink-0 rounded-full border border-[var(--em-ink)]" style={{ backgroundColor: user.statusColor }} />
+                              <span className="text-[12px] font-extrabold text-[var(--em-ink)]">{user.status}</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="rounded-xl border border-[var(--em-border-strong)] bg-[var(--em-bg)] p-3">
+                          <div className="text-[10px] font-black uppercase tracking-[0.12em] text-[var(--em-text-soft)]">Plano</div>
+                          <div className="mt-1 break-words text-[13px] font-extrabold text-[var(--em-ink)]">{user.plan}</div>
+                        </div>
+
+                        <Link href="/admin/usuarios" className="inline-flex w-full justify-center rounded-xl border-2 border-[var(--em-ink)] bg-[var(--em-yellow)] px-4 py-3 text-[12px] font-black text-[var(--em-ink)] shadow-[3px_3px_0_0_#0E0F12] transition-all hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0_0_#0E0F12]">
+                          Ver perfil
+                        </Link>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="rounded-2xl border border-[var(--em-border-strong)] bg-[var(--em-cream)] px-4 py-8 text-center text-[13px] font-bold text-[var(--em-text-soft)]">
+                    Nenhum cadastro encontrado ainda.
+                  </div>
+                )}
+              </div>
+
+              <div className="hidden overflow-x-auto md:block">
+                <table className="w-full min-w-[720px] border-collapse text-left">
                   <thead>
                     <tr className="border-b border-[var(--em-ink)] bg-white">
                       <th className="px-6 py-4 text-[11px] font-extrabold uppercase tracking-wider text-[var(--em-ink)]">Usuario</th>
