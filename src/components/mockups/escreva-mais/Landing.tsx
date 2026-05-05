@@ -378,33 +378,46 @@ export function Landing({ pricing, socialProof }: LandingProps) {
             </div>
 
             {/* Card - Além da Gramática (largo) */}
-            <div className="em-card-hard col-span-12 bg-[var(--em-ink)] p-5 text-white sm:p-6 md:col-span-8">
-              <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between sm:gap-8">
-                <div className="max-w-md">
-                  <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-[var(--em-green)]">
-                    <GraduationCap className="h-3.5 w-3.5" /> Além da gramática
-                  </div>
-                  <h3 className="em-display text-xl leading-tight sm:text-2xl">
-                    Redação para todas as fases escolares
-                  </h3>
-                  <p className="mt-2.5 text-sm font-medium leading-relaxed text-white/65">
-                    Método para organizar ideias, desenvolver repertório e escrever com clareza.
-                  </p>
-                </div>
-                <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-3">
-                  {[
-                    { icon: BookOpen, label: "Repertório" },
-                    { icon: FileText, label: "Estrutura" },
-                    { icon: MessageSquareText, label: "Argumentação" },
-                    { icon: BrainCircuit, label: "Clareza" },
-                  ].map(({ icon: Icon, label }) => (
-                    <div key={label} className="flex flex-col items-center gap-2 rounded-xl bg-white/8 px-3 py-3.5 text-center">
-                      <div className="grid h-9 w-9 place-items-center rounded-lg bg-[var(--em-yellow)] text-[var(--em-ink)]">
-                        <Icon className="h-4 w-4" />
-                      </div>
-                      <span className="text-xs font-semibold text-white/90">{label}</span>
+            <div className="em-card-hard col-span-12 overflow-hidden bg-gradient-to-br from-[var(--em-ink)] to-[#1a1b1f] p-0 text-white md:col-span-8">
+              <div className="grid h-full md:grid-cols-[1fr_auto]">
+                {/* Conteúdo texto */}
+                <div className="flex flex-col justify-between p-6 sm:p-7">
+                  <div>
+                    <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-[var(--em-green)]">
+                      <GraduationCap className="h-3.5 w-3.5" /> Além da gramática
                     </div>
-                  ))}
+                    <h3 className="em-display max-w-sm text-2xl leading-tight sm:text-[1.7rem]">
+                      Redação para todas as fases escolares
+                    </h3>
+                    <p className="mt-3 max-w-md text-sm font-medium leading-relaxed text-white/60">
+                      Método completo para organizar ideias, desenvolver repertório e escrever com clareza em qualquer contexto.
+                    </p>
+                  </div>
+                  {/* Grid de habilidades */}
+                  <div className="mt-6 grid grid-cols-2 gap-2.5 sm:grid-cols-4 sm:gap-3">
+                    {[
+                      { icon: BookOpen, label: "Repertório" },
+                      { icon: FileText, label: "Estrutura" },
+                      { icon: MessageSquareText, label: "Argumentação" },
+                      { icon: BrainCircuit, label: "Clareza" },
+                    ].map(({ icon: Icon, label }) => (
+                      <div key={label} className="flex items-center gap-2.5 rounded-xl border border-white/10 bg-white/5 px-3 py-2.5">
+                        <div className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-[var(--em-yellow)] text-[var(--em-ink)]">
+                          <Icon className="h-4 w-4" />
+                        </div>
+                        <span className="text-xs font-semibold text-white/90">{label}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                {/* Imagem do celular */}
+                <div className="relative hidden h-full min-h-[280px] w-[200px] items-end justify-center overflow-hidden bg-gradient-to-t from-[var(--em-green)]/20 to-transparent md:flex lg:w-[240px]">
+                  <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,var(--em-green)_0%,transparent_70%)] opacity-20" />
+                  <img
+                    src="/images/celular-app-redacao.jpg"
+                    alt="App de redação no celular"
+                    className="relative z-10 h-auto w-[180px] max-w-none translate-y-6 object-contain drop-shadow-2xl lg:w-[210px]"
+                  />
                 </div>
               </div>
             </div>
