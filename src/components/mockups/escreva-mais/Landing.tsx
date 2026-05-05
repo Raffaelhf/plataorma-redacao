@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Check, Star, Target, Award, Instagram, Youtube, Linkedin, GraduationCap, TrendingUp, Menu, LogIn, UserPlus, Gift, Smartphone, Trophy, BrainCircuit, CalendarCheck, FileText, LineChart, MessageSquareText, WandSparkles, BookOpen } from "lucide-react";
+import { ArrowRight, Check, Star, Target, Award, Instagram, Youtube, Linkedin, GraduationCap, TrendingUp, Menu, LogIn, UserPlus, Gift, Smartphone, Trophy, BrainCircuit, CalendarCheck, FileText, LineChart, MessageSquareText, BookOpen } from "lucide-react";
 import { PlatformLogo } from "@/components/branding/platform-logo";
 import type { LandingSocialProof } from "@/lib/landing-social-proof";
 import { formatCurrencyFromCents, type getPublicPlanPricing } from "@/lib/plans";
@@ -277,178 +277,122 @@ export function Landing({ pricing, socialProof }: LandingProps) {
       </section>
 
       {/* 5. DESAFIO COM PREMIAÇÃO */}
-      <section className="relative overflow-hidden border-y border-[var(--em-border)] bg-white px-4 py-16 sm:px-6 md:py-24">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_12%_18%,rgba(43,211,123,0.16),transparent_28%),radial-gradient(circle_at_92%_12%,rgba(255,201,61,0.2),transparent_30%)]" />
-        <div className="relative mx-auto grid max-w-7xl items-stretch gap-10 lg:grid-cols-[0.9fr_1.1fr] xl:gap-12">
-          <div className="flex min-w-0 flex-col justify-center space-y-7">
-            <div className="flex flex-wrap gap-3">
-              <div className="em-chip w-fit border-[var(--em-yellow)] bg-[var(--em-yellow-soft)] text-[var(--em-ink)]">
-                <Trophy className="h-4 w-4" /> Desafio Escreva Mais
+      <section className="border-y border-[var(--em-border)] bg-white px-4 py-16 sm:px-6 md:py-24">
+        <div className="mx-auto max-w-6xl">
+          <div className="mb-10 grid gap-6 md:grid-cols-[1fr_auto] md:items-end">
+            <div className="max-w-3xl space-y-4">
+              <div className="flex flex-wrap gap-3">
+                <div className="em-chip w-fit border-[var(--em-yellow)] bg-[var(--em-yellow-soft)] text-[var(--em-ink)]">
+                  <Trophy className="h-4 w-4" /> Desafio Escreva Mais
+                </div>
+                <div className="em-chip w-fit border-[var(--em-green)] bg-[var(--em-green-soft)] text-[var(--em-green-deep)]">
+                  <BrainCircuit className="h-4 w-4" /> Evolução acompanhada
+                </div>
               </div>
-              <div className="em-chip w-fit border-[var(--em-green)] bg-[var(--em-green-soft)] text-[var(--em-green-deep)]">
-                <BrainCircuit className="h-4 w-4" /> Evolução acompanhada
-              </div>
-            </div>
-            <div className="space-y-4">
               <h2 className="em-display text-3xl leading-tight text-[var(--em-ink)] sm:text-4xl md:text-5xl">
                 Estudo com constância também pode virar <span className="rounded-lg bg-[var(--em-green)] px-2 text-[var(--em-ink)]">premiação</span>
               </h2>
-              <p className="max-w-xl text-base font-medium leading-7 text-[var(--em-text-soft)] sm:text-lg">
+              <p className="max-w-2xl text-base font-medium leading-7 text-[var(--em-text-soft)] sm:text-lg">
                 No fim do curso, os alunos com melhor desempenho, pontualidade nos compromissos e atividades entregues dentro dos prazos poderão concorrer a prêmios especiais, conforme regulamento.
               </p>
             </div>
-            <div className="grid gap-5">
-              <div className="relative overflow-hidden rounded-[30px] border-2 border-[var(--em-ink)] bg-[var(--em-yellow)] p-5 shadow-[7px_7px_0_0_#0E0F12] sm:p-7">
-                <div className="pointer-events-none absolute -right-16 -top-16 h-44 w-44 rounded-full border-[24px] border-white/35" />
-                <div className="pointer-events-none absolute -bottom-16 left-8 h-40 w-40 rounded-full bg-white/18" />
-                <div className="relative grid gap-7 md:grid-cols-[1fr_220px] md:items-center">
-                  <div>
-                    <div className="mb-4 inline-flex items-center gap-2 rounded-full border-2 border-[var(--em-ink)] bg-white px-3 py-1 text-xs font-black uppercase tracking-[0.12em] text-[var(--em-ink)]">
-                      <Gift className="h-4 w-4 text-[var(--em-peach-deep)]" /> Premiação em destaque
-                    </div>
-                    <h3 className="max-w-md font-['Plus_Jakarta_Sans'] text-3xl font-black leading-tight text-[var(--em-ink)] sm:text-4xl">
-                      Celular para 1º e 2º lugar
-                    </h3>
-                    <p className="mt-3 max-w-md text-sm font-bold leading-6 text-[var(--em-ink)]/75 sm:text-base">
-                      Os alunos com melhor desempenho e constância até o fim do curso poderão concorrer ao prêmio, conforme regulamento.
-                    </p>
-                    <div className="mt-5 flex flex-wrap gap-2">
-                      {["Desempenho", "Pontualidade", "Atividades no prazo"].map((item) => (
-                        <span key={item} className="rounded-full border border-[var(--em-ink)]/20 bg-white/70 px-3 py-1 text-xs font-black text-[var(--em-ink)]">
-                          {item}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="relative mx-auto h-[210px] w-full max-w-[230px]">
-                    <div className="absolute bottom-0 left-0 right-0 h-20 rounded-[26px] border-2 border-[var(--em-ink)] bg-white/60 shadow-[4px_4px_0_0_#0E0F12]" />
-                    <div className="absolute bottom-4 left-2 flex items-end gap-2">
-                      <div className="grid h-20 w-14 place-items-center rounded-t-2xl border-2 border-[var(--em-ink)] bg-[var(--em-mint)] text-xl font-black text-[var(--em-ink)]">2</div>
-                      <div className="grid h-28 w-16 place-items-center rounded-t-2xl border-2 border-[var(--em-ink)] bg-white text-2xl font-black text-[var(--em-ink)]">1</div>
-                      <div className="grid h-16 w-14 place-items-center rounded-t-2xl border-2 border-[var(--em-ink)] bg-[var(--em-peach)] text-lg font-black text-[var(--em-ink)]">3</div>
-                    </div>
-                    <div className="absolute right-2 top-0 rotate-3 rounded-[30px] border-4 border-[var(--em-ink)] bg-white p-2 shadow-[6px_6px_0_0_#0E0F12]">
-                      <div className="mx-auto mb-2 h-1.5 w-11 rounded-full bg-[var(--em-ink)]" />
-                      <div className="grid h-32 w-24 place-items-center rounded-[22px] border-2 border-[var(--em-ink)] bg-[var(--em-mint)]">
-                        <div className="grid h-14 w-14 place-items-center rounded-2xl border-2 border-[var(--em-green-deep)] bg-white text-[var(--em-green-deep)]">
-                          <Smartphone className="h-8 w-8" />
-                        </div>
-                      </div>
-                    </div>
-                    <div className="absolute right-0 top-20 grid h-16 w-16 place-items-center rounded-2xl border-2 border-[var(--em-ink)] bg-white shadow-[4px_4px_0_0_#0E0F12]">
-                      <Trophy className="h-7 w-7 text-[var(--em-peach-deep)]" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="grid gap-3 sm:grid-cols-2">
-                <div className="rounded-2xl border-2 border-[var(--em-ink)] bg-[var(--em-mint)] p-4 shadow-[4px_4px_0_0_#0E0F12]">
-                  <div className="mb-3 flex h-11 w-11 items-center justify-center rounded-xl border-2 border-[var(--em-ink)] bg-white">
-                    <LineChart className="h-5 w-5 text-[var(--em-green-deep)]" />
-                  </div>
-                  <h3 className="font-['Plus_Jakarta_Sans'] text-lg font-extrabold leading-tight text-[var(--em-ink)]">Mérito real</h3>
-                  <p className="mt-2 text-sm font-semibold leading-6 text-[var(--em-ink)]/70">Participação, evolução e desempenho contam na jornada do aluno.</p>
-                </div>
-                <div className="rounded-2xl border-2 border-[var(--em-ink)] bg-[var(--em-peach)] p-4 shadow-[4px_4px_0_0_#0E0F12]">
-                  <div className="mb-3 flex h-11 w-11 items-center justify-center rounded-xl border-2 border-[var(--em-ink)] bg-white">
-                    <CalendarCheck className="h-5 w-5 text-[var(--em-peach-deep)]" />
-                  </div>
-                  <h3 className="font-['Plus_Jakarta_Sans'] text-lg font-extrabold leading-tight text-[var(--em-ink)]">Prazos em dia</h3>
-                  <p className="mt-2 text-sm font-semibold leading-6 text-[var(--em-ink)]/70">Pontualidade e atividades entregues no prazo fazem parte dos critérios.</p>
-                </div>
-              </div>
+            <div className="w-fit rounded-2xl border-2 border-[var(--em-ink)] bg-[var(--em-cream)] px-4 py-3 text-sm font-black text-[var(--em-ink)] shadow-[4px_4px_0_0_#0E0F12]">
+              Premiação conforme regulamento
             </div>
           </div>
 
-          <div className="em-card-hard relative min-w-0 overflow-hidden bg-[var(--em-ink)] p-5 text-white sm:p-7 lg:p-8">
-            <div className="pointer-events-none absolute inset-0 em-noise opacity-20" />
-            <div className="pointer-events-none absolute -right-20 -top-20 h-60 w-60 rounded-full border-[34px] border-[var(--em-green)]/20" />
-            <div className="pointer-events-none absolute -bottom-24 left-8 h-56 w-56 rounded-full bg-[var(--em-yellow)]/10" />
-            <div className="relative grid gap-6 xl:grid-cols-[0.95fr_1.05fr]">
-              <div className="relative overflow-hidden rounded-[30px] border-2 border-white/18 bg-[var(--em-green)] p-6 text-[var(--em-ink)] shadow-[6px_6px_0_0_rgba(255,255,255,0.16)]">
-                <div className="absolute -right-14 bottom-8 h-44 w-44 rounded-full border-[26px] border-[var(--em-green-deep)]/30" />
-                <div className="relative z-10 space-y-6">
-                  <div className="flex items-start justify-between gap-4">
-                    <div>
-                      <div className="inline-flex items-center gap-2 rounded-full border border-[var(--em-ink)]/20 bg-white/65 px-3 py-1 text-xs font-black uppercase tracking-[0.14em]">
-                        <WandSparkles className="h-4 w-4" /> Score IA
-                      </div>
-                      <h3 className="mt-4 font-['Plus_Jakarta_Sans'] text-3xl font-black leading-tight">Evolução visível</h3>
-                    </div>
-                    <div className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl border-2 border-[var(--em-ink)] bg-[var(--em-yellow)] shadow-[4px_4px_0_0_#0E0F12]">
-                      <LineChart className="h-7 w-7" />
-                    </div>
+          <div className="grid gap-6 lg:grid-cols-[1.12fr_0.88fr]">
+            <div className="em-card-hard grid min-h-[420px] overflow-hidden bg-[var(--em-yellow)] p-0 lg:grid-cols-[0.95fr_1.05fr]">
+              <div className="flex flex-col justify-between gap-8 p-6 sm:p-8">
+                <div>
+                  <div className="mb-5 inline-flex items-center gap-2 rounded-full border-2 border-[var(--em-ink)] bg-white px-3 py-1 text-xs font-black uppercase tracking-[0.12em] text-[var(--em-ink)]">
+                    <Gift className="h-4 w-4 text-[var(--em-peach-deep)]" /> Premiação em destaque
                   </div>
-
-                  <div className="rounded-[26px] border-2 border-[var(--em-ink)] bg-white p-4 shadow-[5px_5px_0_0_#0E0F12]">
-                    <div className="mb-4 flex items-center justify-between">
-                      <div>
-                        <div className="text-[11px] font-black uppercase tracking-[0.14em] text-[var(--em-green-deep)]">Nota atual</div>
-                        <div className="mt-1 text-4xl font-black">880</div>
-                      </div>
-                      <div className="rounded-full bg-[var(--em-mint)] px-3 py-1 text-xs font-black">+120 pts</div>
+                  <h3 className="font-['Plus_Jakarta_Sans'] text-3xl font-black leading-tight text-[var(--em-ink)] sm:text-4xl">
+                    Celular para 1º e 2º lugar
+                  </h3>
+                  <p className="mt-4 max-w-md text-base font-bold leading-7 text-[var(--em-ink)]/75">
+                    Reconhecimento para alunos que mantêm desempenho, compromisso e rotina de entrega até o fim do curso.
+                  </p>
+                </div>
+                <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
+                  {[
+                    { icon: LineChart, label: "Desempenho" },
+                    { icon: CalendarCheck, label: "Pontualidade" },
+                    { icon: Check, label: "Atividades no prazo" },
+                  ].map(({ icon: Icon, label }) => (
+                    <div key={label} className="flex items-center gap-2 rounded-2xl border-2 border-[var(--em-ink)] bg-white px-3 py-3 text-xs font-black text-[var(--em-ink)] shadow-[3px_3px_0_0_#0E0F12]">
+                      <Icon className="h-4 w-4 text-[var(--em-green-deep)]" strokeWidth={3} />
+                      {label}
                     </div>
-                    <div className="flex h-24 items-end gap-3 rounded-2xl border-2 border-[var(--em-ink)] bg-[var(--em-yellow)] p-4">
-                      <div className="h-8 flex-1 rounded-t-lg bg-[var(--em-ink)]" />
-                      <div className="h-14 flex-1 rounded-t-lg bg-[var(--em-green-deep)]" />
-                      <div className="h-20 flex-1 rounded-t-lg bg-[var(--em-coral)]" />
-                      <div className="h-16 flex-1 rounded-t-lg bg-white" />
-                    </div>
-                    <div className="mt-4 grid gap-2">
-                      <div className="h-3 rounded-full bg-[var(--em-muted)]" />
-                      <div className="h-3 w-3/4 rounded-full bg-[var(--em-muted)]" />
-                    </div>
-                  </div>
+                  ))}
                 </div>
               </div>
 
-              <div className="grid min-w-0 gap-5">
-                <div className="rounded-[28px] border border-white/14 bg-white p-5 text-[var(--em-ink)] sm:p-6">
-                  <div className="mb-5 flex items-start justify-between gap-4">
-                    <div>
-                      <div className="text-xs font-black uppercase tracking-[0.18em] text-[var(--em-green-deep)]">Além da gramática</div>
-                      <h3 className="mt-2 font-['Plus_Jakarta_Sans'] text-2xl font-extrabold leading-tight">Redação para todas as fases escolares</h3>
-                      <p className="mt-2 text-sm font-semibold leading-6 text-[var(--em-text-soft)]">Repertório, estrutura, argumentação e clareza aparecem juntos na prática.</p>
-                    </div>
-                    <div className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl border-2 border-[var(--em-ink)] bg-[var(--em-yellow)] text-[var(--em-ink)] shadow-[3px_3px_0_0_#0E0F12]">
-                      <GraduationCap className="h-7 w-7" />
-                    </div>
-                  </div>
-                  <div className="grid gap-3 sm:grid-cols-2">
-                    {[
-                      { icon: BookOpen, label: "Repertório" },
-                      { icon: FileText, label: "Estrutura" },
-                      { icon: MessageSquareText, label: "Argumentação" },
-                      { icon: BrainCircuit, label: "Clareza" },
-                    ].map(({ icon: Icon, label }) => (
-                      <div key={label} className="flex items-center gap-3 rounded-2xl border-2 border-[var(--em-ink)] bg-[var(--em-cream)] px-3 py-3 text-sm font-extrabold shadow-[3px_3px_0_0_#0E0F12]">
-                        <Icon className="h-4 w-4 text-[var(--em-green-deep)]" />
-                        {label}
-                      </div>
-                    ))}
+              <div className="relative min-h-[320px] bg-[var(--em-yellow-soft)] p-6 sm:p-8">
+                <div className="absolute inset-x-8 bottom-8 h-20 rounded-[24px] border-2 border-[var(--em-ink)] bg-white shadow-[5px_5px_0_0_#0E0F12]" />
+                <div className="absolute bottom-12 left-8 flex items-end gap-3 sm:left-10">
+                  <div className="grid h-20 w-16 place-items-center rounded-t-2xl border-2 border-[var(--em-ink)] bg-[var(--em-mint)] text-xl font-black text-[var(--em-ink)]">2</div>
+                  <div className="grid h-28 w-[72px] place-items-center rounded-t-2xl border-2 border-[var(--em-ink)] bg-white px-5 text-2xl font-black text-[var(--em-ink)]">1</div>
+                </div>
+                <div className="absolute right-8 top-8 rounded-[32px] border-4 border-[var(--em-ink)] bg-white p-3 shadow-[7px_7px_0_0_#0E0F12] sm:right-10">
+                  <div className="mx-auto mb-3 h-1.5 w-14 rounded-full bg-[var(--em-ink)]" />
+                  <div className="grid h-40 w-28 place-items-center rounded-[24px] border-2 border-[var(--em-ink)] bg-[var(--em-mint)]">
+                    <Smartphone className="h-12 w-12 text-[var(--em-green-deep)]" />
                   </div>
                 </div>
+                <div className="absolute right-6 top-44 grid h-16 w-16 place-items-center rounded-2xl border-2 border-[var(--em-ink)] bg-white text-[var(--em-peach-deep)] shadow-[4px_4px_0_0_#0E0F12] sm:right-8">
+                  <Trophy className="h-8 w-8" />
+                </div>
+              </div>
+            </div>
 
-                <div className="rounded-[28px] border border-white/14 bg-white/8 p-5 sm:p-6">
-                  <div className="mb-5 flex items-center justify-between gap-3">
-                    <div>
-                      <div className="text-xs font-black uppercase tracking-[0.16em] text-[var(--em-green)]">Critérios do desafio</div>
-                      <h4 className="mt-1 font-['Plus_Jakarta_Sans'] text-xl font-black">Como o aluno concorre</h4>
-                    </div>
-                    <Check className="h-5 w-5 text-[var(--em-green)]" strokeWidth={3} />
+            <div className="grid gap-6">
+              <div className="em-card-hard bg-[var(--em-mint)] p-6 sm:p-7">
+                <div className="mb-5 flex items-start justify-between gap-4">
+                  <div>
+                    <div className="text-xs font-black uppercase tracking-[0.16em] text-[var(--em-green-deep)]">Critérios do desafio</div>
+                    <h3 className="mt-2 font-['Plus_Jakarta_Sans'] text-2xl font-black leading-tight text-[var(--em-ink)]">Como o aluno concorre</h3>
                   </div>
-                  <div className="grid gap-3">
-                    {["Desempenho nas redações", "Pontualidade nos pagamentos", "Atividades entregues no prazo"].map((item, index) => (
-                      <div key={item} className="flex items-center gap-3 rounded-2xl border border-white/12 bg-white/10 p-3">
-                        <div className="grid h-9 w-9 shrink-0 place-items-center rounded-xl border border-white/20 bg-[var(--em-green)] text-xs font-black text-[var(--em-ink)]">
-                          {index + 1}
-                        </div>
-                        <div className="text-sm font-extrabold text-white">{item}</div>
+                  <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl border-2 border-[var(--em-ink)] bg-white shadow-[3px_3px_0_0_#0E0F12]">
+                    <Check className="h-5 w-5 text-[var(--em-green-deep)]" strokeWidth={3} />
+                  </div>
+                </div>
+                <div className="grid gap-3">
+                  {["Desempenho nas redações", "Pontualidade nos pagamentos", "Atividades entregues no prazo"].map((item, index) => (
+                    <div key={item} className="flex items-center gap-3 rounded-2xl border-2 border-[var(--em-ink)] bg-white p-3 shadow-[3px_3px_0_0_#0E0F12]">
+                      <div className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-[var(--em-yellow)] text-xs font-black text-[var(--em-ink)]">
+                        {index + 1}
                       </div>
-                    ))}
+                      <div className="text-sm font-extrabold text-[var(--em-ink)]">{item}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="em-card-hard bg-[var(--em-ink)] p-6 text-white sm:p-7">
+                <div className="mb-5 flex items-start justify-between gap-4">
+                  <div>
+                    <div className="text-xs font-black uppercase tracking-[0.18em] text-[var(--em-green)]">Além da gramática</div>
+                    <h3 className="mt-2 font-['Plus_Jakarta_Sans'] text-2xl font-black leading-tight">Redação para todas as fases escolares</h3>
+                    <p className="mt-3 text-sm font-semibold leading-6 text-white/70">Acompanhamento de escrita com repertório, estrutura, argumentação e clareza.</p>
                   </div>
+                  <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl border-2 border-white/20 bg-[var(--em-yellow)] text-[var(--em-ink)]">
+                    <GraduationCap className="h-6 w-6" />
+                  </div>
+                </div>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  {[
+                    { icon: BookOpen, label: "Repertório" },
+                    { icon: FileText, label: "Estrutura" },
+                    { icon: MessageSquareText, label: "Argumentação" },
+                    { icon: BrainCircuit, label: "Clareza" },
+                  ].map(({ icon: Icon, label }) => (
+                    <div key={label} className="flex items-center gap-3 rounded-2xl border border-white/14 bg-white/10 px-3 py-3 text-sm font-extrabold">
+                      <Icon className="h-4 w-4 text-[var(--em-green)]" />
+                      {label}
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
