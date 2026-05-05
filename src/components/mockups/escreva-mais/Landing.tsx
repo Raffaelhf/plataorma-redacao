@@ -217,7 +217,7 @@ export function Landing({ pricing, socialProof }: LandingProps) {
 
       {/* 3. FRASE DE FOCO */}
       <section className="overflow-hidden border-y border-[var(--em-border)] bg-white py-6 sm:py-8">
-        <div className="animate-marquee flex w-max items-center gap-10 px-6 font-['Plus_Jakarta_Sans'] text-sm font-extrabold uppercase tracking-[0.12em] text-[var(--em-text-mute)] opacity-70 sm:gap-16 sm:text-lg sm:tracking-[0.18em]">
+        <div className="animate-marquee flex w-max items-center gap-10 px-6 font-['Space_Grotesk'] text-sm font-extrabold uppercase tracking-[0.12em] text-[var(--em-text-mute)] opacity-70 sm:gap-16 sm:text-lg sm:tracking-[0.18em]">
           <span className="shrink-0">Formação em redação com metodologia, repertório e foco no ENEM.</span>
           <span className="shrink-0">Formação em redação com metodologia, repertório e foco no ENEM.</span>
           <span className="shrink-0">Formação em redação com metodologia, repertório e foco no ENEM.</span>
@@ -249,7 +249,7 @@ export function Landing({ pricing, socialProof }: LandingProps) {
               <Target className="h-6 w-6" />
             </div>
             <div>
-              <h3 className="mb-3 font-['Plus_Jakarta_Sans'] text-xl font-extrabold leading-tight text-[var(--em-ink)]">Aprenda as técnicas mais atuais</h3>
+              <h3 className="mb-3 font-['Space_Grotesk'] text-xl font-bold leading-tight text-[var(--em-ink)]">Aprenda as técnicas mais atuais</h3>
               <p className="text-sm font-medium leading-6 text-[var(--em-ink-soft)]/80">Modelos de redação validados pelas bancas do ENEM e Fuvest, atualizados anualmente.</p>
             </div>
           </div>
@@ -259,7 +259,7 @@ export function Landing({ pricing, socialProof }: LandingProps) {
               <Award className="h-6 w-6" />
             </div>
             <div>
-              <h3 className="mb-3 font-['Plus_Jakarta_Sans'] text-xl font-extrabold leading-tight text-[var(--em-ink)]">Esteja pronto para a prova</h3>
+              <h3 className="mb-3 font-['Space_Grotesk'] text-xl font-bold leading-tight text-[var(--em-ink)]">Esteja pronto para a prova</h3>
               <p className="text-sm font-medium leading-6 text-[var(--em-ink-soft)]/80">Simulados semanais com temas inéditos e correção detalhada nos 5 critérios.</p>
             </div>
           </div>
@@ -269,7 +269,7 @@ export function Landing({ pricing, socialProof }: LandingProps) {
               <GraduationCap className="h-6 w-6" />
             </div>
             <div>
-              <h3 className="mb-3 font-['Plus_Jakarta_Sans'] text-xl font-extrabold leading-tight text-[var(--em-ink)]">Conquiste sua vaga</h3>
+              <h3 className="mb-3 font-['Space_Grotesk'] text-xl font-bold leading-tight text-[var(--em-ink)]">Conquiste sua vaga</h3>
               <p className="text-sm font-medium leading-6 text-[var(--em-ink-soft)]/80">Análise de desempenho e histórico de evolução para você chegar no 1000 com segurança.</p>
             </div>
           </div>
@@ -277,125 +277,146 @@ export function Landing({ pricing, socialProof }: LandingProps) {
       </section>
 
       {/* 5. DESAFIO COM PREMIAÇÃO */}
-      <section className="border-y border-[var(--em-border)] bg-[#fffaf1] px-4 py-16 sm:px-6 md:py-24">
+      <section className="border-y border-[var(--em-border)] bg-[#faf8f3] px-4 py-16 sm:px-6 md:py-24">
         <div className="mx-auto max-w-6xl">
-          <div className="mb-12 max-w-3xl">
-            <div className="mb-4 flex flex-wrap gap-3">
-              <div className="em-chip w-fit border-[var(--em-yellow)] bg-white text-[var(--em-ink)]">
-                <Trophy className="h-4 w-4" /> Desafio Escreva Mais
-              </div>
-              <div className="em-chip w-fit border-[var(--em-green)] bg-[var(--em-green-soft)] text-[var(--em-green-deep)]">
-                <BrainCircuit className="h-4 w-4" /> Evolução acompanhada
-              </div>
+          {/* Header da seção */}
+          <div className="mb-10 text-center md:mb-14">
+            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-[var(--em-yellow)] bg-[var(--em-yellow-soft)] px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-[var(--em-ink)]">
+              <Trophy className="h-4 w-4 text-[var(--em-peach-deep)]" /> Desafio Escreva Mais
             </div>
-            <h2 className="em-display text-3xl leading-tight text-[var(--em-ink)] sm:text-4xl md:text-5xl">
-              Estudo com constância também pode virar <span className="rounded-lg bg-[var(--em-green)] px-2 text-[var(--em-ink)]">premiação</span>
+            <h2 className="em-display mx-auto max-w-3xl text-3xl leading-tight text-[var(--em-ink)] sm:text-4xl md:text-[2.75rem]">
+              Estudo com constância também pode virar{" "}
+              <span className="inline-block rounded-lg bg-[var(--em-green)] px-3 py-1 text-[var(--em-ink)]">premiação</span>
             </h2>
-            <p className="mt-4 max-w-2xl text-base font-medium leading-7 text-[var(--em-text-soft)] sm:text-lg">
-              No fim do curso, os alunos com melhor desempenho, pontualidade nos compromissos e atividades entregues dentro dos prazos poderão concorrer a prêmios especiais, conforme regulamento.
+            <p className="mx-auto mt-5 max-w-2xl text-base font-medium leading-7 text-[var(--em-text-soft)] sm:text-lg">
+              Os melhores alunos em desempenho, pontualidade e entregas concorrem a prêmios especiais ao final do curso.
             </p>
           </div>
 
-          <div className="grid gap-5 lg:grid-cols-[1.1fr_0.9fr]">
-            <div className="em-card-hard overflow-hidden bg-white p-0">
-              <div className="grid min-h-[430px] lg:grid-cols-[0.92fr_1.08fr]">
-                <div className="flex flex-col justify-between gap-8 p-6 sm:p-8">
+          {/* Bento Grid */}
+          <div className="grid gap-4 md:grid-cols-12 md:gap-5">
+            {/* Card Principal - Premiação */}
+            <div className="em-card-hard col-span-12 overflow-hidden bg-white p-0 md:col-span-5">
+              <div className="flex h-full flex-col">
+                <div className="flex flex-1 flex-col justify-between p-6 sm:p-7">
                   <div>
-                    <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-[var(--em-border-strong)] bg-[var(--em-yellow-soft)] px-3 py-1 text-xs font-black uppercase tracking-[0.12em] text-[var(--em-ink)]">
-                      <Gift className="h-4 w-4 text-[var(--em-peach-deep)]" /> Premiação em destaque
+                    <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[var(--em-peach)] bg-[var(--em-peach)]/40 px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.12em] text-[var(--em-peach-deep)]">
+                      <Gift className="h-3.5 w-3.5" /> Prêmio principal
                     </div>
-                    <h3 className="font-['Plus_Jakarta_Sans'] text-3xl font-black leading-tight text-[var(--em-ink)] sm:text-4xl">
-                      Celular para 1º e 2º lugar
+                    <h3 className="em-display text-[1.75rem] leading-[1.1] text-[var(--em-ink)] sm:text-[2rem]">
+                      Celular para
+                      <br />1º e 2º lugar
                     </h3>
-                    <p className="mt-4 max-w-sm text-base font-semibold leading-7 text-[var(--em-text-soft)]">
+                    <p className="mt-4 text-sm font-medium leading-relaxed text-[var(--em-text-soft)]">
                       Reconhecimento para quem mantém uma rotina consistente de escrita até o fim do curso.
                     </p>
                   </div>
-                  <div className="rounded-2xl border border-[var(--em-border-strong)] bg-[var(--em-cream)] p-4">
-                    <div className="text-xs font-black uppercase tracking-[0.12em] text-[var(--em-text-soft)]">Conforme regulamento</div>
-                    <div className="mt-2 text-sm font-bold leading-6 text-[var(--em-ink)]">Desempenho, pontualidade e atividades no prazo são considerados no desafio.</div>
-                  </div>
-                </div>
-
-                <div className="relative overflow-hidden bg-[var(--em-yellow)] p-6 sm:p-8">
-                  <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.45),transparent_44%)]" />
-                  <div className="relative mx-auto flex h-full min-h-[340px] max-w-[320px] items-end justify-center">
-                    <div className="absolute bottom-8 left-2 right-2 h-20 rounded-[24px] border-2 border-[var(--em-ink)] bg-white shadow-[5px_5px_0_0_#0E0F12]" />
-                    <div className="relative z-10 mb-12 flex items-end gap-3">
-                      <div className="grid h-20 w-16 place-items-center rounded-t-2xl border-2 border-[var(--em-ink)] bg-[var(--em-mint)] text-xl font-black text-[var(--em-ink)]">2</div>
-                      <div className="grid h-28 w-[72px] place-items-center rounded-t-2xl border-2 border-[var(--em-ink)] bg-white text-2xl font-black text-[var(--em-ink)]">1</div>
-                    </div>
-                    <div className="absolute right-2 top-7 z-20 rounded-[32px] border-4 border-[var(--em-ink)] bg-white p-3 shadow-[7px_7px_0_0_#0E0F12]">
-                      <div className="mx-auto mb-3 h-1.5 w-14 rounded-full bg-[var(--em-ink)]" />
-                      <div className="grid h-40 w-28 place-items-center rounded-[24px] border-2 border-[var(--em-ink)] bg-[var(--em-mint)]">
-                        <Smartphone className="h-12 w-12 text-[var(--em-green-deep)]" />
-                      </div>
-                    </div>
-                    <div className="absolute right-0 top-44 z-30 grid h-16 w-16 place-items-center rounded-2xl border-2 border-[var(--em-ink)] bg-white text-[var(--em-peach-deep)] shadow-[4px_4px_0_0_#0E0F12]">
-                      <Trophy className="h-8 w-8" />
-                    </div>
+                  <div className="mt-6 rounded-xl border border-[var(--em-border-strong)] bg-[var(--em-cream)] p-4">
+                    <div className="text-[10px] font-bold uppercase tracking-[0.14em] text-[var(--em-text-mute)]">Conforme regulamento</div>
+                    <div className="mt-1.5 text-sm font-semibold leading-snug text-[var(--em-ink)]">Desempenho, pontualidade e atividades no prazo.</div>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="grid gap-5">
-              <div className="em-card-hard bg-white p-6 sm:p-7">
-                <div className="mb-6 flex items-start justify-between gap-4">
-                  <div>
-                    <div className="text-xs font-black uppercase tracking-[0.16em] text-[var(--em-green-deep)]">Critérios do desafio</div>
-                    <h3 className="mt-2 font-['Plus_Jakarta_Sans'] text-2xl font-black leading-tight text-[var(--em-ink)]">Como o aluno concorre</h3>
-                  </div>
-                  <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-[var(--em-green)] text-[var(--em-ink)]">
-                    <Check className="h-5 w-5" strokeWidth={3} />
+            {/* Card Ilustração - Pódio */}
+            <div className="em-card-hard relative col-span-12 overflow-hidden bg-[var(--em-yellow)] !border-[var(--em-ink)] p-0 md:col-span-3">
+              <div className="absolute inset-0 bg-[linear-gradient(145deg,rgba(255,255,255,0.5)_0%,transparent_50%)]" />
+              <div className="relative flex h-full min-h-[280px] flex-col items-center justify-end p-5 pb-6 md:min-h-[340px]">
+                {/* Celular flutuante */}
+                <div className="absolute right-3 top-4 z-20 rounded-[20px] border-[3px] border-[var(--em-ink)] bg-white p-2 shadow-[4px_4px_0_0_#0E0F12] md:right-4 md:top-5">
+                  <div className="mx-auto mb-2 h-1 w-8 rounded-full bg-[var(--em-ink)]" />
+                  <div className="grid h-24 w-16 place-items-center rounded-xl border-[1.5px] border-[var(--em-ink)] bg-[var(--em-mint)] md:h-28 md:w-[68px]">
+                    <Smartphone className="h-8 w-8 text-[var(--em-green-deep)] md:h-9 md:w-9" />
                   </div>
                 </div>
-                <div className="grid gap-3">
-                  {[
-                    { icon: LineChart, title: "Desempenho nas redações", desc: "evolução real ao longo do curso" },
-                    { icon: CalendarCheck, title: "Pontualidade", desc: "compromissos e pagamentos em dia" },
-                    { icon: FileText, title: "Atividades no prazo", desc: "rotina de prática acompanhada" },
-                  ].map(({ icon: Icon, title, desc }, index) => (
-                    <div key={title} className="grid grid-cols-[40px_1fr] gap-3 rounded-2xl border border-[var(--em-border-strong)] bg-[var(--em-cream)] p-3">
-                      <div className="grid h-10 w-10 place-items-center rounded-xl bg-white text-[var(--em-green-deep)]">
-                        <Icon className="h-5 w-5" />
-                      </div>
-                      <div>
-                        <div className="flex items-center gap-2 text-sm font-black text-[var(--em-ink)]">
-                          <span className="text-[var(--em-green-deep)]">{index + 1}</span>
-                          {title}
-                        </div>
-                        <div className="mt-1 text-xs font-semibold leading-5 text-[var(--em-text-soft)]">{desc}</div>
-                      </div>
-                    </div>
-                  ))}
+                {/* Troféu */}
+                <div className="absolute left-3 top-4 z-10 grid h-11 w-11 place-items-center rounded-xl border-2 border-[var(--em-ink)] bg-white text-[var(--em-peach-deep)] shadow-[3px_3px_0_0_#0E0F12] md:left-4 md:top-5 md:h-12 md:w-12">
+                  <Trophy className="h-5 w-5 md:h-6 md:w-6" />
+                </div>
+                {/* Pódio */}
+                <div className="relative z-10 flex items-end gap-2">
+                  <div className="grid h-16 w-12 place-items-center rounded-t-xl border-2 border-[var(--em-ink)] bg-[var(--em-mint)] text-lg font-bold text-[var(--em-ink)] md:h-20 md:w-14 md:text-xl">2</div>
+                  <div className="grid h-[88px] w-14 place-items-center rounded-t-xl border-2 border-[var(--em-ink)] bg-white text-xl font-bold text-[var(--em-ink)] md:h-24 md:w-16 md:text-2xl">1</div>
+                </div>
+                {/* Base do pódio */}
+                <div className="absolute bottom-0 left-4 right-4 h-5 rounded-t-lg border-2 border-b-0 border-[var(--em-ink)] bg-white md:h-6" />
+              </div>
+            </div>
+
+            {/* Card - Critérios */}
+            <div className="em-card-hard col-span-12 bg-white p-5 sm:p-6 md:col-span-4">
+              <div className="mb-5 flex items-start justify-between gap-3">
+                <div>
+                  <div className="text-[10px] font-bold uppercase tracking-[0.16em] text-[var(--em-green-deep)]">Critérios</div>
+                  <h3 className="em-display mt-1.5 text-xl leading-tight text-[var(--em-ink)] sm:text-[1.35rem]">Como concorrer</h3>
+                </div>
+                <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[var(--em-green)] text-[var(--em-ink)]">
+                  <Check className="h-4 w-4" strokeWidth={3} />
                 </div>
               </div>
+              <div className="space-y-2.5">
+                {[
+                  { icon: LineChart, title: "Desempenho", desc: "evolução nas redações" },
+                  { icon: CalendarCheck, title: "Pontualidade", desc: "compromissos em dia" },
+                  { icon: FileText, title: "Entregas", desc: "atividades no prazo" },
+                ].map(({ icon: Icon, title, desc }, index) => (
+                  <div key={title} className="flex items-center gap-3 rounded-xl border border-[var(--em-border)] bg-[var(--em-cream)]/60 p-3">
+                    <div className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-white text-[var(--em-green-deep)]">
+                      <Icon className="h-4 w-4" />
+                    </div>
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-1.5 text-sm font-bold text-[var(--em-ink)]">
+                        <span className="text-xs text-[var(--em-green-deep)]">{index + 1}</span>
+                        {title}
+                      </div>
+                      <div className="text-xs font-medium text-[var(--em-text-soft)]">{desc}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
 
-              <div className="em-card-hard bg-[var(--em-ink)] p-6 text-white sm:p-7">
-                <div className="mb-5 flex items-start justify-between gap-4">
-                  <div>
-                    <div className="text-xs font-black uppercase tracking-[0.18em] text-[var(--em-green)]">Além da gramática</div>
-                    <h3 className="mt-2 font-['Plus_Jakarta_Sans'] text-2xl font-black leading-tight">Redação para todas as fases escolares</h3>
-                    <p className="mt-3 text-sm font-semibold leading-6 text-white/70">Método para organizar ideias, desenvolver repertório e escrever com clareza.</p>
+            {/* Card - Além da Gramática (largo) */}
+            <div className="em-card-hard col-span-12 bg-[var(--em-ink)] p-5 text-white sm:p-6 md:col-span-8">
+              <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between sm:gap-8">
+                <div className="max-w-md">
+                  <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-[var(--em-green)]">
+                    <GraduationCap className="h-3.5 w-3.5" /> Além da gramática
                   </div>
-                  <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-[var(--em-yellow)] text-[var(--em-ink)]">
-                    <GraduationCap className="h-6 w-6" />
-                  </div>
+                  <h3 className="em-display text-xl leading-tight sm:text-2xl">
+                    Redação para todas as fases escolares
+                  </h3>
+                  <p className="mt-2.5 text-sm font-medium leading-relaxed text-white/65">
+                    Método para organizar ideias, desenvolver repertório e escrever com clareza.
+                  </p>
                 </div>
-                <div className="grid gap-3 sm:grid-cols-2">
+                <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-3">
                   {[
                     { icon: BookOpen, label: "Repertório" },
                     { icon: FileText, label: "Estrutura" },
                     { icon: MessageSquareText, label: "Argumentação" },
                     { icon: BrainCircuit, label: "Clareza" },
                   ].map(({ icon: Icon, label }) => (
-                    <div key={label} className="flex items-center gap-3 rounded-2xl bg-white/10 px-3 py-3 text-sm font-extrabold">
-                      <Icon className="h-4 w-4 text-[var(--em-green)]" />
-                      {label}
+                    <div key={label} className="flex flex-col items-center gap-2 rounded-xl bg-white/8 px-3 py-3.5 text-center">
+                      <div className="grid h-9 w-9 place-items-center rounded-lg bg-[var(--em-yellow)] text-[var(--em-ink)]">
+                        <Icon className="h-4 w-4" />
+                      </div>
+                      <span className="text-xs font-semibold text-white/90">{label}</span>
                     </div>
                   ))}
                 </div>
+              </div>
+            </div>
+
+            {/* Card - Evolução */}
+            <div className="em-card-hard col-span-12 flex items-center gap-4 bg-[var(--em-mint)] p-5 sm:gap-5 sm:p-6 md:col-span-4">
+              <div className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl border-2 border-[var(--em-ink)] bg-white text-[var(--em-green-deep)] shadow-[3px_3px_0_0_#0E0F12]">
+                <TrendingUp className="h-7 w-7" />
+              </div>
+              <div>
+                <div className="text-[10px] font-bold uppercase tracking-[0.14em] text-[var(--em-green-deep)]">Acompanhamento</div>
+                <h3 className="em-display mt-1 text-lg leading-tight text-[var(--em-ink)] sm:text-xl">Evolução monitorada ao longo do curso</h3>
               </div>
             </div>
           </div>
@@ -426,7 +447,7 @@ export function Landing({ pricing, socialProof }: LandingProps) {
                   </div>
                 </div>
                 <div className="px-2 flex-1 flex flex-col">
-                  <h3 className="mb-3 font-['Plus_Jakarta_Sans'] text-xl font-bold leading-tight text-[var(--em-ink)] transition-colors group-hover:text-[var(--em-green-deep)]">{course.title}</h3>
+                  <h3 className="mb-3 font-['Space_Grotesk'] text-xl font-bold leading-tight text-[var(--em-ink)] transition-colors group-hover:text-[var(--em-green-deep)]">{course.title}</h3>
                   <p className="mb-5 text-sm font-medium leading-6 text-[var(--em-text-soft)]">{course.description}</p>
                   <div className="mt-auto flex items-center gap-3 pt-4 border-t border-[var(--em-border)]">
                     <div className="w-8 h-8 rounded-full bg-[var(--em-ink)] text-white grid place-items-center font-bold text-xs">
@@ -486,7 +507,7 @@ export function Landing({ pricing, socialProof }: LandingProps) {
             
             {/* Card Flutuante */}
             <div className="em-card-hard absolute bottom-0 left-3 right-3 z-20 rounded-[24px] bg-white p-5 sm:left-6 sm:right-auto sm:w-[260px] sm:p-5 lg:-bottom-5 lg:-left-2">
-              <h4 className="font-extrabold text-[var(--em-ink)] mb-4 font-['Plus_Jakarta_Sans']">Professor do curso</h4>
+              <h4 className="font-extrabold text-[var(--em-ink)] mb-4 font-['Space_Grotesk']">Professor do curso</h4>
               <div className="space-y-4">
                 {[
                   { name: mainTeacherName, area: "Redação, gramática e acompanhamento", bg: "bg-[var(--em-mint)]" }
@@ -560,11 +581,11 @@ export function Landing({ pricing, socialProof }: LandingProps) {
                   {plan.badge}
                 </div>
               )}
-              <h3 className="text-xl font-bold font-['Plus_Jakarta_Sans'] text-[var(--em-ink)]">{plan.title}</h3>
+              <h3 className="text-xl font-bold font-['Space_Grotesk'] text-[var(--em-ink)]">{plan.title}</h3>
               <p className="text-sm font-semibold text-[var(--em-ink)]/60 mb-6">{plan.desc}</p>
               
               <div className="mb-8">
-                <span className="text-4xl font-extrabold text-[var(--em-ink)] font-['Plus_Jakarta_Sans']">{plan.price}</span>
+                <span className="text-4xl font-extrabold text-[var(--em-ink)] font-['Space_Grotesk']">{plan.price}</span>
                 <span className="text-[var(--em-ink)]/60 font-semibold">{plan.period}</span>
               </div>
               
@@ -675,7 +696,7 @@ export function Landing({ pricing, socialProof }: LandingProps) {
             </div>
             
             <div>
-              <h4 className="font-bold text-white mb-6 font-['Plus_Jakarta_Sans']">Sobre</h4>
+              <h4 className="font-bold text-white mb-6 font-['Space_Grotesk']">Sobre</h4>
               <ul className="space-y-4 text-sm text-white/60">
                 <li><a href="#inicio" className="hover:text-[var(--em-green)]">Nossa História</a></li>
                 <li><a href="#professor" className="hover:text-[var(--em-green)]">Professor</a></li>
@@ -685,7 +706,7 @@ export function Landing({ pricing, socialProof }: LandingProps) {
             </div>
             
             <div>
-              <h4 className="font-bold text-white mb-6 font-['Plus_Jakarta_Sans']">Recursos</h4>
+              <h4 className="font-bold text-white mb-6 font-['Space_Grotesk']">Recursos</h4>
               <ul className="space-y-4 text-sm text-white/60">
                 <li><a href="#" className="hover:text-[var(--em-green)]">Temas de Redação</a></li>
                 <li><a href="#" className="hover:text-[var(--em-green)]">Simulador ENEM</a></li>
@@ -695,7 +716,7 @@ export function Landing({ pricing, socialProof }: LandingProps) {
             </div>
             
             <div>
-              <h4 className="font-bold text-white mb-6 font-['Plus_Jakarta_Sans']">Ajuda</h4>
+              <h4 className="font-bold text-white mb-6 font-['Space_Grotesk']">Ajuda</h4>
               <ul className="space-y-4 text-sm text-white/60">
                 <li><a href="/login" className="hover:text-[var(--em-green)]">Central de Ajuda</a></li>
                 <li><a href="#planos" className="hover:text-[var(--em-green)]">Planos e Preços</a></li>

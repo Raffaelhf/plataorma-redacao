@@ -1,17 +1,19 @@
 import type { Metadata } from 'next';
-import { Plus_Jakarta_Sans, Sora } from 'next/font/google';
+import { DM_Sans, Space_Grotesk } from 'next/font/google';
 import './globals.css';
 import { CookieBanner } from '@/components/legal/cookie-banner';
 import { AuthProvider } from '@/components/providers/session-provider';
 
-const bodyFont = Plus_Jakarta_Sans({
+const bodyFont = DM_Sans({
   variable: '--font-body',
   subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
 });
 
-const displayFont = Sora({
+const displayFont = Space_Grotesk({
   variable: '--font-display',
   subsets: ['latin'],
+  weight: ['500', '600', '700'],
 });
 
 export const metadata: Metadata = {

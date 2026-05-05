@@ -1,5 +1,5 @@
 /* Escreva Mais — design tokens (editorial / Zillo-inspired refresh) */
-@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap");
 
 .em-root {
   /* Brand — primary */
@@ -67,7 +67,7 @@
   --em-shadow-hard-sm: 4px 4px 0 0 #0E0F12;
   --em-shadow-glow: 0 30px 80px -30px rgba(43, 211, 123, 0.45);
 
-  font-family: "Plus Jakarta Sans", "Inter", system-ui, sans-serif;
+  font-family: "DM Sans", system-ui, sans-serif;
   color: var(--em-text);
   background: var(--em-bg);
   -webkit-font-smoothing: antialiased;
@@ -100,18 +100,18 @@
 }
 
 .em-root .em-display {
-  font-family: "Plus Jakarta Sans", system-ui, sans-serif;
-  font-weight: 800;
-  letter-spacing: 0;
-  line-height: 0.98;
+  font-family: "Space Grotesk", system-ui, sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
   overflow-wrap: anywhere;
 }
 
 .em-root .em-display-xl {
-  font-family: "Plus Jakarta Sans", system-ui, sans-serif;
-  font-weight: 900;
-  letter-spacing: 0;
-  line-height: 0.95;
+  font-family: "Space Grotesk", system-ui, sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1;
   overflow-wrap: anywhere;
 }
 
