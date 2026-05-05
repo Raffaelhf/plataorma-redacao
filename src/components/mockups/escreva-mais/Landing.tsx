@@ -317,28 +317,106 @@ export function Landing({ pricing, socialProof }: LandingProps) {
               </p>
             </div>
 
-            {/* Coluna direita: imagem do celular */}
-            <div className="relative flex items-center justify-center">
-              {/* Círculo decorativo de fundo */}
-              <div className="absolute h-[380px] w-[380px] rounded-full bg-gradient-to-br from-[var(--em-green)]/20 to-transparent blur-3xl sm:h-[450px] sm:w-[450px]" />
+            {/* Coluna direita: mockup do celular com app */}
+            <div className="relative flex items-center justify-center py-8">
+              {/* Brilho de fundo */}
+              <div className="absolute h-[320px] w-[320px] rounded-full bg-[var(--em-green)]/15 blur-[100px] sm:h-[400px] sm:w-[400px]" />
               
-              {/* Imagem do celular */}
-              <img
-                src="/images/smartphone-premio.jpg"
-                alt="Celular - prêmio do desafio"
-                className="relative z-10 h-auto w-[280px] max-w-none object-contain drop-shadow-2xl sm:w-[340px] lg:w-[380px]"
-              />
+              {/* Mockup do celular */}
+              <div className="relative z-10 w-[260px] sm:w-[280px]">
+                {/* Frame do celular */}
+                <div className="relative rounded-[40px] border-[8px] border-[#1a1a1a] bg-[#1a1a1a] p-1 shadow-2xl shadow-black/50">
+                  {/* Notch */}
+                  <div className="absolute left-1/2 top-3 z-20 h-6 w-24 -translate-x-1/2 rounded-full bg-[#1a1a1a]" />
+                  
+                  {/* Tela do app */}
+                  <div className="relative overflow-hidden rounded-[32px] bg-[#faf8f3]">
+                    {/* Status bar */}
+                    <div className="flex items-center justify-between bg-[var(--em-ink)] px-6 pb-2 pt-8 text-[10px] text-white/70">
+                      <span>9:41</span>
+                      <div className="flex items-center gap-1">
+                        <div className="h-2 w-2 rounded-full bg-white/70" />
+                        <div className="h-2 w-4 rounded-sm bg-white/70" />
+                      </div>
+                    </div>
+                    
+                    {/* Header do app */}
+                    <div className="bg-[var(--em-ink)] px-5 pb-5">
+                      <div className="flex items-center gap-2">
+                        <div className="h-8 w-8 rounded-lg bg-[var(--em-green)]" />
+                        <span className="text-sm font-bold text-white">Escreva+</span>
+                      </div>
+                      <p className="mt-3 text-lg font-bold text-white">Olá, estudante!</p>
+                      <p className="text-xs text-white/50">Continue sua jornada</p>
+                    </div>
+
+                    {/* Conteúdo do app */}
+                    <div className="space-y-3 p-4">
+                      {/* Card de progresso */}
+                      <div className="rounded-2xl border border-[var(--em-border)] bg-white p-4">
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-semibold text-[var(--em-ink)]">Seu progresso</span>
+                          <span className="text-xs font-bold text-[var(--em-green-deep)]">72%</span>
+                        </div>
+                        <div className="mt-2 h-2 overflow-hidden rounded-full bg-[var(--em-cream)]">
+                          <div className="h-full w-[72%] rounded-full bg-[var(--em-green)]" />
+                        </div>
+                      </div>
+
+                      {/* Card de redação */}
+                      <div className="rounded-2xl bg-[var(--em-green)] p-4">
+                        <div className="flex items-center gap-2">
+                          <FileText className="h-4 w-4 text-[var(--em-ink)]" />
+                          <span className="text-xs font-bold text-[var(--em-ink)]">Nova redação</span>
+                        </div>
+                        <p className="mt-1 text-[10px] text-[var(--em-ink)]/70">Tema da semana disponível</p>
+                      </div>
+
+                      {/* Stats mini */}
+                      <div className="flex gap-2">
+                        <div className="flex-1 rounded-xl bg-[var(--em-yellow-soft)] p-3 text-center">
+                          <span className="text-lg font-bold text-[var(--em-ink)]">12</span>
+                          <p className="text-[8px] text-[var(--em-ink)]/60">redações</p>
+                        </div>
+                        <div className="flex-1 rounded-xl bg-[var(--em-mint)] p-3 text-center">
+                          <span className="text-lg font-bold text-[var(--em-ink)]">920</span>
+                          <p className="text-[8px] text-[var(--em-ink)]/60">melhor nota</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Bottom nav */}
+                    <div className="flex items-center justify-around border-t border-[var(--em-border)] bg-white px-4 py-3">
+                      <div className="h-5 w-5 rounded-md bg-[var(--em-green)]" />
+                      <div className="h-5 w-5 rounded-md bg-[var(--em-border)]" />
+                      <div className="h-5 w-5 rounded-md bg-[var(--em-border)]" />
+                      <div className="h-5 w-5 rounded-full bg-[var(--em-border)]" />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Reflexo sutil */}
+                <div className="absolute -bottom-4 left-1/2 h-8 w-[80%] -translate-x-1/2 rounded-full bg-white/5 blur-xl" />
+              </div>
               
               {/* Badge flutuante */}
-              <div className="absolute -left-2 top-1/4 z-20 rounded-2xl border border-white/10 bg-white/10 p-4 backdrop-blur-md sm:left-0">
+              <div className="absolute -left-4 top-1/3 z-20 rounded-2xl border border-[var(--em-green)]/30 bg-[var(--em-ink)] p-3 shadow-xl sm:left-0 sm:p-4">
                 <div className="flex items-center gap-3">
                   <div className="grid h-10 w-10 place-items-center rounded-xl bg-[var(--em-yellow)] text-[var(--em-ink)]">
-                    <Gift className="h-5 w-5" />
+                    <Trophy className="h-5 w-5" />
                   </div>
                   <div>
                     <div className="text-sm font-bold text-white">1º e 2º lugar</div>
-                    <div className="text-xs text-white/60">Ganham celular</div>
+                    <div className="text-xs text-[var(--em-green)]">Ganham celular</div>
                   </div>
+                </div>
+              </div>
+
+              {/* Elemento decorativo */}
+              <div className="absolute -right-2 bottom-1/4 z-20 rounded-xl border border-white/10 bg-white/5 p-3 backdrop-blur-sm sm:right-4">
+                <div className="flex items-center gap-2">
+                  <Star className="h-4 w-4 fill-[var(--em-yellow)] text-[var(--em-yellow)]" />
+                  <span className="text-xs font-semibold text-white">Nota 1000</span>
                 </div>
               </div>
             </div>
