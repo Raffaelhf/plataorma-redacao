@@ -290,7 +290,7 @@ export function Landing({ pricing, socialProof }: LandingProps) {
               <h2 className="em-display text-4xl leading-[1.1] text-white sm:text-5xl md:text-[3.5rem]">
                 Constância que
                 <br />
-                <span className="text-[var(--em-green)]">vira prêmio.</span>
+                <span className="text-[var(--em-ink)] bg-[var(--em-green)] px-2 rounded-lg inline-block transform -rotate-1">vira prêmio.</span>
               </h2>
               
               <p className="mt-6 max-w-lg font-['Source_Serif_4'] text-base leading-relaxed text-white/60 sm:text-lg">
