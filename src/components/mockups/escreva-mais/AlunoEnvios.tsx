@@ -1,16 +1,92 @@
 "use client";
 
 import Link from "next/link";
-import { FileText, Clock, CheckCircle2, AlertCircle, ChevronDown, ChevronUp, Download, Eye, Upload, RefreshCw } from "lucide-react";
-import { useState } from "react";
+import { AlertCircle, ChevronDown, ChevronUp, CheckCircle2, Clock, Download, Eye, FileText, RefreshCw, Upload } from "lucide-react";
+import { useMemo, useState } from "react";
+import type { ReactNode } from "react";
 import { AppLayout } from "./_shared/AppLayout";
 import "./_group.css";
 
 type EnviosStatus = "Todas" | "Em correção" | "Corrigidas" | "Devolvidas";
 
-export function AlunoEnvios() {
+type StudentCorrection = {
+  score: number;
+  comments: string | null;
+  strengths: string[];
+  improvements: string[];
+  teacherName: string | null;
+  createdAt: string;
+};
+
+export type StudentSubmissionItem = {
+  id: string;
+  submittedAt: string;
+  title: string;
+  status: string;
+  grade: number | null;
+  pdfHref: string | null;
+  correction: StudentCorrection | null;
+};
+
+type AlunoEnviosProps = {
+  viewer: { name: string; email: string };
+  submissions: StudentSubmissionItem[];
+  awaitingSubmissionCount: number;
+};
+
+function formatSubmissionDate(value: string) {
+  return new Intl.DateTimeFormat("pt-BR", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  })
+    .format(new Date(value))
+    .replace(".", "");
+}
+
+function getStatusLabel(status: string) {
+  if (status === "GRADED") return "Corrigida";
+  if (status === "RETURNED") return "Devolvida";
+  if (status === "UNDER_REVIEW") return "Em correção";
+  return "Pendente";
+}
+
+function getTabStatus(label: EnviosStatus, status: string) {
+  if (label === "Todas") return true;
+  if (label === "Corrigidas") return status === "GRADED";
+  if (label === "Devolvidas") return status === "RETURNED";
+  if (label === "Em correção") return status === "PENDING" || status === "UNDER_REVIEW";
+  return true;
+}
+
+function getSubmissionScore(submission: StudentSubmissionItem) {
+  return submission.correction?.score ?? submission.grade;
+}
+
+function getStatusBadgeClasses(status: string) {
+  if (status === "GRADED") return "bg-[var(--em-green-soft)] text-[var(--em-green-deep)]";
+  if (status === "RETURNED") return "bg-[var(--em-rose)] text-[var(--em-rose-deep)]";
+  return "bg-[var(--em-peach)] text-[var(--em-peach-deep)]";
+}
+
+function EmptyList() {
+  return (
+    <div className="em-card-hard bg-white p-8 text-center">
+      <div className="mx-auto grid h-12 w-12 place-items-center rounded-2xl border border-[var(--em-ink)] bg-[var(--em-cream)]">
+        <FileText className="h-5 w-5 text-[var(--em-ink)]" />
+      </div>
+      <h3 className="mt-4 text-[18px] font-extrabold text-[var(--em-ink)]">Nenhum envio encontrado</h3>
+      <p className="mt-2 text-sm font-semibold text-[var(--em-text-soft)]">
+        Assim que você enviar uma redação, ela aparecerá aqui com o status real da correção.
+      </p>
+    </div>
+  );
+}
+
+export function AlunoEnvios({ viewer, submissions, awaitingSubmissionCount }: AlunoEnviosProps) {
   const [activeTab, setActiveTab] = useState<EnviosStatus>("Todas");
-  const [expandedId, setExpandedId] = useState<number | null>(1);
+  const firstCorrectedSubmission = submissions.find((submission) => submission.status === "GRADED");
+  const [expandedId, setExpandedId] = useState<string | null>(firstCorrectedSubmission?.id ?? submissions[0]?.id ?? null);
   const [message, setMessage] = useState<string | null>(null);
 
   function notify(text: string) {
@@ -18,23 +94,24 @@ export function AlunoEnvios() {
     window.setTimeout(() => setMessage(null), 3000);
   }
 
-  const envios = [
-    { id: 1, data: "12 Out 2026", tema: "Caminhos para combater a intolerância religiosa no Brasil", status: "Corrigida", nota: 920, isRecent: true },
-    { id: 2, data: "05 Out 2026", tema: "Os impactos da inteligência artificial no mercado de trabalho", status: "Em correção", nota: null, isRecent: false },
-    { id: 3, data: "28 Set 2026", tema: "A democratização do acesso ao cinema no Brasil", status: "Corrigida", nota: 880, isRecent: false },
-    { id: 4, data: "21 Set 2026", tema: "Desafios para a valorização de comunidades tradicionais", status: "Corrigida", nota: 840, isRecent: false },
-    { id: 5, data: "14 Set 2026", tema: "O estigma associado às doenças mentais na sociedade", status: "Devolvida", nota: null, isRecent: false },
-    { id: 6, data: "07 Set 2026", tema: "Manipulação do comportamento do usuário pelo controle de dados", status: "Corrigida", nota: 900, isRecent: false },
-    { id: 7, data: "31 Ago 2026", tema: "Desafios para a formação educacional de surdos", status: "Corrigida", nota: 860, isRecent: false },
-    { id: 8, data: "24 Ago 2026", tema: "Caminhos para combater o racismo estrutural", status: "Corrigida", nota: 820, isRecent: false },
-  ];
+  const stats = useMemo(() => {
+    const corrected = submissions.filter((submission) => submission.status === "GRADED").length;
+    const inCorrection = submissions.filter((submission) => submission.status === "PENDING" || submission.status === "UNDER_REVIEW").length;
+    return {
+      total: submissions.length,
+      corrected,
+      inCorrection,
+    };
+  }, [submissions]);
+
+  const visibleSubmissions = submissions.filter((submission) => getTabStatus(activeTab, submission.status));
 
   return (
     <AppLayout
       role="aluno"
-      userName="Júlia Andrade"
-      userEmail="julia.andrade@email.com"
-      pageKicker="Meus envios · 24 redações"
+      userName={viewer.name}
+      userEmail={viewer.email}
+      pageKicker={`Meus envios · ${stats.total} redações`}
       pageTitle="Sua jornada em PDF."
       primaryAction={{ label: "Enviar nova redação", href: "/atividades" }}
     >
@@ -44,52 +121,48 @@ export function AlunoEnvios() {
             {message}
           </div>
         ) : null}
-        
-        {/* STATS */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-          <div className="em-card-hard p-5 bg-[var(--em-mint)] flex flex-col justify-between">
-            <div className="flex items-center justify-between mb-4">
+
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-4">
+          <div className="em-card-hard flex flex-col justify-between bg-[var(--em-mint)] p-5">
+            <div className="mb-4 flex items-center justify-between">
               <span className="text-[14px] font-extrabold text-[var(--em-ink)]">Total enviadas</span>
-              <FileText className="w-5 h-5 text-[var(--em-ink)]" />
+              <FileText className="h-5 w-5 text-[var(--em-ink)]" />
             </div>
-            <div className="em-display text-[42px] text-[var(--em-ink)]">24</div>
+            <div className="em-display text-[42px] text-[var(--em-ink)]">{stats.total}</div>
           </div>
-          
-          <div className="em-card-hard p-5 bg-[var(--em-lavender)] flex flex-col justify-between">
-            <div className="flex items-center justify-between mb-4">
+
+          <div className="em-card-hard flex flex-col justify-between bg-[var(--em-lavender)] p-5">
+            <div className="mb-4 flex items-center justify-between">
               <span className="text-[14px] font-extrabold text-[var(--em-ink)]">Já corrigidas</span>
-              <CheckCircle2 className="w-5 h-5 text-[var(--em-ink)]" />
+              <CheckCircle2 className="h-5 w-5 text-[var(--em-ink)]" />
             </div>
-            <div className="em-display text-[42px] text-[var(--em-ink)]">18</div>
+            <div className="em-display text-[42px] text-[var(--em-ink)]">{stats.corrected}</div>
           </div>
-          
-          <div className="em-card-hard p-5 bg-[var(--em-peach)] flex flex-col justify-between">
-            <div className="flex items-center justify-between mb-4">
+
+          <div className="em-card-hard flex flex-col justify-between bg-[var(--em-peach)] p-5">
+            <div className="mb-4 flex items-center justify-between">
               <span className="text-[14px] font-extrabold text-[var(--em-ink)]">Em correção</span>
-              <Clock className="w-5 h-5 text-[var(--em-ink)]" />
+              <Clock className="h-5 w-5 text-[var(--em-ink)]" />
             </div>
-            <div className="em-display text-[42px] text-[var(--em-ink)]">3</div>
+            <div className="em-display text-[42px] text-[var(--em-ink)]">{stats.inCorrection}</div>
           </div>
-          
-          <div className="em-card-hard p-5 bg-[var(--em-muted)] flex flex-col justify-between border-dashed border-[2px]">
-            <div className="flex items-center justify-between mb-4">
+
+          <div className="em-card-hard flex flex-col justify-between border-[2px] border-dashed bg-[var(--em-muted)] p-5">
+            <div className="mb-4 flex items-center justify-between">
               <span className="text-[14px] font-extrabold text-[var(--em-text-soft)]">Aguardando envio</span>
-              <Upload className="w-5 h-5 text-[var(--em-text-soft)]" />
+              <Upload className="h-5 w-5 text-[var(--em-text-soft)]" />
             </div>
-            <div className="em-display text-[42px] text-[var(--em-text-soft)]">3</div>
+            <div className="em-display text-[42px] text-[var(--em-text-soft)]">{awaitingSubmissionCount}</div>
           </div>
         </div>
 
-        {/* TABS */}
-        <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none">
+        <div className="scrollbar-none flex gap-2 overflow-x-auto pb-2">
           {(["Todas", "Em correção", "Corrigidas", "Devolvidas"] as EnviosStatus[]).map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
               className={`em-chip shrink-0 transition-all ${
-                activeTab === tab 
-                  ? "bg-[var(--em-ink)] text-white border-[var(--em-ink)] shadow-[2px_2px_0_0_#2BD37B]" 
-                  : "bg-white hover:bg-[var(--em-bg-alt)]"
+                activeTab === tab ? "border-[var(--em-ink)] bg-[var(--em-ink)] text-white shadow-[2px_2px_0_0_#2BD37B]" : "bg-white hover:bg-[var(--em-bg-alt)]"
               }`}
             >
               {tab}
@@ -97,172 +170,180 @@ export function AlunoEnvios() {
           ))}
         </div>
 
-        {/* LISTA DE ENVIOS */}
         <div className="space-y-4">
-          {envios.filter((e) => {
-            if (activeTab === "Todas") return true;
-            if (activeTab === "Corrigidas") return e.status === "Corrigida";
-            if (activeTab === "Devolvidas") return e.status === "Devolvida";
-            return e.status === activeTab;
-          }).map((envio) => {
-            const isExpanded = expandedId === envio.id;
-            
+          {visibleSubmissions.length === 0 ? <EmptyList /> : null}
+
+          {visibleSubmissions.map((submission) => {
+            const isExpanded = expandedId === submission.id;
+            const statusLabel = getStatusLabel(submission.status);
+            const score = getSubmissionScore(submission);
+            const correction = submission.correction;
+
             return (
-              <div key={envio.id} className="em-card-hard bg-white overflow-hidden transition-all duration-300">
-                <div 
-                  className="p-5 flex flex-col md:flex-row md:items-center gap-4 cursor-pointer hover:bg-[var(--em-bg)] transition-colors"
-                  onClick={() => setExpandedId(isExpanded ? null : envio.id)}
+              <div key={submission.id} className="em-card-hard overflow-hidden bg-white transition-all duration-300">
+                <div
+                  className="flex cursor-pointer flex-col gap-4 p-5 transition-colors hover:bg-[var(--em-bg)] md:flex-row md:items-center"
+                  onClick={() => setExpandedId(isExpanded ? null : submission.id)}
                 >
-                  {/* Thumb Placeholder */}
-                  <div className="hidden md:flex w-12 h-16 bg-[var(--em-cream)] border border-[var(--em-border-strong)] rounded flex-col items-center justify-center text-[8px] font-bold text-[var(--em-text-mute)] shrink-0">
-                    <FileText className="w-5 h-5 mb-1 opacity-50" />
+                  <div className="hidden h-16 w-12 shrink-0 flex-col items-center justify-center rounded border border-[var(--em-border-strong)] bg-[var(--em-cream)] text-[8px] font-bold text-[var(--em-text-mute)] md:flex">
+                    <FileText className="mb-1 h-5 w-5 opacity-50" />
                     PDF
                   </div>
-                  
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-3 mb-1.5">
-                      <span className="text-[12px] font-bold text-[var(--em-text-soft)]">{envio.data}</span>
-                      <span className={`rounded-full px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wide border border-[var(--em-ink)] shadow-[1px_1px_0_0_#0E0F12] ${
-                        envio.status === "Corrigida" ? "bg-[var(--em-green-soft)] text-[var(--em-green-deep)]" :
-                        envio.status === "Em correção" ? "bg-[var(--em-peach)] text-[var(--em-peach-deep)]" :
-                        "bg-[var(--em-rose)] text-[var(--em-rose-deep)]"
-                      }`}>
-                        {envio.status}
+
+                  <div className="min-w-0 flex-1">
+                    <div className="mb-1.5 flex items-center gap-3">
+                      <span className="text-[12px] font-bold text-[var(--em-text-soft)]">{formatSubmissionDate(submission.submittedAt)}</span>
+                      <span className={`rounded-full border border-[var(--em-ink)] px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wide shadow-[1px_1px_0_0_#0E0F12] ${getStatusBadgeClasses(submission.status)}`}>
+                        {statusLabel}
                       </span>
                     </div>
-                    <h3 className="text-[16px] md:text-[18px] font-extrabold text-[var(--em-ink)] leading-tight truncate">{envio.tema}</h3>
+                    <h3 className="truncate text-[16px] font-extrabold leading-tight text-[var(--em-ink)] md:text-[18px]">{submission.title}</h3>
                   </div>
-                  
-                  <div className="flex items-center justify-between md:justify-end gap-6 md:w-auto w-full pt-3 md:pt-0 border-t border-[var(--em-border)] md:border-t-0">
-                    {envio.nota ? (
-                      <div className="flex items-baseline gap-1 bg-[var(--em-green-soft)] px-4 py-2 rounded-full border border-[var(--em-ink)] shadow-[2px_2px_0_0_#0E0F12]">
-                        <span className="text-[20px] font-extrabold text-[var(--em-ink)]">{envio.nota}</span>
+
+                  <div className="flex w-full items-center justify-between gap-6 border-t border-[var(--em-border)] pt-3 md:w-auto md:justify-end md:border-t-0 md:pt-0">
+                    {typeof score === "number" ? (
+                      <div className="flex items-baseline gap-1 rounded-full border border-[var(--em-ink)] bg-[var(--em-green-soft)] px-4 py-2 shadow-[2px_2px_0_0_#0E0F12]">
+                        <span className="text-[20px] font-extrabold text-[var(--em-ink)]">{score}</span>
                         <span className="text-[12px] font-bold text-[var(--em-ink)]/60">/1000</span>
                       </div>
                     ) : (
-                      <div className="text-[14px] font-bold text-[var(--em-text-mute)] px-4 py-2">-- /1000</div>
+                      <div className="px-4 py-2 text-[14px] font-bold text-[var(--em-text-mute)]">-- /1000</div>
                     )}
-                    
+
                     <div className="flex items-center gap-2">
-                      <button type="button" onClick={(event) => { event.stopPropagation(); notify(envio.status === "Corrigida" ? `Correção aberta: ${envio.tema}` : `Status atualizado: ${envio.tema}`); }} className="p-2 text-[var(--em-ink)] bg-[var(--em-bg)] border border-[var(--em-ink)] rounded-lg hover:bg-[var(--em-yellow)] transition-colors">
-                        {envio.status === "Corrigida" ? <Eye className="w-4 h-4" /> : <RefreshCw className="w-4 h-4" />}
+                      <button
+                        type="button"
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          notify(correction ? `Correção aberta: ${submission.title}` : `Status atualizado: ${submission.title}`);
+                        }}
+                        className="rounded-lg border border-[var(--em-ink)] bg-[var(--em-bg)] p-2 text-[var(--em-ink)] transition-colors hover:bg-[var(--em-yellow)]"
+                      >
+                        {correction ? <Eye className="h-4 w-4" /> : <RefreshCw className="h-4 w-4" />}
                       </button>
-                      <button type="button" onClick={(event) => { event.stopPropagation(); setExpandedId(isExpanded ? null : envio.id); }} className="p-2 text-[var(--em-ink)] hover:bg-[var(--em-bg)] rounded-lg transition-colors">
-                        {isExpanded ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+                      <button
+                        type="button"
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          setExpandedId(isExpanded ? null : submission.id);
+                        }}
+                        className="rounded-lg p-2 text-[var(--em-ink)] transition-colors hover:bg-[var(--em-bg)]"
+                      >
+                        {isExpanded ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
                       </button>
                     </div>
                   </div>
                 </div>
 
-                {/* EXPANDED CONTENT (LATEST CORRECTED) */}
-                {isExpanded && envio.status === "Corrigida" && (
-                  <div className="border-t border-[var(--em-ink)] bg-[var(--em-bg)] p-6 md:p-8 animate-in slide-in-from-top-4 fade-in duration-300">
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                      {/* Left: Score & Competencies */}
-                      <div className="space-y-6">
-                        <div className="bg-white p-6 rounded-2xl border border-[var(--em-ink)] shadow-[4px_4px_0_0_#0E0F12] text-center">
-                          <div className="text-[12px] font-extrabold uppercase tracking-widest text-[var(--em-text-soft)] mb-2">Nota Geral</div>
-                          <div className="em-display text-[64px] text-[var(--em-ink)] leading-none text-center">
-                            {envio.nota} <span className="text-[24px] text-[var(--em-text-mute)]">/1000</span>
-                          </div>
-                        </div>
-                        
-                        <div className="bg-white p-6 rounded-2xl border border-[var(--em-ink)] shadow-[4px_4px_0_0_#0E0F12] space-y-4">
-                          <h4 className="font-extrabold text-[14px] text-[var(--em-ink)] uppercase tracking-wider mb-2">Competências</h4>
-                          {[
-                            { label: "1. Norma culta", nota: 180, cor: "bg-[var(--em-green)]" },
-                            { label: "2. Compreensão tema", nota: 200, cor: "bg-[var(--em-mint-deep)]" },
-                            { label: "3. Argumentação", nota: 200, cor: "bg-[var(--em-mint-deep)]" },
-                            { label: "4. Coesão/coerência", nota: 180, cor: "bg-[var(--em-green)]" },
-                            { label: "5. Proposta intervenção", nota: 160, cor: "bg-[var(--em-yellow)]" },
-                          ].map((comp, i) => (
-                            <div key={i}>
-                              <div className="flex justify-between text-[13px] font-bold text-[var(--em-ink)] mb-1">
-                                <span>{comp.label}</span>
-                                <span>{comp.nota}/200</span>
-                              </div>
-                              <div className="h-2.5 w-full bg-[var(--em-bg)] border border-[var(--em-ink)] rounded-full overflow-hidden">
-                                <div className={`h-full ${comp.cor} border-r border-[var(--em-ink)]`} style={{ width: `${(comp.nota/200)*100}%` }} />
-                              </div>
+                {isExpanded ? (
+                  <div className="animate-in fade-in slide-in-from-top-4 border-t border-[var(--em-ink)] bg-[var(--em-bg)] p-6 duration-300 md:p-8">
+                    {correction ? (
+                      <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+                        <div className="space-y-6">
+                          <div className="rounded-2xl border border-[var(--em-ink)] bg-white p-6 text-center shadow-[4px_4px_0_0_#0E0F12]">
+                            <div className="mb-2 text-[12px] font-extrabold uppercase tracking-widest text-[var(--em-text-soft)]">Nota Geral</div>
+                            <div className="em-display text-center text-[64px] leading-none text-[var(--em-ink)]">
+                              {correction.score} <span className="text-[24px] text-[var(--em-text-mute)]">/1000</span>
                             </div>
-                          ))}
+                          </div>
+
+                          <div className="space-y-4 rounded-2xl border border-[var(--em-ink)] bg-white p-6 shadow-[4px_4px_0_0_#0E0F12]">
+                            <h4 className="mb-2 text-[14px] font-extrabold uppercase tracking-wider text-[var(--em-ink)]">Competências</h4>
+                            <div className="rounded-xl border border-[var(--em-border-strong)] bg-[var(--em-bg-alt)] p-4 text-[13px] font-bold leading-6 text-[var(--em-text-soft)]">
+                              A nota por competência ainda não é salva separadamente nesta correção. A plataforma registra a nota total real e o feedback do avaliador.
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="space-y-6 lg:col-span-2">
+                          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                            <FeedbackList
+                              title="Pontos Fortes"
+                              icon={<CheckCircle2 className="h-5 w-5 text-[var(--em-green-deep)]" />}
+                              items={correction.strengths}
+                              emptyLabel="Nenhum ponto forte registrado nessa correção."
+                              className="bg-[var(--em-mint)]"
+                            />
+                            <FeedbackList
+                              title="O que melhorar"
+                              icon={<AlertCircle className="h-5 w-5 text-[var(--em-coral)]" />}
+                              items={correction.improvements}
+                              emptyLabel="Nenhuma melhoria registrada nessa correção."
+                              className="bg-[var(--em-peach)]"
+                            />
+                          </div>
+
+                          <div className="relative rounded-2xl border border-[var(--em-ink)] bg-white p-6 shadow-[4px_4px_0_0_#0E0F12]">
+                            <div className="absolute right-4 top-4 opacity-10">
+                              <FileText className="h-16 w-16 text-[var(--em-ink)]" />
+                            </div>
+                            <h4 className="mb-4 text-[14px] font-extrabold uppercase tracking-wider text-[var(--em-text-mute)]">Comentário do Avaliador</h4>
+                            <blockquote className="border-l-4 border-[var(--em-yellow)] pl-4 text-[16px] font-medium italic leading-relaxed text-[var(--em-ink)]">
+                              {correction.comments || "O avaliador registrou a nota, mas ainda não adicionou um comentário geral."}
+                            </blockquote>
+                            <div className="mt-4 text-[13px] font-bold text-[var(--em-text-soft)]">
+                              — {correction.teacherName ?? "Professor Escreva Mais"}
+                            </div>
+                          </div>
+
+                          <div className="flex flex-col justify-end gap-4 pt-2 sm:flex-row">
+                            {submission.pdfHref ? (
+                              <a href={submission.pdfHref} target="_blank" rel="noreferrer" className="em-btn-ghost-dark !border-[var(--em-ink)] !text-[var(--em-ink)] hover:!bg-[var(--em-border)]">
+                                <Download className="h-4 w-4" /> Abrir PDF enviado
+                              </a>
+                            ) : null}
+                            <Link href="/atividades" className="em-btn-primary">
+                              Próxima atividade
+                            </Link>
+                          </div>
                         </div>
                       </div>
-
-                      {/* Right: Feedback */}
-                      <div className="lg:col-span-2 space-y-6">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                          <div className="bg-[var(--em-mint)] p-6 rounded-2xl border border-[var(--em-ink)] shadow-[4px_4px_0_0_#0E0F12]">
-                            <h4 className="font-extrabold text-[16px] text-[var(--em-ink)] mb-4 flex items-center gap-2">
-                              <CheckCircle2 className="w-5 h-5 text-[var(--em-green-deep)]" /> Pontos Fortes
-                            </h4>
-                            <ul className="space-y-3">
-                              <li className="flex items-start gap-2 text-[14px] font-medium text-[var(--em-ink-soft)]">
-                                <span className="w-1.5 h-1.5 rounded-full bg-[var(--em-ink)] mt-1.5 shrink-0" />
-                                Excelente repertório sociocultural utilizando Zygmunt Bauman.
-                              </li>
-                              <li className="flex items-start gap-2 text-[14px] font-medium text-[var(--em-ink-soft)]">
-                                <span className="w-1.5 h-1.5 rounded-full bg-[var(--em-ink)] mt-1.5 shrink-0" />
-                                Argumentação bem estruturada nos desenvolvimentos.
-                              </li>
-                              <li className="flex items-start gap-2 text-[14px] font-medium text-[var(--em-ink-soft)]">
-                                <span className="w-1.5 h-1.5 rounded-full bg-[var(--em-ink)] mt-1.5 shrink-0" />
-                                Domínio da norma padrão, com raras falhas de pontuação.
-                              </li>
-                            </ul>
-                          </div>
-
-                          <div className="bg-[var(--em-peach)] p-6 rounded-2xl border border-[var(--em-ink)] shadow-[4px_4px_0_0_#0E0F12]">
-                            <h4 className="font-extrabold text-[16px] text-[var(--em-ink)] mb-4 flex items-center gap-2">
-                              <AlertCircle className="w-5 h-5 text-[var(--em-coral)]" /> O que melhorar
-                            </h4>
-                            <ul className="space-y-3">
-                              <li className="flex items-start gap-2 text-[14px] font-medium text-[var(--em-ink-soft)]">
-                                <span className="w-1.5 h-1.5 rounded-full bg-[var(--em-ink)] mt-1.5 shrink-0" />
-                                A proposta de intervenção precisa detalhar melhor o &quot;modo/meio&quot;.
-                              </li>
-                              <li className="flex items-start gap-2 text-[14px] font-medium text-[var(--em-ink-soft)]">
-                                <span className="w-1.5 h-1.5 rounded-full bg-[var(--em-ink)] mt-1.5 shrink-0" />
-                                Evitar repetição de conectivos (&quot;além disso&quot;) no D2.
-                              </li>
-                              <li className="flex items-start gap-2 text-[14px] font-medium text-[var(--em-ink-soft)]">
-                                <span className="w-1.5 h-1.5 rounded-full bg-[var(--em-ink)] mt-1.5 shrink-0" />
-                                Conclusão ficou um pouco extensa em relação aos desenvolvimentos.
-                              </li>
-                            </ul>
-                          </div>
-                        </div>
-
-                        <div className="bg-white p-6 rounded-2xl border border-[var(--em-ink)] shadow-[4px_4px_0_0_#0E0F12] relative">
-                          <div className="absolute top-4 right-4 opacity-10">
-                            <FileText className="w-16 h-16 text-[var(--em-ink)]" />
-                          </div>
-                          <h4 className="font-extrabold text-[14px] text-[var(--em-text-mute)] uppercase tracking-wider mb-4">Comentário do Avaliador</h4>
-                          <blockquote className="text-[16px] font-medium text-[var(--em-ink)] leading-relaxed border-l-4 border-[var(--em-yellow)] pl-4 italic">
-                            &quot;Júlia, excelente evolução! Seu texto está muito mais maduro. Cuidado apenas com a PI: lembre-se sempre de responder às 5 perguntas (Quem? O que? Como? Para que? Detalhamento). Continue assim, o 1000 está próximo!&quot;
-                          </blockquote>
-                          <div className="mt-4 text-[13px] font-bold text-[var(--em-text-soft)]">
-                            — Prof. Pedro Lima
-                          </div>
-                        </div>
-
-                        <div className="flex justify-end gap-4 pt-2">
-                          <button type="button" onClick={() => notify(`Download iniciado: ${envio.tema}`)} className="em-btn-ghost-dark !text-[var(--em-ink)] !border-[var(--em-ink)] hover:!bg-[var(--em-border)]">
-                            <Download className="w-4 h-4" /> Baixar PDF Corrigido
-                          </button>
-                          <Link href="/atividades" className="em-btn-primary">
-                            Próxima atividade
-                          </Link>
-                        </div>
+                    ) : (
+                      <div className="rounded-2xl border border-[var(--em-border-strong)] bg-white p-5 text-sm font-bold text-[var(--em-text-soft)]">
+                        Este envio ainda não possui correção registrada. Quando o professor concluir, a nota, os comentários e as sugestões aparecerão aqui automaticamente.
                       </div>
-                    </div>
+                    )}
                   </div>
-                )}
+                ) : null}
               </div>
             );
           })}
         </div>
       </div>
     </AppLayout>
+  );
+}
+
+function FeedbackList({
+  title,
+  icon,
+  items,
+  emptyLabel,
+  className,
+}: {
+  title: string;
+  icon: ReactNode;
+  items: string[];
+  emptyLabel: string;
+  className: string;
+}) {
+  return (
+    <div className={`rounded-2xl border border-[var(--em-ink)] p-6 shadow-[4px_4px_0_0_#0E0F12] ${className}`}>
+      <h4 className="mb-4 flex items-center gap-2 text-[16px] font-extrabold text-[var(--em-ink)]">
+        {icon} {title}
+      </h4>
+      {items.length ? (
+        <ul className="space-y-3">
+          {items.map((item) => (
+            <li key={item} className="flex items-start gap-2 text-[14px] font-medium text-[var(--em-ink-soft)]">
+              <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--em-ink)]" />
+              {item}
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="text-[14px] font-medium text-[var(--em-ink-soft)]">{emptyLabel}</p>
+      )}
+    </div>
   );
 }

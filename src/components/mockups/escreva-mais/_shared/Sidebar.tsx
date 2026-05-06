@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { useEffect, useMemo, useState } from "react";
 import {
   LayoutDashboard,
   FileText,
@@ -29,16 +30,16 @@ export type Item = { label: string; icon: LucideIcon; active?: boolean; badge?: 
 export const MENUS: Record<Role, Item[]> = {
   aluno: [
     { label: "Dashboard", icon: LayoutDashboard, active: true, href: "/dashboard/aluno" },
-    { label: "Envios", icon: FileText, badge: "3", href: "/envios" },
+    { label: "Envios", icon: FileText, href: "/envios" },
     { label: "Desempenho", icon: TrendingUp, href: "/desempenho" },
-    { label: "Atividades", icon: ListChecks, badge: "5", href: "/atividades" },
+    { label: "Atividades", icon: ListChecks, href: "/atividades" },
     { label: "Videoaulas", icon: PlayCircle, href: "/videoaulas" },
     { label: "Ao vivo", icon: Radio, badge: "·", href: "/ao-vivo" },
     { label: "Perfil", icon: UserRound, href: "/perfil" },
   ],
   professor: [
     { label: "Dashboard", icon: LayoutDashboard, active: true, href: "/dashboard/professor" },
-    { label: "Correções", icon: ClipboardCheck, badge: "12", href: "/correcoes" },
+    { label: "Correções", icon: ClipboardCheck, href: "/correcoes" },
     { label: "Atividades", icon: ListChecks, href: "/atividades" },
     { label: "Alunos", icon: Users, href: "/alunos" },
     { label: "Videoaulas", icon: PlayCircle, href: "/videoaulas" },
@@ -47,7 +48,7 @@ export const MENUS: Record<Role, Item[]> = {
   ],
   admin: [
     { label: "Dashboard", icon: LayoutDashboard, active: true, href: "/dashboard/admin" },
-    { label: "Correções", icon: ClipboardCheck, badge: "27", href: "/correcoes" },
+    { label: "Correções", icon: ClipboardCheck, href: "/correcoes" },
     { label: "Usuários", icon: Users, href: "/admin/usuarios" },
     { label: "Atividades", icon: ListChecks, href: "/atividades" },
     { label: "Videoaulas", icon: PlayCircle, href: "/videoaulas" },
@@ -73,10 +74,129 @@ export function isActivePath(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
+export function useMenuItems(role: Role, enabled = true) {
+  const [pendingCorrections, setPendingCorrections] = useState<number | null>(null);
+  const [studentActivities, setStudentActivities] = useState<number | null>(null);
+  const [studentSubmissions, setStudentSubmissions] = useState<number | null>(null);
+  const hasCorrectionsQueue = enabled && (role === "professor" || role === "admin");
+  const hasStudentCounters = enabled && role === "aluno";
+
+  useEffect(() => {
+    if (!hasCorrectionsQueue) {
+      return;
+    }
+
+    let cancelled = false;
+
+    async function loadPendingCorrections() {
+      try {
+        const response = await fetch("/api/corrections", { cache: "no-store" });
+        if (!response.ok) return;
+
+        const data = (await response.json()) as { pending?: unknown };
+        if (!cancelled && typeof data.pending === "number") {
+          setPendingCorrections(data.pending);
+        }
+      } catch {
+        if (!cancelled) setPendingCorrections(null);
+      }
+    }
+
+    const refreshWhenVisible = () => {
+      if (document.visibilityState === "visible") void loadPendingCorrections();
+    };
+
+    void loadPendingCorrections();
+    window.addEventListener("focus", loadPendingCorrections);
+    document.addEventListener("visibilitychange", refreshWhenVisible);
+
+    return () => {
+      cancelled = true;
+      window.removeEventListener("focus", loadPendingCorrections);
+      document.removeEventListener("visibilitychange", refreshWhenVisible);
+    };
+  }, [hasCorrectionsQueue]);
+
+  useEffect(() => {
+    if (!hasStudentCounters) {
+      return;
+    }
+
+    let cancelled = false;
+
+    async function loadStudentCounters() {
+      try {
+        const [activitiesResponse, submissionsResponse] = await Promise.all([
+          fetch("/api/activities?summary=1", { cache: "no-store" }),
+          fetch("/api/submissions?summary=1", { cache: "no-store" }),
+        ]);
+
+        if (activitiesResponse.ok) {
+          const data = (await activitiesResponse.json()) as { available?: unknown };
+          if (!cancelled && typeof data.available === "number") setStudentActivities(data.available);
+        }
+
+        if (submissionsResponse.ok) {
+          const data = (await submissionsResponse.json()) as { total?: unknown };
+          if (!cancelled && typeof data.total === "number") setStudentSubmissions(data.total);
+        }
+      } catch {
+        if (!cancelled) {
+          setStudentActivities(null);
+          setStudentSubmissions(null);
+        }
+      }
+    }
+
+    const refreshWhenVisible = () => {
+      if (document.visibilityState === "visible") void loadStudentCounters();
+    };
+
+    void loadStudentCounters();
+    window.addEventListener("focus", loadStudentCounters);
+    document.addEventListener("visibilitychange", refreshWhenVisible);
+
+    return () => {
+      cancelled = true;
+      window.removeEventListener("focus", loadStudentCounters);
+      document.removeEventListener("visibilitychange", refreshWhenVisible);
+    };
+  }, [hasStudentCounters]);
+
+  return useMemo(
+    () =>
+      MENUS[role].map((item) => {
+        if (hasCorrectionsQueue && item.href === "/correcoes") {
+          return {
+            ...item,
+            badge: pendingCorrections === null ? undefined : String(pendingCorrections),
+          };
+        }
+
+        if (hasStudentCounters && item.href === "/atividades") {
+          return {
+            ...item,
+            badge: studentActivities === null ? undefined : String(studentActivities),
+          };
+        }
+
+        if (hasStudentCounters && item.href === "/envios") {
+          return {
+            ...item,
+            badge: studentSubmissions === null ? undefined : String(studentSubmissions),
+          };
+        }
+
+        return item;
+      }),
+    [hasCorrectionsQueue, hasStudentCounters, pendingCorrections, role, studentActivities, studentSubmissions],
+  );
+}
+
 export function Sidebar({ role, userName, userEmail }: { role: Role; userName: string; userEmail: string }) {
   const pathname = usePathname();
   const { data: session } = useSession();
-  const items = MENUS[role];
+  const items = useMenuItems(role);
   const RoleIcon = ROLE_ICON[role];
   const displayName = session?.user?.name?.trim() || userName || "Usuário Escreva Mais";
   const displayEmail = session?.user?.email?.trim() || userEmail || "conta@escrevamais.com";

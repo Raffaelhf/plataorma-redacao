@@ -16,14 +16,110 @@ import {
 import "./_group.css";
 import { AppLayout } from "./_shared/AppLayout";
 
-export function DashboardAluno() {
+type StudentDashboardStats = {
+  totalSubmissions: number;
+  monthlySubmissions: number;
+  averageGrade: number;
+  averageGradeDelta: number;
+  inCorrection: number;
+  weeklyPublishedActivities: number;
+};
+
+type StudentLiveClass = {
+  id: string;
+  title: string;
+  description: string;
+  scheduledAt: string;
+  meetingUrl: string | null;
+  teacherName: string | null;
+};
+
+type StudentRecentSubmission = {
+  id: string;
+  title: string;
+  submittedAt: string;
+  status: string;
+  grade: number | null;
+};
+
+type DashboardAlunoProps = {
+  viewer: { name: string; email: string };
+  stats: StudentDashboardStats;
+  liveClasses: StudentLiveClass[];
+  recentSubmissions: StudentRecentSubmission[];
+};
+
+function getFirstName(name: string) {
+  return name.trim().split(/\s+/)[0] || "aluno";
+}
+
+function formatClassDate(value: string) {
+  const date = new Date(value);
+  const today = new Date();
+  const tomorrow = new Date(today);
+  tomorrow.setDate(today.getDate() + 1);
+  const sameDay = date.toDateString() === today.toDateString();
+  const nextDay = date.toDateString() === tomorrow.toDateString();
+  const time = new Intl.DateTimeFormat("pt-BR", { hour: "2-digit", minute: "2-digit" }).format(date);
+
+  if (sameDay) return `Hoje ${time}`;
+  if (nextDay) return `Amanhã ${time}`;
+
+  const day = new Intl.DateTimeFormat("pt-BR", { weekday: "short", day: "2-digit", month: "short" })
+    .format(date)
+    .replace(".", "");
+  return `${day} · ${time}`;
+}
+
+function getStartLabel(value: string) {
+  const diffInMinutes = Math.round((new Date(value).getTime() - Date.now()) / 60000);
+
+  if (diffInMinutes <= 0) return "Acontecendo agora";
+  if (diffInMinutes < 60) return `Começa em ${diffInMinutes}min`;
+
+  const hours = Math.round(diffInMinutes / 60);
+  if (hours < 24) return `Começa em ${hours}h`;
+
+  const days = Math.round(hours / 24);
+  return `Começa em ${days}d`;
+}
+
+function getSubmissionStatusLabel(status: string) {
+  if (status === "GRADED") return "Corrigida";
+  if (status === "RETURNED") return "Devolvida";
+  if (status === "UNDER_REVIEW") return "Em correção";
+  return "Pendente";
+}
+
+function getRelativeSubmissionDate(value: string) {
+  const date = new Date(value);
+  const today = new Date();
+  const yesterday = new Date(today);
+  yesterday.setDate(today.getDate() - 1);
+  const time = new Intl.DateTimeFormat("pt-BR", { hour: "2-digit", minute: "2-digit" }).format(date);
+
+  if (date.toDateString() === today.toDateString()) return `Hoje, ${time}`;
+  if (date.toDateString() === yesterday.toDateString()) return `Ontem, ${time}`;
+
+  return new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "short" }).format(date).replace(".", "");
+}
+
+function getShortTitle(title: string) {
+  return title.length > 30 ? `${title.slice(0, 27)}...` : title;
+}
+
+export function DashboardAluno({ viewer, stats, liveClasses, recentSubmissions }: DashboardAlunoProps) {
+  const nextLiveClass = liveClasses[0] ?? null;
+  const nextCalendarItems = liveClasses.slice(1, 4);
+  const firstName = getFirstName(viewer.name);
+
   return (
     <AppLayout
       role="aluno"
-      userName="Júlia Andrade"
-      userEmail="julia.andrade@email.com"
-      pageKicker="Visão geral · Semana 14"
-      pageTitle="Olá, Júlia. Hoje é um bom dia para escrever."
+      userName={viewer.name}
+      userEmail={viewer.email}
+      pageKicker="Visão geral · agenda do aluno"
+      pageTitle={`Olá, ${firstName}. Hoje é um bom dia para escrever.`}
       primaryAction={{ label: "Enviar redação em PDF", href: "/envios" }}
     >
       <div className="space-y-8">
@@ -38,9 +134,9 @@ export function DashboardAluno() {
                 <FileText className="w-4 h-4" />
               </div>
             </div>
-            <div className="em-display text-[42px] text-[var(--em-ink)]">24</div>
+            <div className="em-display text-[42px] text-[var(--em-ink)]">{stats.totalSubmissions}</div>
             <div className="mt-2 text-[12px] font-semibold text-[var(--em-green-deep)] flex items-center gap-1">
-              <TrendingUp className="w-3.5 h-3.5" /> +3 este mês
+              <TrendingUp className="w-3.5 h-3.5" /> +{stats.monthlySubmissions} este mês
             </div>
           </div>
 
@@ -53,11 +149,11 @@ export function DashboardAluno() {
               </div>
             </div>
             <div className="flex items-baseline gap-1">
-              <span className="em-display text-[42px] text-[var(--em-ink)]">842</span>
+              <span className="em-display text-[42px] text-[var(--em-ink)]">{stats.averageGrade || "--"}</span>
               <span className="text-[16px] font-bold text-[var(--em-text-soft)]">/1000</span>
             </div>
             <div className="mt-2 text-[12px] font-semibold text-[var(--em-ink)] flex items-center gap-1">
-              <TrendingUp className="w-3.5 h-3.5" /> +18 vs mês passado
+              <TrendingUp className="w-3.5 h-3.5" /> {stats.averageGradeDelta >= 0 ? "+" : ""}{stats.averageGradeDelta} vs mês passado
             </div>
           </div>
 
@@ -69,7 +165,7 @@ export function DashboardAluno() {
                 <Clock className="w-4 h-4" />
               </div>
             </div>
-            <div className="em-display text-[42px] text-[var(--em-ink)]">3</div>
+            <div className="em-display text-[42px] text-[var(--em-ink)]">{stats.inCorrection}</div>
             <div className="mt-2 text-[12px] font-semibold text-[var(--em-ink)] flex items-center gap-1">
               <Clock className="w-3.5 h-3.5" /> Prazo médio: 2 dias
             </div>
@@ -83,7 +179,7 @@ export function DashboardAluno() {
                 <Sparkles className="w-4 h-4" />
               </div>
             </div>
-            <div className="em-display text-[42px] text-[var(--em-ink)]">5</div>
+            <div className="em-display text-[42px] text-[var(--em-ink)]">{stats.weeklyPublishedActivities}</div>
             <div className="mt-2 text-[12px] font-semibold text-[var(--em-ink)] flex items-center gap-1">
               <Calendar className="w-3.5 h-3.5" /> Para esta semana
             </div>
@@ -98,33 +194,42 @@ export function DashboardAluno() {
             
             {/* AULA AO VIVO */}
             <div className="relative overflow-hidden rounded-[var(--em-radius-card-lg)] bg-[var(--em-green)] border-[1.5px] border-[var(--em-ink)] shadow-[var(--em-shadow-hard)] p-8 md:p-10 transition-transform duration-200 hover:-translate-y-1">
-              <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+              <div className="relative z-10 flex flex-col md:flex-row md:items-start justify-between gap-6">
                 <div>
                   <div className="inline-flex items-center gap-2 px-3 py-1 bg-[var(--em-yellow)] border-[1.5px] border-[var(--em-ink)] rounded-full text-[12px] font-bold text-[var(--em-ink)] shadow-[2px_2px_0_0_#0E0F12] mb-4">
                     <span className="w-2 h-2 rounded-full bg-[var(--em-coral)] animate-pulse" />
-                    Começa em 2h
+                    {nextLiveClass ? getStartLabel(nextLiveClass.scheduledAt) : "Agenda em atualização"}
                   </div>
                   <h3 className="em-display text-[32px] md:text-[40px] text-[var(--em-ink)] leading-tight mb-2">
-                    Repertório sociocultural<br />meio ambiente
+                    {nextLiveClass?.title ?? "Nenhuma live agendada"}
                   </h3>
-                  <div className="flex items-center gap-3 text-[16px] font-bold text-[var(--em-ink-soft)]">
+                  <div className="flex flex-wrap items-center gap-3 text-[16px] font-bold text-[var(--em-ink-soft)]">
                     <div className="flex items-center gap-1.5">
-                      <Clock className="w-5 h-5" /> Hoje 19h
+                      <Clock className="w-5 h-5" /> {nextLiveClass ? formatClassDate(nextLiveClass.scheduledAt) : "Sem horário definido"}
                     </div>
                     <span>·</span>
                     <div className="flex items-center gap-1.5">
                       <div className="w-6 h-6 rounded-full bg-white border border-[var(--em-ink)] grid place-items-center overflow-hidden">
-                        <img src="https://i.pravatar.cc/100?img=11" alt="Prof Pedro" className="w-full h-full object-cover" />
+                        <span className="text-[10px] font-extrabold">{(nextLiveClass?.teacherName ?? "EM").split(" ").map((name) => name[0]).join("").slice(0, 2)}</span>
                       </div>
-                      Prof. Pedro Lima
+                      {nextLiveClass?.teacherName ?? "Equipe Escreva Mais"}
                     </div>
                   </div>
+                  {nextCalendarItems.length ? (
+                    <div className="mt-5 flex flex-wrap gap-2">
+                      {nextCalendarItems.map((liveClass) => (
+                        <Link key={liveClass.id} href="/ao-vivo" className="rounded-xl border border-[var(--em-ink)] bg-white/50 px-3 py-2 text-[12px] font-extrabold text-[var(--em-ink)] hover:bg-white">
+                          {formatClassDate(liveClass.scheduledAt)} · {getShortTitle(liveClass.title)}
+                        </Link>
+                      ))}
+                    </div>
+                  ) : null}
                 </div>
                 
-                <Link href="/ao-vivo" className="em-btn-primary shrink-0 text-[16px] px-6 py-4">
+                <a href={nextLiveClass?.meetingUrl || "/ao-vivo"} target={nextLiveClass?.meetingUrl ? "_blank" : undefined} rel={nextLiveClass?.meetingUrl ? "noreferrer" : undefined} className="em-btn-primary shrink-0 text-[16px] px-6 py-4">
                   <Play className="w-5 h-5" fill="currentColor" />
-                  Entrar na sala
-                </Link>
+                  {nextLiveClass?.meetingUrl ? "Entrar na sala" : "Ver calendário"}
+                </a>
               </div>
 
               {/* Decorative shapes */}
@@ -207,7 +312,7 @@ export function DashboardAluno() {
                 {[
                   { label: "Redações", icon: PenSquare, done: 3, total: 4 },
                   { label: "Videoaulas", icon: Video, done: 2, total: 3 },
-                  { label: "Simulados", icon: CheckCircle2, done: 1, total: 2 },
+                  { label: "Temas guiados", icon: CheckCircle2, done: 1, total: 2 },
                   { label: "Leituras", icon: BookOpen, done: 5, total: 5 },
                 ].map((item, idx) => {
                   const pct = Math.round((item.done / item.total) * 100);
@@ -245,30 +350,35 @@ export function DashboardAluno() {
               </div>
               
               <div className="space-y-3">
-                {[
-                  { title: "Caminhos para combater a...", date: "Hoje, 10:45", status: "Corrigida", color: "var(--em-green)", note: "920" },
-                  { title: "Democratização do acesso...", date: "Ontem, 16:20", status: "Em correção", color: "var(--em-yellow)", note: "---" },
-                  { title: "Desafios da saúde pública...", date: "12 Mar", status: "Corrigida", color: "var(--em-green)", note: "880" },
-                  { title: "Impactos da inteligência...", date: "05 Mar", status: "Rascunho", color: "var(--em-coral)", note: "---" },
-                ].map((item, idx) => (
-                  <div key={idx} className="group relative overflow-hidden rounded-xl border border-[var(--em-border-strong)] p-3 hover:border-[var(--em-ink)] hover:bg-[var(--em-bg-alt)] transition-all cursor-pointer flex items-center justify-between gap-3 bg-[var(--em-surface)]">
+                {recentSubmissions.map((item) => {
+                  const statusLabel = getSubmissionStatusLabel(item.status);
+                  const statusColor = item.status === "GRADED" || item.status === "RETURNED" ? "var(--em-green)" : item.status === "UNDER_REVIEW" ? "var(--em-yellow)" : "var(--em-coral)";
+
+                  return (
+                  <div key={item.id} className="group relative overflow-hidden rounded-xl border border-[var(--em-border-strong)] p-3 hover:border-[var(--em-ink)] hover:bg-[var(--em-bg-alt)] transition-all cursor-pointer flex items-center justify-between gap-3 bg-[var(--em-surface)]">
                     <div className="flex-1 min-w-0">
-                      <div className="text-[14px] font-bold text-[var(--em-ink)] truncate mb-1">{item.title}</div>
+                      <div className="text-[14px] font-bold text-[var(--em-ink)] truncate mb-1">{getShortTitle(item.title)}</div>
                       <div className="flex items-center gap-2 text-[12px] font-semibold text-[var(--em-text-soft)]">
-                        <span>{item.date}</span>
+                        <span>{getRelativeSubmissionDate(item.submittedAt)}</span>
                         <span className="w-1 h-1 rounded-full bg-[var(--em-border-strong)]" />
-                        <span style={{ color: item.color }}>{item.status}</span>
+                        <span style={{ color: statusColor }}>{statusLabel}</span>
                       </div>
                     </div>
                     <div className="shrink-0 text-right">
-                      {item.note !== "---" ? (
-                        <div className="text-[18px] font-extrabold text-[var(--em-ink)]">{item.note}</div>
+                      {typeof item.grade === "number" ? (
+                        <div className="text-[18px] font-extrabold text-[var(--em-ink)]">{item.grade}</div>
                       ) : (
                         <div className="text-[18px] font-extrabold text-[var(--em-text-mute)]">--</div>
                       )}
                     </div>
                   </div>
-                ))}
+                  );
+                })}
+                {recentSubmissions.length === 0 ? (
+                  <div className="rounded-xl border border-[var(--em-border-strong)] bg-[var(--em-bg-alt)] p-4 text-[13px] font-bold text-[var(--em-text-soft)]">
+                    Seus envios mais recentes aparecerão aqui assim que você mandar uma redação.
+                  </div>
+                ) : null}
               </div>
             </div>
 
@@ -287,8 +397,8 @@ export function DashboardAluno() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
               { 
-                title: "Simulado FUVEST 2026", 
-                type: "Simulado", 
+                title: "Tema guiado: persistência da fome", 
+                type: "Redação", 
                 deadline: "Até domingo", 
                 bg: "var(--em-mint)", 
                 diff: "Alta" 

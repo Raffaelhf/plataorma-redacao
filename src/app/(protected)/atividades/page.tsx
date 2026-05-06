@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
 import { AdminAtividades, type AdminActivitiesSummary, type AdminActivityItem } from '@/components/mockups/escreva-mais/AdminAtividades';
-import { AlunoAtividades } from '@/components/mockups/escreva-mais/AlunoAtividades';
+import { AlunoAtividades, type AlunoActivityItem } from '@/components/mockups/escreva-mais/AlunoAtividades';
 import { ProfessorAtividades } from '@/components/mockups/escreva-mais/ProfessorAtividades';
 import { getAuthSession } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
@@ -41,6 +41,23 @@ function formatDateLabel(date: Date | null) {
   })
     .format(date)
     .replace('.', '');
+}
+
+function formatDueDateLabel(date: Date | null) {
+  if (!date) return 'Sem prazo';
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const dueDate = new Date(date);
+  dueDate.setHours(0, 0, 0, 0);
+
+  const diffDays = Math.round((dueDate.getTime() - today.getTime()) / 86400000);
+
+  if (diffDays < 0) return 'Prazo encerrado';
+  if (diffDays === 0) return 'Hoje';
+  if (diffDays === 1) return 'Amanha';
+  return `Em ${diffDays} dias`;
 }
 
 function initialsFromName(name?: string | null, email?: string | null) {
@@ -186,6 +203,64 @@ async function getAdminActivitiesSummary(): Promise<AdminActivitiesSummary> {
   };
 }
 
+async function getStudentActivities(studentId?: string): Promise<AlunoActivityItem[]> {
+  const activities = await prisma.activity.findMany({
+    where: {
+      status: 'PUBLISHED',
+    },
+    orderBy: [{ publishedAt: 'desc' }, { createdAt: 'desc' }],
+    include: {
+      attachments: {
+        select: {
+          id: true,
+        },
+        orderBy: {
+          createdAt: 'asc',
+        },
+      },
+      submissions: {
+        where: {
+          studentId: studentId ?? '__student_without_profile__',
+        },
+        select: {
+          status: true,
+          grade: true,
+          submittedAt: true,
+        },
+        orderBy: {
+          submittedAt: 'desc',
+        },
+        take: 1,
+      },
+    },
+  });
+
+  return activities.map((activity, index) => {
+    const latestSubmission = activity.submissions[0] ?? null;
+
+    return {
+      id: activity.id,
+      title: activity.title,
+      description: activity.description,
+      prompt: activity.prompt,
+      tags: activity.tags,
+      bg: CARD_BACKGROUNDS[index % CARD_BACKGROUNDS.length],
+      publishedAtMs: (activity.publishedAt ?? activity.createdAt).getTime(),
+      dueDateMs: activity.dueDate?.getTime() ?? null,
+      dueDateLabel: formatDueDateLabel(activity.dueDate),
+      submission: latestSubmission
+        ? {
+            status: latestSubmission.status,
+            grade: latestSubmission.grade,
+            submittedAtLabel: formatDateLabel(latestSubmission.submittedAt) ?? 'Sem data',
+          }
+        : null,
+      attachmentsCount: activity.attachments.length,
+      firstAttachmentHref: activity.attachments[0] ? `/api/activity-attachments/${activity.attachments[0].id}` : null,
+    };
+  });
+}
+
 export default async function ActivitiesPage() {
   const session = await getAuthSession();
   if (!session?.user) redirect('/login');
@@ -193,5 +268,14 @@ export default async function ActivitiesPage() {
   if (session.user.role === 'ADMIN') return <AdminAtividades summary={await getAdminActivitiesSummary()} />;
   if (session.user.role === 'TEACHER') return <ProfessorAtividades />;
 
-  return <AlunoAtividades />;
+  return (
+    <AlunoAtividades
+      viewer={{
+        name: session.user.name ?? 'Aluno Escreva Mais',
+        email: session.user.email ?? 'aluno@escrevamais.com',
+      }}
+      activities={await getStudentActivities(session.user.studentId)}
+      generatedAtLabel={formatDateTimeLabel(new Date())}
+    />
+  );
 }

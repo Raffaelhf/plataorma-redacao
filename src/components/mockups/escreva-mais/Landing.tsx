@@ -260,7 +260,7 @@ export function Landing({ pricing, socialProof }: LandingProps) {
             </div>
             <div>
               <h3 className="mb-3 font-['Outfit'] text-xl font-bold leading-tight text-[var(--em-ink)]">Esteja pronto para a prova</h3>
-              <p className="font-['Source_Serif_4'] text-sm font-medium leading-6 text-[var(--em-ink-soft)]/80">Simulados semanais com temas inéditos e correção detalhada nos 5 critérios.</p>
+              <p className="font-['Source_Serif_4'] text-sm font-medium leading-6 text-[var(--em-ink-soft)]/80">Propostas semanais de redação com temas inéditos e correção detalhada.</p>
             </div>
           </div>
           
@@ -800,7 +800,7 @@ export function Landing({ pricing, socialProof }: LandingProps) {
               <h4 className="font-bold text-white mb-6 font-['Outfit']">Recursos</h4>
               <ul className="space-y-4 text-sm text-white/60">
                 <li><a href="#" className="hover:text-[var(--em-green)]">Temas de Redação</a></li>
-                <li><a href="#" className="hover:text-[var(--em-green)]">Simulador ENEM</a></li>
+                <li><a href="#" className="hover:text-[var(--em-green)]">Temas de redação</a></li>
                 <li><a href="#" className="hover:text-[var(--em-green)]">Materiais Gratuitos</a></li>
                 <li><a href="#" className="hover:text-[var(--em-green)]">Guia de Estudo</a></li>
               </ul>

@@ -6,7 +6,7 @@ import { Bell, Search, HelpCircle, Plus } from "lucide-react";
 import { useMemo, useState } from "react";
 import type { ReactNode } from "react";
 import { PlatformLogo } from "@/components/branding/platform-logo";
-import { isActivePath, MENUS, ROLE_LABEL, Sidebar } from "./Sidebar";
+import { isActivePath, ROLE_LABEL, Sidebar, useMenuItems } from "./Sidebar";
 import type { Role } from "./Sidebar";
 import "../_group.css";
 
@@ -28,7 +28,7 @@ export function AppLayout({
   children: ReactNode;
 }) {
   const pathname = usePathname();
-  const mobileItems = MENUS[role];
+  const mobileItems = useMenuItems(role);
   const [query, setQuery] = useState("");
   const [openPanel, setOpenPanel] = useState<"help" | "notifications" | null>(null);
   const [actionFeedback, setActionFeedback] = useState<string | null>(null);
@@ -125,7 +125,12 @@ export function AppLayout({
                   style={active ? { background: "var(--em-grad-hero)" } : {}}
                 >
                   <Icon className="h-4 w-4" />
-                  {item.label}
+                  <span>{item.label}</span>
+                  {item.badge && (
+                    <span className={active ? "rounded-full bg-white/25 px-1.5 py-0.5 text-[10px] text-white" : "rounded-full bg-[var(--em-coral)] px-1.5 py-0.5 text-[10px] text-white"}>
+                      {item.badge}
+                    </span>
+                  )}
                 </a>
               );
             })}
@@ -166,51 +171,55 @@ export function AppLayout({
               </div>
             ) : null}
           </div>
-          <button
-            type="button"
-            onClick={() => setOpenPanel((current) => (current === "help" ? null : "help"))}
-            className="hidden md:flex items-center gap-2 px-3 py-2 rounded-xl text-[13px] font-medium text-[var(--em-text-soft)] hover:bg-[var(--em-bg-alt)]"
-          >
-            <HelpCircle className="w-4 h-4" /> Ajuda
-          </button>
-          <button
-            type="button"
-            onClick={() => setOpenPanel((current) => (current === "notifications" ? null : "notifications"))}
-            className="relative grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-transparent bg-[var(--em-bg-alt)] text-[var(--em-deep)] transition-all hover:border-[var(--em-border)] hover:bg-white"
-          >
-            <Bell className="w-4 h-4" />
-            <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-[var(--em-coral)]" />
-          </button>
+          <div className="relative hidden md:block">
+            <button
+              type="button"
+              onClick={() => setOpenPanel((current) => (current === "help" ? null : "help"))}
+              className="flex items-center gap-2 px-3 py-2 rounded-xl text-[13px] font-medium text-[var(--em-text-soft)] hover:bg-[var(--em-bg-alt)]"
+            >
+              <HelpCircle className="w-4 h-4" /> Ajuda
+            </button>
+            {openPanel === "help" ? (
+              <div className="absolute right-0 top-[calc(100%+0.75rem)] z-50 w-[min(360px,calc(100vw-2rem))] rounded-2xl border border-[var(--em-ink)] bg-white p-4 shadow-[6px_6px_0_0_#0E0F12]">
+                <div className="space-y-3">
+                  <div className="text-[14px] font-extrabold text-[var(--em-ink)]">Ajuda rápida</div>
+                  <a href="https://wa.me/5500000000000" target="_blank" rel="noreferrer" className="block rounded-xl border border-[var(--em-border-strong)] px-3 py-2 text-[13px] font-bold text-[var(--em-ink)] hover:bg-[var(--em-bg-alt)]">
+                    Falar com suporte no WhatsApp
+                  </a>
+                  <Link href="/termos-de-servico" className="block rounded-xl border border-[var(--em-border-strong)] px-3 py-2 text-[13px] font-bold text-[var(--em-ink)] hover:bg-[var(--em-bg-alt)]">
+                    Ver termos e políticas
+                  </Link>
+                </div>
+              </div>
+            ) : null}
+          </div>
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => setOpenPanel((current) => (current === "notifications" ? null : "notifications"))}
+              className="relative grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-transparent bg-[var(--em-bg-alt)] text-[var(--em-deep)] transition-all hover:border-[var(--em-border)] hover:bg-white"
+            >
+              <Bell className="w-4 h-4" />
+              <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-[var(--em-coral)]" />
+            </button>
+            {openPanel === "notifications" ? (
+              <div className="absolute right-0 top-[calc(100%+0.75rem)] z-50 w-[min(360px,calc(100vw-2rem))] rounded-2xl border border-[var(--em-ink)] bg-white p-4 shadow-[6px_6px_0_0_#0E0F12]">
+                <div className="space-y-3">
+                  <div className="text-[14px] font-extrabold text-[var(--em-ink)]">Notificações</div>
+                  {["Nova correção disponível.", "Aula ao vivo começa em breve.", "Seu painel foi atualizado."].map((item) => (
+                    <div key={item} className="rounded-xl border border-[var(--em-border-strong)] px-3 py-2 text-[13px] font-bold text-[var(--em-ink)]">
+                      {item}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : null}
+          </div>
           {renderPrimaryAction(
             "hidden md:inline-flex items-center gap-2 pl-4 pr-5 py-2.5 rounded-xl text-white text-[13px] font-semibold shadow-[var(--em-shadow-soft)] hover:translate-y-[-1px] transition-all",
             "w-4 h-4",
           )}
         </header>
-
-        {openPanel ? (
-          <div className="fixed right-4 top-[126px] z-50 w-[min(360px,calc(100vw-2rem))] rounded-2xl border border-[var(--em-ink)] bg-white p-4 shadow-[6px_6px_0_0_#0E0F12] lg:top-[76px]">
-            {openPanel === "help" ? (
-              <div className="space-y-3">
-                <div className="text-[14px] font-extrabold text-[var(--em-ink)]">Ajuda rápida</div>
-                <a href="https://wa.me/5500000000000" target="_blank" rel="noreferrer" className="block rounded-xl border border-[var(--em-border-strong)] px-3 py-2 text-[13px] font-bold text-[var(--em-ink)] hover:bg-[var(--em-bg-alt)]">
-                  Falar com suporte no WhatsApp
-                </a>
-                <Link href="/termos-de-servico" className="block rounded-xl border border-[var(--em-border-strong)] px-3 py-2 text-[13px] font-bold text-[var(--em-ink)] hover:bg-[var(--em-bg-alt)]">
-                  Ver termos e políticas
-                </Link>
-              </div>
-            ) : (
-              <div className="space-y-3">
-                <div className="text-[14px] font-extrabold text-[var(--em-ink)]">Notificações</div>
-                {["Nova correção disponível.", "Aula ao vivo começa em breve.", "Seu painel foi atualizado."].map((item) => (
-                  <div key={item} className="rounded-xl border border-[var(--em-border-strong)] px-3 py-2 text-[13px] font-bold text-[var(--em-ink)]">
-                    {item}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        ) : null}
 
         {/* Page header */}
         <div className="px-4 pb-2 pt-6 sm:px-6 lg:px-8 lg:pt-8">

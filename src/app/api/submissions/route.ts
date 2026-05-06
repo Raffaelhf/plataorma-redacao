@@ -7,7 +7,7 @@ import { SERVERLESS_SAFE_UPLOAD_BYTES, getServerlessUploadLimitMessage } from '@
 
 export const runtime = 'nodejs';
 
-export async function GET() {
+export async function GET(req: Request) {
   const session = await getAuthSession();
   if (!session?.user || session.user.isActive === false) {
     return NextResponse.json({ error: 'Nao autorizado.' }, { status: 401 });
@@ -21,6 +21,12 @@ export async function GET() {
         : isTeacherRole(session.user.role) && session.user.teacherId
           ? { activity: { createdById: session.user.teacherId } }
           : { id: '__no-submissions__' };
+
+  const url = new URL(req.url);
+  if (url.searchParams.get('summary') === '1') {
+    const total = await prisma.submission.count({ where });
+    return NextResponse.json({ total });
+  }
 
   const submissions = await prisma.submission.findMany({
     where,

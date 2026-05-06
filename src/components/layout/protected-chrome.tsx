@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Bell, HelpCircle, Search } from 'lucide-react';
 import { PlatformLogo } from '@/components/branding/platform-logo';
-import { MENUS, ROLE_LABEL, Sidebar } from '@/components/mockups/escreva-mais/_shared/Sidebar';
+import { ROLE_LABEL, Sidebar, useMenuItems } from '@/components/mockups/escreva-mais/_shared/Sidebar';
 import type { Role as AppRole } from '@/components/mockups/escreva-mais/_shared/Sidebar';
 import { cn } from '@/lib/utils';
 import '@/components/mockups/escreva-mais/_group.css';
@@ -49,8 +49,10 @@ export function ProtectedChrome({
 }) {
   const pathname = usePathname();
   const appRole = roleMap[role];
+  const isMockupScreen = mockupScreenPaths.has(pathname);
+  const mobileItems = useMenuItems(appRole, !isMockupScreen);
 
-  if (mockupScreenPaths.has(pathname)) {
+  if (isMockupScreen) {
     return <>{children}</>;
   }
 
@@ -75,7 +77,7 @@ export function ProtectedChrome({
           </div>
 
           <nav className="mt-3 flex gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            {MENUS[appRole].map((item) => {
+            {mobileItems.map((item) => {
               const Icon = item.icon;
               const active = isActivePath(pathname, item.href);
 
@@ -90,7 +92,12 @@ export function ProtectedChrome({
                   style={active ? { background: 'var(--em-grad-hero)' } : undefined}
                 >
                   <Icon className="h-4 w-4" />
-                  {item.label}
+                  <span>{item.label}</span>
+                  {item.badge && (
+                    <span className={active ? 'rounded-full bg-white/25 px-1.5 py-0.5 text-[10px] text-white' : 'rounded-full bg-[var(--em-coral)] px-1.5 py-0.5 text-[10px] text-white'}>
+                      {item.badge}
+                    </span>
+                  )}
                 </Link>
               );
             })}

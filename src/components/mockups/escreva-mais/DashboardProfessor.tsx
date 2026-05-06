@@ -223,7 +223,7 @@ export function DashboardProfessor() {
               </div>
               <div className="flex flex-col gap-3">
                 <div className="p-3 rounded-xl border border-[var(--em-ink)] bg-[var(--em-peach)] shadow-[2px_2px_0_0_#0E0F12]">
-                  <h4 className="font-bold text-[14px] text-[var(--em-ink)] mb-1">Simulado ENEM - Outubro</h4>
+                  <h4 className="font-bold text-[14px] text-[var(--em-ink)] mb-1">Tema ENEM - Outubro</h4>
                   <div className="flex items-center gap-3 text-[12px] font-semibold text-[var(--em-ink-soft)]">
                     <span className="flex items-center gap-1"><Users className="w-3.5 h-3.5" /> 45 envios</span>
                     <span className="flex items-center gap-1"><Clock className="w-3.5 h-3.5" /> Faltam 2 dias</span>

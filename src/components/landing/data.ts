@@ -48,8 +48,8 @@ export const featureItems: FeatureItem[] = [
     tint: 'from-[#ebfbff] to-[#f5ffff]',
   },
   {
-    title: 'Prática e Simulados',
-    description: 'Rotina de treino com temas atuais e simulados pensados para vestibulares.',
+    title: 'Prática de Redação',
+    description: 'Rotina de escrita com temas atuais, propostas guiadas e repertórios para diferentes idades.',
     icon: Sparkles,
     color: 'text-[#7d5cff]',
     tint: 'from-[#f2eeff] to-[#faf7ff]',
@@ -136,6 +136,6 @@ export const planItems: PlanItem[] = [
     description: 'Melhor custo mensal para quem deseja estudar o ano todo com previsibilidade e profundidade.',
     cta: 'Garantir anual',
     icon: Crown,
-    benefits: ['6 correções por mês', 'Cronograma anual completo', 'Simulados e revisões', 'Acesso a todos os recursos premium'],
+    benefits: ['6 correções por mês', 'Cronograma anual completo', 'Temas guiados e revisões', 'Acesso a todos os recursos premium'],
   },
 ];

@@ -6,7 +6,7 @@ import {
 } from '@/lib/activity-attachments';
 import { getAuthSession } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
-import { isTeacherRole } from '@/lib/roles';
+import { isAdminRole, isTeacherRole } from '@/lib/roles';
 import { ensureTeacherProfile } from '@/lib/teacher-profiles';
 import { SERVERLESS_SAFE_UPLOAD_BYTES, getServerlessUploadLimitMessage } from '@/lib/upload-limits';
 
@@ -53,15 +53,56 @@ async function readActivityPayload(req: Request) {
   };
 }
 
-export async function GET() {
+export async function GET(req: Request) {
+  const session = await getAuthSession();
+  if (!session?.user || session.user.isActive === false) {
+    return NextResponse.json({ error: 'Acesso negado' }, { status: 401 });
+  }
+
+  const url = new URL(req.url);
+  const isStudent = session.user.role === 'STUDENT';
+  const isAdmin = isAdminRole(session.user.role);
+  const isTeacher = isTeacherRole(session.user.role);
+  const teacherId = session.user.teacherId;
+  const studentId = session.user.studentId;
+
+  if (url.searchParams.get('summary') === '1') {
+    const available = await prisma.activity.count({
+      where: isStudent
+        ? {
+            status: 'PUBLISHED',
+            ...(studentId
+              ? {
+                  submissions: {
+                    none: {
+                      studentId,
+                    },
+                  },
+                }
+              : {}),
+          }
+        : isTeacher && !isAdmin
+          ? { createdById: teacherId ?? '__teacher_without_profile__' }
+          : {},
+    });
+
+    return NextResponse.json({ available });
+  }
+
   const activities = await prisma.activity.findMany({
     orderBy: { createdAt: 'desc' },
+    where: isStudent
+      ? { status: 'PUBLISHED' }
+      : isTeacher && !isAdmin
+        ? { createdById: teacherId ?? '__teacher_without_profile__' }
+        : {},
     include: {
       attachments: {
         select: activityAttachmentSelect,
       },
       submissions: {
-        select: { id: true },
+        where: isStudent ? { studentId: studentId ?? '__student_without_profile__' } : undefined,
+        select: { id: true, status: true, grade: true, submittedAt: true },
       },
     },
   });

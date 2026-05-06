@@ -78,7 +78,7 @@ export function SubmitWork({ activityId, existingSubmission }: { activityId: str
 
     if (isDemoLogin(login)) {
       setLoading(false);
-      setStatus('Envio de PDF simulado no modo demo.');
+      setStatus('Envio de PDF registrado no modo demo.');
       setSentFileName(pdfFile.name);
       setContent('');
       setPdfFile(null);
