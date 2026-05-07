@@ -3,10 +3,30 @@ import { getAuthSession } from '@/lib/auth';
 import { isTeacherRole } from '@/lib/roles';
 import { prisma } from '@/lib/prisma';
 
-export async function GET() {
+export async function GET(req: Request) {
   const session = await getAuthSession();
   if (!session?.user || session.user.isActive === false) {
     return NextResponse.json({ error: 'Acesso negado' }, { status: 401 });
+  }
+
+  const url = new URL(req.url);
+  const now = new Date();
+
+  if (url.searchParams.get('summary') === '1') {
+    const upcoming = await prisma.liveClass.count({
+      where: {
+        scheduledAt: {
+          gte: now,
+        },
+        ...(session.user.role === 'TEACHER'
+          ? {
+              createdById: session.user.teacherId ?? '__teacher_without_profile__',
+            }
+          : {}),
+      },
+    });
+
+    return NextResponse.json({ upcoming });
   }
 
   const liveClasses = await prisma.liveClass.findMany({

@@ -34,7 +34,7 @@ export const MENUS: Record<Role, Item[]> = {
     { label: "Desempenho", icon: TrendingUp, href: "/desempenho" },
     { label: "Atividades", icon: ListChecks, href: "/atividades" },
     { label: "Videoaulas", icon: PlayCircle, href: "/videoaulas" },
-    { label: "Ao vivo", icon: Radio, badge: "·", href: "/ao-vivo" },
+    { label: "Ao vivo", icon: Radio, href: "/ao-vivo" },
     { label: "Perfil", icon: UserRound, href: "/perfil" },
   ],
   professor: [
@@ -78,6 +78,7 @@ export function useMenuItems(role: Role, enabled = true) {
   const [pendingCorrections, setPendingCorrections] = useState<number | null>(null);
   const [studentActivities, setStudentActivities] = useState<number | null>(null);
   const [studentSubmissions, setStudentSubmissions] = useState<number | null>(null);
+  const [upcomingLiveClasses, setUpcomingLiveClasses] = useState<number | null>(null);
   const hasCorrectionsQueue = enabled && (role === "professor" || role === "admin");
   const hasStudentCounters = enabled && role === "aluno";
 
@@ -126,9 +127,10 @@ export function useMenuItems(role: Role, enabled = true) {
 
     async function loadStudentCounters() {
       try {
-        const [activitiesResponse, submissionsResponse] = await Promise.all([
+        const [activitiesResponse, submissionsResponse, liveResponse] = await Promise.all([
           fetch("/api/activities?summary=1", { cache: "no-store" }),
           fetch("/api/submissions?summary=1", { cache: "no-store" }),
+          fetch("/api/live-classes?summary=1", { cache: "no-store" }),
         ]);
 
         if (activitiesResponse.ok) {
@@ -140,10 +142,16 @@ export function useMenuItems(role: Role, enabled = true) {
           const data = (await submissionsResponse.json()) as { total?: unknown };
           if (!cancelled && typeof data.total === "number") setStudentSubmissions(data.total);
         }
+
+        if (liveResponse.ok) {
+          const data = (await liveResponse.json()) as { upcoming?: unknown };
+          if (!cancelled && typeof data.upcoming === "number") setUpcomingLiveClasses(data.upcoming);
+        }
       } catch {
         if (!cancelled) {
           setStudentActivities(null);
           setStudentSubmissions(null);
+          setUpcomingLiveClasses(null);
         }
       }
     }
@@ -187,9 +195,16 @@ export function useMenuItems(role: Role, enabled = true) {
           };
         }
 
+        if (hasStudentCounters && item.href === "/ao-vivo") {
+          return {
+            ...item,
+            badge: upcomingLiveClasses === null ? undefined : String(upcomingLiveClasses),
+          };
+        }
+
         return item;
       }),
-    [hasCorrectionsQueue, hasStudentCounters, pendingCorrections, role, studentActivities, studentSubmissions],
+    [hasCorrectionsQueue, hasStudentCounters, pendingCorrections, role, studentActivities, studentSubmissions, upcomingLiveClasses],
   );
 }
 

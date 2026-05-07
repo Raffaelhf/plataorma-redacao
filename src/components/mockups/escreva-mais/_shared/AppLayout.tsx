@@ -3,12 +3,21 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Bell, Search, HelpCircle, Plus } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { ReactNode } from "react";
 import { PlatformLogo } from "@/components/branding/platform-logo";
 import { isActivePath, ROLE_LABEL, Sidebar, useMenuItems } from "./Sidebar";
 import type { Role } from "./Sidebar";
 import "../_group.css";
+
+type HeaderNotification = {
+  id: string;
+  title: string;
+  body: string;
+  href: string;
+  kind: string;
+  timeLabel: string;
+};
 
 export function AppLayout({
   role,
@@ -32,6 +41,8 @@ export function AppLayout({
   const [query, setQuery] = useState("");
   const [openPanel, setOpenPanel] = useState<"help" | "notifications" | null>(null);
   const [actionFeedback, setActionFeedback] = useState<string | null>(null);
+  const [notifications, setNotifications] = useState<HeaderNotification[]>([]);
+  const [notificationCount, setNotificationCount] = useState(0);
   const searchResults = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
     if (!normalizedQuery) return [];
@@ -44,6 +55,57 @@ export function AppLayout({
       .filter((item) => item.label.toLowerCase().includes(normalizedQuery) || item.href.toLowerCase().includes(normalizedQuery))
       .slice(0, 5);
   }, [mobileItems, query]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadNotifications() {
+      try {
+        const response = await fetch("/api/notifications", { cache: "no-store" });
+        if (!response.ok) return;
+
+        const data = (await response.json()) as { notifications?: unknown; unread?: unknown };
+        const items = Array.isArray(data.notifications)
+          ? data.notifications.filter((item): item is HeaderNotification => {
+              if (!item || typeof item !== "object") return false;
+              const candidate = item as Record<string, unknown>;
+              return (
+                typeof candidate.id === "string" &&
+                typeof candidate.title === "string" &&
+                typeof candidate.body === "string" &&
+                typeof candidate.href === "string" &&
+                typeof candidate.kind === "string" &&
+                typeof candidate.timeLabel === "string"
+              );
+            })
+          : [];
+
+        if (!cancelled) {
+          setNotifications(items);
+          setNotificationCount(typeof data.unread === "number" ? data.unread : items.length);
+        }
+      } catch {
+        if (!cancelled) {
+          setNotifications([]);
+          setNotificationCount(0);
+        }
+      }
+    }
+
+    const refreshWhenVisible = () => {
+      if (document.visibilityState === "visible") void loadNotifications();
+    };
+
+    void loadNotifications();
+    window.addEventListener("focus", loadNotifications);
+    document.addEventListener("visibilitychange", refreshWhenVisible);
+
+    return () => {
+      cancelled = true;
+      window.removeEventListener("focus", loadNotifications);
+      document.removeEventListener("visibilitychange", refreshWhenVisible);
+    };
+  }, []);
 
   function showActionFeedback(label: string) {
     setActionFeedback(`${label}: ação registrada nesta tela.`);
@@ -200,17 +262,35 @@ export function AppLayout({
               className="relative grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-transparent bg-[var(--em-bg-alt)] text-[var(--em-deep)] transition-all hover:border-[var(--em-border)] hover:bg-white"
             >
               <Bell className="w-4 h-4" />
-              <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-[var(--em-coral)]" />
+              {notificationCount > 0 ? <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-[var(--em-coral)]" /> : null}
             </button>
             {openPanel === "notifications" ? (
               <div className="absolute right-0 top-[calc(100%+0.75rem)] z-50 w-[min(360px,calc(100vw-2rem))] rounded-2xl border border-[var(--em-ink)] bg-white p-4 shadow-[6px_6px_0_0_#0E0F12]">
                 <div className="space-y-3">
-                  <div className="text-[14px] font-extrabold text-[var(--em-ink)]">Notificações</div>
-                  {["Nova correção disponível.", "Aula ao vivo começa em breve.", "Seu painel foi atualizado."].map((item) => (
-                    <div key={item} className="rounded-xl border border-[var(--em-border-strong)] px-3 py-2 text-[13px] font-bold text-[var(--em-ink)]">
-                      {item}
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="text-[14px] font-extrabold text-[var(--em-ink)]">Notificações</div>
+                    <span className="rounded-full border border-[var(--em-border-strong)] px-2 py-0.5 text-[11px] font-bold text-[var(--em-text-soft)]">{notificationCount}</span>
+                  </div>
+                  {notifications.length ? (
+                    notifications.map((item) => (
+                      <a
+                        key={item.id}
+                        href={item.href}
+                        className="block rounded-xl border border-[var(--em-border-strong)] px-3 py-2 text-[13px] font-bold text-[var(--em-ink)] hover:bg-[var(--em-bg-alt)]"
+                        onClick={() => setOpenPanel(null)}
+                      >
+                        <div className="flex items-center justify-between gap-3">
+                          <span>{item.title}</span>
+                          <span className="shrink-0 text-[10px] font-semibold text-[var(--em-text-mute)]">{item.timeLabel}</span>
+                        </div>
+                        <div className="mt-1 text-[12px] font-semibold leading-5 text-[var(--em-text-soft)]">{item.body}</div>
+                      </a>
+                    ))
+                  ) : (
+                    <div className="rounded-xl border border-[var(--em-border-strong)] px-3 py-2 text-[13px] font-bold text-[var(--em-text-soft)]">
+                      Sem notificações reais no momento.
                     </div>
-                  ))}
+                  )}
                 </div>
               </div>
             ) : null}
